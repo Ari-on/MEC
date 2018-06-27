@@ -915,6 +915,9 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
                   as : "sessionFiltedInfo"
                 }
               },
+                {
+                    $unwind : "$sessionFiltedInfo"
+                },
                         
               {
                 $lookup:
@@ -961,20 +964,36 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
 	              var finalItem = [];
 	              var finalItemArrObj = [];
 	              var bwInfo = {};
-            	   console.log('item is ----', item)
+                  var sessionFilter = {};
+
+            	   // console.log('item is ----', item)
                // return false;
                 console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 for(var i = 0 ; item.length > i; i++){
-                  // console.log(item[i], "item printing")
-                  console.log("\n")
+
+                    sessionFilter = {
+                        session_Id : (item[i]['sessionFiltedInfo']['session_Id']),
+                        sourceIP : item[i]['sessionFiltedInfo']['sourceIP'],
+                        destAddress : item[i]['sessionFiltedInfo']['destAddress'],
+                        protocol : item[i]['sessionFiltedInfo']['protocol'],
+                        sourcePort : [],
+                        dstPort : []
+                    }
+                    if (item[i]['sessionFiltedInfo']['session_Id'] == item[i]['ports']['session_Id'])
+                    {
+                        sessionFilter['sourcePort'].push(item[i]['ports']['srcPort'])
+                        sessionFilter['dstPort'].push(item[i]['ports']['dstPort'])
+                    }
+
                   finalItemArrObj.push({
                       bwInfo :{ 
                       'timeStamp' : item[i]['timeStamp'],
                       'appIns_Id' : item[i]['appIns_Id'],
                       'requestType' : item[i].requestType['reqstTypeDescription'],
-                      'sessionFilter' : item[i]['sessionFiltedInfo'],                   
-                      'sourcePort' : item[i].ports['srcPort'],                  
-                      'dstPort' : item[i].ports['dstPort'],
+                      // 'sessionFilter': sessionFilter,
+                      'sessionFilter' : sessionFilter,
+                      'sourcePort' : item[i].ports['srcPort'],
+                      // 'dstPort' : item[i].ports['dstPort'],
                       // 'sourcePort' : item[i]['ports.srcPort'],                  
                       // 'dstPort' : item[i]['ports.dstPort'],
                       'fixedBWPriority' : item[i]['fixedBWPriority'],
@@ -982,8 +1001,19 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
                       'allocationDirection' : item[i]['allocationDirection']
                     }
                   })
+
                 }
-               resolve(finalItemArrObj); 
+              for (var j = 0; finalItemArrObj.length > j; j++) {
+                  for (var k = j + 1; finalItemArrObj.length > k; k++) {
+                      if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
+                          finalItemArrObj[j].bwInfo['sessionFilter']['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter']['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter']['sourcePort'])
+                          finalItemArrObj[j].bwInfo['sessionFilter']['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter']['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter']['dstPort'])
+                          finalItemArrObj.splice(k, 1);
+                          j = 0;
+                      }
+                  }
+              }
+                  resolve(finalItemArrObj);
               }
             });  
         }
