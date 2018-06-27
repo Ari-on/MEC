@@ -161,37 +161,129 @@ exports.bw_allocationsAllocationIdGET = function(allocationId) {
  **/
 exports.bw_allocationsAllocationIdPATCH = function(allocationId,bwInfoDeltas) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "bwInfo" : {
-    "timeStamp" : {
-      "seconds" : { },
-      "nanoSeconds" : { }
-    },
-    "fixedBWPriority" : { },
-    "allocationDirection" : { },
-    "requestType" : { },
-    "sessionFilter" : "",
-    "appInsId" : { },
-    "fixedAllocation" : { }
-  }
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    MongoClient.connect("mongodb://localhost:27017/MEC", function(err, db){
+      if (err){
+        return console.log (err);
+      }
+      else{
+        console.log("allocationId............", allocationId)
+        var myobj = bwInfoDeltas
+        console.log(">>>>>>>>>>>>>>>>>>>>>>bwInfoDeltas<<<<<<<<<<<<<<<<<<<<\n", myobj)
+        console.log("#########################################################")
+
+        var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"]
+        var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"]
+        var sessionFilter_dstAddress = myobj.sessionFilter[0]["dstAddress"]
+        var sessionFilter_dstPort = myobj.sessionFilter[0]["dstPort"]
+        var sessionFilter_protocol = myobj.sessionFilter[0]["protocol"]
+
+        db.collection('bwInfo').findOneAndUpdate(
+          {"allocation_Id" : allocationId},
+          {
+            $set :
+            {
+              "bwInfo_Id" : "bwInfo_4",
+              "fixedBWPriority" : myobj.fixedBWPriority,
+              "fixedAllocation" : myobj.fixedAllocation,
+              "allocationDirection" : myobj.allocationDirection,
+              "appIns_Id" : myobj.appInsId,
+              "session_Id" : "session_3",
+              "appInfo_Id" : "appInfo_3"
+            }
+          }
+        )
+
+        db.collection('sessionFilter').findOneAndUpdate(
+          {"session_Id" : "session_3"},
+          {
+            $set :
+            {
+              "sourceIP" : sessionFilter_sourceIp, 
+              "destAddress" : sessionFilter_dstAddress, 
+              "protocol" : sessionFilter_protocol,
+              "appIns_Id" : myobj.appInsId,
+            }
+          }
+        )
+
+        if (myobj['reqstType'] == "APPLICATION_SPECIFIC_BW_ALLOCATION" || myobj['reqstType'] == "application_specific_bw_allocation"){
+          console.log(myobj['reqstType'])
+          db.collection('bwInfo').findOneAndUpdate(
+            {"bwInfo_Id" : "bwInfo_4"},
+            {
+              $set:
+              {
+                "reqstType" : "0"
+              }
+            }
+          )   
+        }
+
+        else if (myobj['reqstType'] == "SESSION_SPECIFIC_BW_ALLOCATION" || myobj['reqstType'] == "session_specific_bw_allocation"){
+          console.log(myobj['reqstType'])
+          db.collection('bwInfo').findOneAndUpdate(
+            {"bwInfo_Id" : "bwInfo_4"},
+            {
+              $set:
+              {
+                "reqstType" : "1"
+              }
+            }
+          )   
+        }
+
+        var mainLength;
+        if(sessionFilter_sourcePort.length >= sessionFilter_dstPort.length){
+          mainLength = sessionFilter_sourcePort.length
+        }
+        else{
+          mainLength = sessionFilter_dstPort.length
+        }
+        var sourcePort, destPort;
+        for(var i = 0; i < mainLength; i++){
+          console.log(sessionFilter_sourcePort[i],"sessionFilter_sourcePort[i]")
+          console.log(sessionFilter_dstPort[i],"sessionFilter_dstPort[i]")
+
+          if(sessionFilter_dstPort[i]){
+            destPort = sessionFilter_dstPort[i]
+          } 
+          else{
+            destPort = ''
+          }
+          if(sessionFilter_sourcePort[i]){
+            sourcePort = sessionFilter_sourcePort[i]
+          } 
+          else{
+            sourcePort = ''
+          }
+          db.collection('ports').findOneAndUpdate(
+            {"session_Id" : "session_3"},
+            {
+              $set:
+              {
+                 "port_Id" : "port_5",
+                "srcPort" : sourcePort,
+                "dstPort" : destPort,
+              }
+            }
+          )  
+        }
+        console.log("Refresh and check the DB")
+      }
+    })
   });
 }
 
 
-/**
+/*
+ *
  * This method updates the information about a specific bandwidthAllocation resource. 
  *
  * allocationId String Represents a bandwidth allocation instance
  * bwInfo BwInfo BwInfo with updated information is included as entity body of the request
  * returns inline_response_200
- **/
+ *
+*/
 exports.bw_allocationsAllocationIdPUT = function(allocationId,bwInfo) {
   console.log("This is bw_allocationsAllocationIdPUT method!!!")
   return new Promise(function(resolve, reject) {
@@ -220,10 +312,10 @@ exports.bw_allocationsAllocationIdPUT = function(allocationId,bwInfo) {
               "fixedBWPriority" : myobj.fixedBWPriority,
               "fixedAllocation" : myobj.fixedAllocation,
               "allocationDirection" : myobj.allocationDirection,
-              "timeStamp_Id" : "timeStamp_4",
+              "timeStamp_Id" : "timeStamp_3",
               "appIns_Id" : myobj.appInsId,
-              "session_Id" : "session_4",
-              "appInfo_Id" : "appInfo_4"
+              "session_Id" : "session_3",
+              "appInfo_Id" : "appInfo_3"
             }
           }
         )
@@ -265,12 +357,6 @@ exports.bw_allocationsAllocationIdPUT = function(allocationId,bwInfo) {
             }
           )
           console.log("updated for ", myobj["reqstType"])
-          // var myquery = {"reqstType" : "APPLICATION_SPECIFIC_BW_ALLOCATION"}
-          // var newvalues = {$set: {"reqstType" : "0"} };
-
-          // db.collection("bwInfo").updateOne(myquery, newvalues, function(err, res) {
-          //   if (err) throw err;
-          // });
         }
           
         else if(myobj["reqstType"] == "SESSION_SPECIFIC_BW_ALLOCATION" || myobj["reqstType"] == "session_specific_bw_allocation"){
@@ -286,15 +372,8 @@ exports.bw_allocationsAllocationIdPUT = function(allocationId,bwInfo) {
             }
           )
           console.log("updated for ", myobj["reqstType"])
-          // var myquery = {"reqstType" : "SESSION_SPECIFIC_BW_ALLOCATION"}
-          // var newvalues = {$set: {"reqstType" : "1"} };
-
-          // db.collection("bwInfo").updateOne(myquery, newvalues, function(err, res) {
-          //   if (err) throw err;
-          // });
         }
 
-        // var port_Id = 0
         var mainLength;
         if(sessionFilter_sourcePort.length >= sessionFilter_dstPort.length){
           mainLength = sessionFilter_sourcePort.length
