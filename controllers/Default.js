@@ -54,7 +54,6 @@ module.exports.bw_allocationsGET = function bw_allocationsGET (req, res, next) {
   var app_instance_id = req.swagger.params['app_instance_id'].value;
   var app_name = req.swagger.params['app_name'].value;
   var session_id = req.swagger.params['session_id'].value;
-  console.log(app_instance_id)
 
   // var criteriaList = []
   //   if (typeof app_instance_id == 'undefined' && app_instance_id == null) {

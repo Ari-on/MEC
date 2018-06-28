@@ -32,7 +32,6 @@ exports.bw_allocationsAllocationIdGET = function(allocationId) {
     		return console.log(err);
     	}
     	else{
-    		console.log("allocationId............", allocationId)
     		if (allocationId != null){
     			var collection = db.collection('bwInfo')
     			collection.aggregate([
@@ -77,7 +76,10 @@ exports.bw_allocationsAllocationIdGET = function(allocationId) {
     						as : "sessionFiltedInfo"
     					}
     				},
-
+            {
+              $unwind : "$sessionFiltedInfo"
+            },
+                  
     				{
     					$lookup:
     					{
@@ -120,32 +122,66 @@ exports.bw_allocationsAllocationIdGET = function(allocationId) {
 	              var finalItem = [];
 	              var finalItemArrObj = [];
 	              var bwInfo = {};
-            	  // console.log('item is ----', item)
-                // return false;
-                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                var sessionFilter = {};
                 for(var i = 0 ; item.length > i; i++){
-                  // console.log(item[i], "item printing")
-                  // console.log("\n")
+
+                    sessionFilter = {
+                        sourceIP : item[i]['sessionFiltedInfo']['sourceIP'],
+                        sourcePort : [],
+                        destAddress : item[i]['sessionFiltedInfo']['destAddress'],
+                        dstPort : [],
+                        protocol : item[i]['sessionFiltedInfo']['protocol']
+                    }
+                    if (item[i]['sessionFiltedInfo']['session_Id'] == item[i]['ports']['session_Id'])
+                    {
+                        sessionFilter['sourcePort'].push(item[i]['ports']['srcPort'])
+                        sessionFilter['dstPort'].push(item[i]['ports']['dstPort'])
+                    }
                   finalItemArrObj.push({
                       bwInfo :{ 
                       'timeStamp' : item[i]['timeStamp'],
                       'appIns_Id' : item[i]['appIns_Id'],
                       'requestType' : item[i].requestType['reqstTypeDescription'],
-                      'sessionFilter' : item[i]['sessionFiltedInfo'],                   
-                      'sourcePort' : item[i].ports['srcPort'],                  
-                      'dstPort' : item[i].ports['dstPort'],
-                      // 'sourcePort' : item[i]['ports.srcPort'],                  
-                      // 'dstPort' : item[i]['ports.dstPort'],
+                      'sessionFilter' : [sessionFilter],
                       'fixedBWPriority' : item[i]['fixedBWPriority'],
                       'fixedAllocation' : item[i]['fixedAllocation'],
                       'allocationDirection' : item[i]['allocationDirection']
                     }
                   })
-                }
+
+              }
+              for (var j = 0; finalItemArrObj.length > j; j++) {
+                  for (var k = j + 1; finalItemArrObj.length > k; k++) {
+                      if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
+                          finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['sourcePort'])
+                          finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['dstPort'])
+                          finalItemArrObj.splice(k, 1);
+                          j = 0;
+                      }
+                  }
+              }
                resolve(finalItemArrObj); 
               }
             });
-    		}
+    		  }
+        else{
+          console.log("ELSE BLOCK")
+          var examples = {};
+          examples['application/json'] = {
+            "bwInfo" : {
+              "timeStamp" : {
+                "seconds" : { },
+                "nanoSeconds" : { }
+              },
+              "fixedBWPriority" : { },
+              "allocationDirection" : { },
+              "requestType" : { },
+              "sessionFilter" : "",
+              "appInsId" : { },
+              "fixedAllocation" : { }
+            }
+          }
+        }
     	}
     })
   });
@@ -166,11 +202,7 @@ exports.bw_allocationsAllocationIdPATCH = function(allocationId,bwInfoDeltas) {
         return console.log (err);
       }
       else{
-        console.log("allocationId............", allocationId)
         var myobj = bwInfoDeltas
-        console.log(">>>>>>>>>>>>>>>>>>>>>>bwInfoDeltas<<<<<<<<<<<<<<<<<<<<\n", myobj)
-        console.log("#########################################################")
-
         var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"]
         var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"]
         var sessionFilter_dstAddress = myobj.sessionFilter[0]["dstAddress"]
@@ -292,11 +324,7 @@ exports.bw_allocationsAllocationIdPUT = function(allocationId,bwInfo) {
         return console.log (err);
       }
       else{
-        console.log("allocationId............", allocationId)
         var myobj = bwInfo
-        console.log(">>>>>>>>>>>>>>>>>>>>>>bwInfo<<<<<<<<<<<<<<<<<<<<\n", myobj)
-        console.log("#########################################################")
-
         var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"]
         var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"]
         var sessionFilter_dstAddress = myobj.sessionFilter[0]["dstAddress"]
@@ -476,7 +504,6 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
                       $match : 
                       {
                         appIns_Id : {$in : app_instance_id}
-                        // $or : [{appIns_Id : {$in : app_instance_id}} , {session_Id :{$in : session_Id}}]
                       } 
                     },
                     {
@@ -589,7 +616,6 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
                             $match : 
                             {
                               session_Id : {$in : session_Id}
-                              // $or : [{appIns_Id : {$in : app_instance_id}} , {session_Id :{$in : session_Id}}]
                             } 
                         },
                         {
@@ -930,9 +956,6 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
               {
                 $unwind : "$ports" 
               },
-		          // {
-		          //   $group : { _id : "$ports.session_Id", srcPort : {$push : "$ports.srcPort" },dstPort : {$push : "$ports.dstPort" }  } 
-		          // },
                             
               {
                 $project : 
@@ -963,15 +986,10 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
 	              var finalItem = [];
 	              var finalItemArrObj = [];
 	              var bwInfo = {};
-                  var sessionFilter = {};
-
-            	   // console.log('item is ----', item)
-               // return false;
-                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                var sessionFilter = {};
                 for(var i = 0 ; item.length > i; i++){
 
                     sessionFilter = {
-                        // session_Id : (item[i]['sessionFiltedInfo']['session_Id']),
                         sourceIP : item[i]['sessionFiltedInfo']['sourceIP'],
                         sourcePort : [],
                         destAddress : item[i]['sessionFiltedInfo']['destAddress'],
@@ -989,12 +1007,7 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
                       'timeStamp' : item[i]['timeStamp'],
                       'appIns_Id' : item[i]['appIns_Id'],
                       'requestType' : item[i].requestType['reqstTypeDescription'],
-                      // 'sessionFilter': sessionFilter,
                       'sessionFilter' : [sessionFilter],
-                      // 'sourcePort' : item[i].ports['srcPort'],
-                      // 'dstPort' : item[i].ports['dstPort'],
-                      // 'sourcePort' : item[i]['ports.srcPort'],                  
-                      // 'dstPort' : item[i]['ports.dstPort'],
                       'fixedBWPriority' : item[i]['fixedBWPriority'],
                       'fixedAllocation' : item[i]['fixedAllocation'],
                       'allocationDirection' : item[i]['allocationDirection']
