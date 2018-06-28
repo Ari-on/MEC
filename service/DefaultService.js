@@ -434,7 +434,6 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
       	return console.log(err); 
       }
       else{
-          console.log(app_instance_id)
         if(app_instance_id!= null && session_Id == null && app_name == null ){
               var collection = db.collection('bwInfo')
           
@@ -972,12 +971,12 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
                 for(var i = 0 ; item.length > i; i++){
 
                     sessionFilter = {
-                        session_Id : (item[i]['sessionFiltedInfo']['session_Id']),
+                        // session_Id : (item[i]['sessionFiltedInfo']['session_Id']),
                         sourceIP : item[i]['sessionFiltedInfo']['sourceIP'],
-                        destAddress : item[i]['sessionFiltedInfo']['destAddress'],
-                        protocol : item[i]['sessionFiltedInfo']['protocol'],
                         sourcePort : [],
-                        dstPort : []
+                        destAddress : item[i]['sessionFiltedInfo']['destAddress'],
+                        dstPort : [],
+                        protocol : item[i]['sessionFiltedInfo']['protocol']
                     }
                     if (item[i]['sessionFiltedInfo']['session_Id'] == item[i]['ports']['session_Id'])
                     {
@@ -991,8 +990,8 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
                       'appIns_Id' : item[i]['appIns_Id'],
                       'requestType' : item[i].requestType['reqstTypeDescription'],
                       // 'sessionFilter': sessionFilter,
-                      'sessionFilter' : sessionFilter,
-                      'sourcePort' : item[i].ports['srcPort'],
+                      'sessionFilter' : [sessionFilter],
+                      // 'sourcePort' : item[i].ports['srcPort'],
                       // 'dstPort' : item[i].ports['dstPort'],
                       // 'sourcePort' : item[i]['ports.srcPort'],                  
                       // 'dstPort' : item[i]['ports.dstPort'],
@@ -1006,8 +1005,8 @@ exports.bw_allocationsGET = function(app_instance_id,app_name,session_Id) {
               for (var j = 0; finalItemArrObj.length > j; j++) {
                   for (var k = j + 1; finalItemArrObj.length > k; k++) {
                       if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
-                          finalItemArrObj[j].bwInfo['sessionFilter']['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter']['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter']['sourcePort'])
-                          finalItemArrObj[j].bwInfo['sessionFilter']['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter']['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter']['dstPort'])
+                          finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['sourcePort'])
+                          finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['dstPort'])
                           finalItemArrObj.splice(k, 1);
                           j = 0;
                       }
