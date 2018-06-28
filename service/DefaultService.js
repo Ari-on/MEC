@@ -13,7 +13,57 @@ var bodyParser = require('body-parser');
  **/
 exports.bw_allocationsAllocationIdDELETE = function(allocationId) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    MongoClient.connect("mongodb://localhost:27017/MEC", function(err, db){
+      if (err){
+        return console.log(err);
+      }
+      else{
+        db.collection('bwInfo').findOne({"allocation_Id" : allocationId}, function(err,result){
+          if (err){
+            return console.log(err);
+          }
+          else{
+            console.log(">>>>>>>>>>>>>>>>>>>>>>bwInfo<<<<<<<<<<<<<<<<<<<<\n", result)
+            console.log("#########################################################")
+
+            var bwInfoId = result["bwInfo_Id"]
+            var sessionId = result["session_Id"]
+            var timeStampId = result["timeStamp_Id"]
+            var appInfoId = result["appInfo_Id"]
+
+            console.log("sessionId : ", sessionId)
+            console.log("timeStampId : ", timeStampId)
+            console.log("appInfoId : ", appInfoId)
+
+            db.collection('sessionFilter').findOneAndDelete(
+              {"session_Id" : sessionId}
+            )
+            console.log(sessionId, " is deleted....")
+
+            db.collection('timeStamp').findOneAndDelete(
+              {"timeStamp_Id" : timeStampId}
+            )
+            console.log(timeStampId, " is deleted....")
+
+            db.collection('appInfo').findOneAndDelete(
+              {"appInfo_Id" : appInfoId}
+            )
+            console.log(appInfoId, " is deleted....")
+
+            db.collection('bwInfo').findOneAndDelete(
+              {"bwInfo_Id" : bwInfoId}
+            )
+            console.log(bwInfoId, " is deleted....")
+
+            db.collection('ports').deleteMany(
+              {"session_Id" : sessionId}
+            )
+            console.log(sessionId, " is deleted in ports table....")            
+          }
+          console.log("Refresh db and check")
+        })
+      }
+    })
   });
 }
 
