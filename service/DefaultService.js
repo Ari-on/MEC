@@ -2,9 +2,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var bodyParser = require('body-parser');
 
-// exports.use(bodyParser.json());
-// exports.use(bodyParser.urlencoded({extented:true}))
-
 /**
  * Remove a specific bandwidthAllocation resource. DELETE method is typically used in \"Unregister from Bandwidth Management Service\" procedure
  *
@@ -12,6 +9,7 @@ var bodyParser = require('body-parser');
  * no response value expected for this operation
  **/
 exports.bw_allocationsAllocationIdDELETE = function(allocationId) {
+  console.log("This is bw_allocationsAllocationIdDELETE method!!!")
   return new Promise(function(resolve, reject) {
     MongoClient.connect("mongodb://localhost:27017/MEC", function(err, db){
       if (err){
@@ -23,45 +21,36 @@ exports.bw_allocationsAllocationIdDELETE = function(allocationId) {
             return console.log(err);
           }
           else{
-            console.log(">>>>>>>>>>>>>>>>>>>>>>bwInfo<<<<<<<<<<<<<<<<<<<<\n", result)
-            console.log("#########################################################")
 
             var bwInfoId = result["bwInfo_Id"]
             var sessionId = result["session_Id"]
             var timeStampId = result["timeStamp_Id"]
             var appInfoId = result["appInfo_Id"]
 
-            console.log("sessionId : ", sessionId)
-            console.log("timeStampId : ", timeStampId)
-            console.log("appInfoId : ", appInfoId)
 
             db.collection('sessionFilter').findOneAndDelete(
               {"session_Id" : sessionId}
             )
-            console.log(sessionId, " is deleted....")
 
             db.collection('timeStamp').findOneAndDelete(
               {"timeStamp_Id" : timeStampId}
             )
-            console.log(timeStampId, " is deleted....")
 
             db.collection('appInfo').findOneAndDelete(
               {"appInfo_Id" : appInfoId}
             )
-            console.log(appInfoId, " is deleted....")
 
             db.collection('bwInfo').findOneAndDelete(
               {"bwInfo_Id" : bwInfoId}
             )
-            console.log(bwInfoId, " is deleted....")
 
             db.collection('ports').deleteMany(
               {"session_Id" : sessionId}
             )
-            console.log(sessionId, " is deleted in ports table....")            
           }
           console.log("Refresh db and check")
         })
+        // resolve("Record deleted!!!")
       }
     })
   });
@@ -214,24 +203,6 @@ exports.bw_allocationsAllocationIdGET = function(allocationId) {
               }
             });
     		  }
-        else{
-          console.log("ELSE BLOCK")
-          var examples = {};
-          examples['application/json'] = {
-            "bwInfo" : {
-              "timeStamp" : {
-                "seconds" : { },
-                "nanoSeconds" : { }
-              },
-              "fixedBWPriority" : { },
-              "allocationDirection" : { },
-              "requestType" : { },
-              "sessionFilter" : "",
-              "appInsId" : { },
-              "fixedAllocation" : { }
-            }
-          }
-        }
     	}
     })
   });
@@ -289,7 +260,6 @@ exports.bw_allocationsAllocationIdPATCH = function(allocationId,bwInfoDeltas) {
         )
 
         if (myobj['reqstType'] == "APPLICATION_SPECIFIC_BW_ALLOCATION" || myobj['reqstType'] == "application_specific_bw_allocation"){
-          console.log(myobj['reqstType'])
           db.collection('bwInfo').findOneAndUpdate(
             {"bwInfo_Id" : "bwInfo_4"},
             {
@@ -302,7 +272,6 @@ exports.bw_allocationsAllocationIdPATCH = function(allocationId,bwInfoDeltas) {
         }
 
         else if (myobj['reqstType'] == "SESSION_SPECIFIC_BW_ALLOCATION" || myobj['reqstType'] == "session_specific_bw_allocation"){
-          console.log(myobj['reqstType'])
           db.collection('bwInfo').findOneAndUpdate(
             {"bwInfo_Id" : "bwInfo_4"},
             {
@@ -323,8 +292,6 @@ exports.bw_allocationsAllocationIdPATCH = function(allocationId,bwInfoDeltas) {
         }
         var sourcePort, destPort;
         for(var i = 0; i < mainLength; i++){
-          console.log(sessionFilter_sourcePort[i],"sessionFilter_sourcePort[i]")
-          console.log(sessionFilter_dstPort[i],"sessionFilter_dstPort[i]")
 
           if(sessionFilter_dstPort[i]){
             destPort = sessionFilter_dstPort[i]
@@ -352,6 +319,7 @@ exports.bw_allocationsAllocationIdPATCH = function(allocationId,bwInfoDeltas) {
         }
         console.log("Refresh and check the DB")
       }
+      resolve(myobj)
     })
   });
 }
@@ -424,7 +392,6 @@ exports.bw_allocationsAllocationIdPUT = function(allocationId,bwInfo) {
         )
 
         if (myobj["reqstType"] == "APPLICATION_SPECIFIC_BW_ALLOCATION" || myobj["reqstType"] == "application_specific_bw_allocation"){    
-          console.log(myobj["reqstType"])
           db.collection('bwInfo').findOneAndUpdate(
             {"bwInfo_Id" : "bwInfo_4"},
             {
@@ -434,11 +401,9 @@ exports.bw_allocationsAllocationIdPUT = function(allocationId,bwInfo) {
               }
             }
           )
-          console.log("updated for ", myobj["reqstType"])
         }
           
         else if(myobj["reqstType"] == "SESSION_SPECIFIC_BW_ALLOCATION" || myobj["reqstType"] == "session_specific_bw_allocation"){
-          console.log(myobj["reqstType"])
 
           db.collection('bwInfo').findOneAndUpdate(
             {"bwInfo_Id" : "bwInfo_4"},
@@ -449,7 +414,6 @@ exports.bw_allocationsAllocationIdPUT = function(allocationId,bwInfo) {
               }
             }
           )
-          console.log("updated for ", myobj["reqstType"])
         }
 
         var mainLength;
@@ -461,8 +425,6 @@ exports.bw_allocationsAllocationIdPUT = function(allocationId,bwInfo) {
         }
         var sourcePort, destPort;
         for(var i = 0; i < mainLength; i++){
-          console.log(sessionFilter_sourcePort[i],"sessionFilter_sourcePort[i]")
-          console.log(sessionFilter_dstPort[i],"sessionFilter_dstPort[i]")
 
           if(sessionFilter_dstPort[i]){
             destPort = sessionFilter_dstPort[i]
@@ -490,6 +452,7 @@ exports.bw_allocationsAllocationIdPUT = function(allocationId,bwInfo) {
         }
         console.log("Refresh db and check")
       }
+      resolve(myobj)
     })
   });
 }
@@ -1218,6 +1181,7 @@ exports.bw_allocationsPOST = function(bwInfo) {
           }
           console.log("Refresh and check db!!!")
         }
+        resolve(myobj)
       })    
     });
   })
