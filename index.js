@@ -44,6 +44,7 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
     console.log('Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
     console.log('Swagger-ui is available on http://localhost:%d', serverPort);
     console.log('The mongodb is running on the url and port %s', url)
+    console.log("##########################################################################")
   });
 
 });
