@@ -1,11 +1,15 @@
 
 var service  = require ('../service/DefaultService.js');
+var Idservice  = require ('../service/UEIdentityService.js');
+var Appservice  = require ('../service/UEAppService.js');
 
 
 var UIRoutes = function(app) {
 
     this.app = app;
     this.seviceInstance = new service(app);
+    this.IdserviceInstance = new Idservice(app);
+    this.AppserviceInstance = new Appservice(app);
 };
 
 
@@ -68,44 +72,36 @@ UIRoutes.prototype.init = function() {
 
         console.log('GET Method',req.query)
 
-        // self.seviceInstance.bw_allocationsAllocationIdDELETE(req.params.allocationID, function (err,result) {
-        //     res.send(result);
-        // })
-        res.send('From UEApp GET')
-
+        self.AppserviceInstance.app_listGET(req, function (err,result) {
+            res.send(result);
+        })
     });
 
     app.post("/mx2/v1/app_contexts",function (req,res) {
 
         console.log('POST Method',req.body)
 
-        // self.seviceInstance.bw_allocationsAllocationIdDELETE(req.params.allocationID, function (err,result) {
-        //     res.send(result);
-        // })
-        res.send('From UEApp POST')
-
+        self.AppserviceInstance.app_contextsPOST(req, function (err,result) {
+            res.send(result);
+        })
     });
 
     app.put("/mx2/v1/app_contexts/:contextID",function (req,res) {
 
         console.log('PUT Method',req.params)
 
-        // self.seviceInstance.bw_allocationsAllocationIdDELETE(req.params.allocationID, function (err,result) {
-        //     res.send(result);
-        // })
-        res.send('From UEApp PUT')
-
+        self.AppserviceInstance.app_contextsContextIdPUT(req, function (err,result) {
+            res.send(result);
+        })
     });
 
     app.delete("/mx2/v1/app_contexts/:contextID",function (req,res) {
 
         console.log('DELETE Method',req.params)
 
-        // self.seviceInstance.bw_allocationsAllocationIdDELETE(req.params.allocationID, function (err,result) {
-        //     res.send(result);
-        // })
-        res.send('From UEApp DELETE')
-
+        self.AppserviceInstance.app_contextsContextIdDELETE(req, function (err,result) {
+            res.send(result);
+        })
     });
 
     app.get("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
@@ -113,11 +109,9 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method',req.params)
         console.log('GET Method',req.query)
 
-        // self.seviceInstance.bw_allocationsAllocationIdDELETE(req.params.allocationID, function (err,result) {
-        //     res.send(result);
-        // })
-        res.send('From UEID GET')
-
+        self.IdserviceInstance.appInstanceIdUe_identity_tag_infoGET(req, function (err,result) {
+            res.send(result);
+        })
     });
 
     app.put("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
@@ -125,11 +119,9 @@ UIRoutes.prototype.init = function() {
         console.log('PUT Method',req.params)
         console.log('PUT Method',req.body)
 
-        // self.seviceInstance.bw_allocationsAllocationIdDELETE(req.params.allocationID, function (err,result) {
-        //     res.send(result);
-        // })
-        res.send('From UEID PUT')
-
+        self.IdserviceInstance.appInstanceIdUe_identity_tag_infoPUT(req, function (err,result) {
+            res.send(result);
+        })
     });
 
 }

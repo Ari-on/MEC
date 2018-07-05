@@ -1,6 +1,4 @@
 'use strict';
-var MongoClient = require('mongodb').MongoClient;
-var bodyParser = require('body-parser');
 
 var DefaultService = function (app) {
     this.app = app;
@@ -56,7 +54,11 @@ DefaultService.prototype.bw_allocationsAllocationIdDELETE = function(req,callbac
             }
             console.log("Refresh db and check")
         })
-        callback(null,"Record deleted!!!")
+        var result = {
+            statuscode:"200",
+            res:"Record deleted!!!"
+        }
+        callback(null,result)
 }
 
 
@@ -173,7 +175,11 @@ DefaultService.prototype.bw_allocationsAllocationIdGET = function(req,callback) 
                 }
               })
             }
-           callback(null,finalItemArrObj);
+              var result = {
+                  statuscode:"200",
+                  res: finalItemArrObj
+              }
+           callback(null,result);
           }
         });
         }
@@ -192,7 +198,6 @@ DefaultService.prototype.bw_allocationsAllocationIdPATCH = function(req,callback
     var db = self.app.db;
    var allocationId = req.params.allocationID
     var myobj = req.body
-    console.log(">>>>>>>>>>>>>>>>>>>>>>bwInfoDeltas<<<<<<<<<<<<<<<<<<<<\n", myobj)
     console.log("#########################################################")
 
     var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"]
@@ -289,7 +294,11 @@ DefaultService.prototype.bw_allocationsAllocationIdPATCH = function(req,callback
       )
     }
     console.log("Refresh and check the DB")
-    callback(null,myobj)
+    var result = {
+        statuscode:"200",
+        res:myobj
+    }
+    callback(null,result)
 }
 
 
@@ -308,7 +317,6 @@ DefaultService.prototype.bw_allocationsAllocationIdPUT = function(req,callback) 
     var db = self.app.db;
     var allocationId = req.params.allocationID
     var myobj = req.body
-    console.log(">>>>>>>>>>>>>>>>>>>>>>bwInfo<<<<<<<<<<<<<<<<<<<<\n", myobj)
     console.log("#########################################################")
 
     var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"]
@@ -422,7 +430,11 @@ DefaultService.prototype.bw_allocationsAllocationIdPUT = function(req,callback) 
       )
     }
     console.log("Refresh db and check")
-    callback(null,myobj)
+    var result = {
+        statuscode:"200",
+        res:myobj
+    }
+    callback(null,result)
 }
 
 
@@ -562,7 +574,11 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
                   })
 
                 }
-                callback(null,finalItemArrObj)
+                  var result = {
+                      statuscode:"200",
+                      res:finalItemArrObj
+                  }
+                callback(null,result)
               }
             });
     }
@@ -673,7 +689,11 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
                       })
 
                     }
-                    callback(null,finalItemArrObj)
+                      var result = {
+                          statuscode:"200",
+                          res:finalItemArrObj
+                      }
+                    callback(null,result)
                   }
                 });
 
@@ -787,8 +807,11 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
                   })
 
                 }
-
-               callback(null,finalItemArrObj)
+                var result = {
+                    statuscode:"200",
+                    res:finalItemArrObj
+                }
+               callback(null,result)
               }
             });
     }
@@ -897,14 +920,18 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
                     }
                   })
                 }
-                // resolve(finalItemArrObj);
-                callback(null,finalItemArrObj)
+              var result = {
+                  statuscode:"200",
+                  res:finalItemArrObj
+              }
+                callback(null,result)
               }
             });
     }
 
     else if (app_instance_id == null && session_Id == null && app_name == null){
-        var collection = db.collection('bwInfo')
+        var tableName = "bwInfo"
+        var collection = db.collection(tableName);
 
         collection.aggregate([
           { $lookup :
@@ -1037,7 +1064,12 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
                   }
               }
           }
-              callback(null,finalItemArrObj);
+
+              var result = {
+                  statuscode:"200",
+                  res:finalItemArrObj
+              }
+              callback(null,result);
           }
         });
     }
@@ -1058,7 +1090,12 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
                     "appInsId" : { },
                     "fixedAllocation" : { }
                   }
+            }
+        var result = {
+            statuscode:"200",
+            res:examples['application/json']
         }
+        callback(null,result)
     }
 }
   
@@ -1175,7 +1212,11 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                 }
                 console.log("Refresh and check db!!!")
             }
-            callback(null,myobj)
+            var result = {
+                status:"status code : 200",
+                res:myobj
+            }
+            callback(null,result)
         })
     }
 
@@ -1190,6 +1231,11 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                 "instance": "string"
             }
         }
-        callback(null,errorbody)
+
+        var result = {
+            statuscode:"200",
+            res:errorbody
+        }
+        callback(null,result)
     }
 };
