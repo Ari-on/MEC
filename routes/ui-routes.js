@@ -2,6 +2,7 @@
 var service  = require ('../service/DefaultService.js');
 var Idservice  = require ('../service/UEIdentityService.js');
 var Appservice  = require ('../service/UEAppService.js');
+var Mp1service  = require ('../service/Mp1Service.js');
 
 
 var UIRoutes = function(app) {
@@ -10,6 +11,7 @@ var UIRoutes = function(app) {
     this.seviceInstance = new service(app);
     this.IdserviceInstance = new Idservice(app);
     this.AppserviceInstance = new Appservice(app);
+    this.Mp1serviceInstance = new Mp1service(app);
 };
 
 
@@ -70,7 +72,7 @@ UIRoutes.prototype.init = function() {
 
     app.get("/mx2/v1/app_list",function (req,res) {
 
-        console.log('GET Method',req.query)
+        console.log('GET Method',req.query);
 
         self.AppserviceInstance.app_listGET(req, function (err,result) {
             res.send(result);
@@ -79,7 +81,7 @@ UIRoutes.prototype.init = function() {
 
     app.post("/mx2/v1/app_contexts",function (req,res) {
 
-        console.log('POST Method',req.body)
+        console.log('POST Method',req.body);
 
         self.AppserviceInstance.app_contextsPOST(req, function (err,result) {
             res.send(result);
@@ -88,7 +90,7 @@ UIRoutes.prototype.init = function() {
 
     app.put("/mx2/v1/app_contexts/:contextID",function (req,res) {
 
-        console.log('PUT Method',req.params)
+        console.log('PUT Method',req.params);
 
         self.AppserviceInstance.app_contextsContextIdPUT(req, function (err,result) {
             res.send(result);
@@ -97,7 +99,7 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/mx2/v1/app_contexts/:contextID",function (req,res) {
 
-        console.log('DELETE Method',req.params)
+        console.log('DELETE Method',req.params);
 
         self.AppserviceInstance.app_contextsContextIdDELETE(req, function (err,result) {
             res.send(result);
@@ -106,8 +108,8 @@ UIRoutes.prototype.init = function() {
 
     app.get("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
 
-        console.log('GET Method',req.params)
-        console.log('GET Method',req.query)
+        console.log('GET Method',req.params);
+        console.log('GET Method',req.query);
 
         self.IdserviceInstance.appInstanceIdUe_identity_tag_infoGET(req, function (err,result) {
             res.send(result);
@@ -116,13 +118,172 @@ UIRoutes.prototype.init = function() {
 
     app.put("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
 
-        console.log('PUT Method',req.params)
-        console.log('PUT Method',req.body)
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
 
         self.IdserviceInstance.appInstanceIdUe_identity_tag_infoPUT(req, function (err,result) {
             res.send(result);
         })
     });
 
-}
+    ////////////////////////////////////////////////////////////////
+
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules",function (req,res) {
+
+        console.log('GET Method',req.params);
+
+        self.Mp1serviceInstance.ApplicationsDnsRules_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",function (req,res) {
+
+        console.log('GET Method',req.params);
+
+        self.Mp1serviceInstance.ApplicationsDnsRule_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",function (req,res) {
+
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
+
+        self.Mp1serviceInstance.ApplicationsDnsRule_PUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
+
+        console.log('GET Method',req.params);
+
+        self.Mp1serviceInstance.ApplicationsSubscriptions_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.post("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
+
+        console.log('POST Method',req.params);
+        console.log('POST Method',req.body);
+
+        self.Mp1serviceInstance.ApplicationsSubscriptions_POST(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",function (req,res) {
+
+        console.log('GET Method',req.params);
+
+        self.Mp1serviceInstance.ApplicationsSubscription_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.delete("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",function (req,res) {
+
+        console.log('DELETE Method',req.params);
+
+        self.Mp1serviceInstance.ApplicationsSubscription_DELETE(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules",function (req,res) {
+
+        console.log('GET Method',req.params);
+
+        self.Mp1serviceInstance.ApplicationsTrafficRules_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
+
+        console.log('GET Method',req.params);
+
+        self.Mp1serviceInstance.ApplicationsTrafficRule_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
+
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
+
+        self.Mp1serviceInstance.ApplicationsTrafficRules_PUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/exampleAPI/mp1/v1/services",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.Mp1serviceInstance.Services_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/exampleAPI/mp1/v1/services",function (req,res) {
+
+        console.log('PUT Method',req.body);
+
+        self.Mp1serviceInstance.Services_PUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
+
+        console.log('GET Method',req.params);
+
+        self.Mp1serviceInstance.ServicesServiceId_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
+
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
+
+        self.Mp1serviceInstance.ServicesServiceId_PUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/exampleAPI/mp1/v1/timing/current_time",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.Mp1serviceInstance.TimingCurrentTime_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/exampleAPI/mp1/v1/timing/timing_caps",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.Mp1serviceInstance.TimingCaps_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/exampleAPI/mp1/v1/transports",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.Mp1serviceInstance.Transports_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+};
 

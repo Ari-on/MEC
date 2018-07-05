@@ -19,7 +19,7 @@ DefaultService.prototype.bw_allocationsAllocationIdDELETE = function(req,callbac
     var self = this;
     var db = self.app.db;
 
-    var allocationId = req
+    var allocationId = req;
         db.collection('bwInfo').findOne({"allocationDirection" : allocationId}, function(err,result){
             if (err){
                 console.log(err);
@@ -156,9 +156,10 @@ DefaultService.prototype.bw_allocationsAllocationIdGET = function(req,callback) 
             callback(null,err)
           }
           else{
+              console.log(item)
               var finalItemArrObj = [];
               var bwInfo = {};
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             for(var i = 0 ; item.length > i; i++){
 
               finalItemArrObj.push({
@@ -174,7 +175,9 @@ DefaultService.prototype.bw_allocationsAllocationIdGET = function(req,callback) 
                   'allocationDirection' : item[i]['allocationDirection']
                 }
               })
+
             }
+
               var result = {
                   statuscode:"200",
                   res: finalItemArrObj
