@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="04d72ce5-d514-4e2e-9a80-2766c1ee3f14" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/ui-routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/ui-routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/DefaultService.js" beforeDir="false" afterPath="$PROJECT_DIR$/service/DefaultService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/UEAppService.js" beforeDir="false" afterPath="$PROJECT_DIR$/service/UEAppService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/UEIdentityService.js" beforeDir="false" afterPath="$PROJECT_DIR$/service/UEIdentityService.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -26,8 +23,8 @@
       <file leaf-file-name="DefaultService.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/service/DefaultService.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="532">
-              <caret line="96" lean-forward="true" selection-start-line="96" selection-end-line="96" />
+            <state relative-caret-position="1824">
+              <caret line="96" selection-start-line="96" selection-end-line="96" />
             </state>
           </provider>
         </entry>
@@ -36,7 +33,7 @@
         <entry file="file://$PROJECT_DIR$/index.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="152">
-              <caret line="8" column="22" lean-forward="true" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+              <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -45,7 +42,7 @@
         <entry file="file://$PROJECT_DIR$/service/UEIdentityService.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="323">
-              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
             </state>
           </provider>
         </entry>
@@ -53,17 +50,26 @@
       <file leaf-file-name="UEAppService.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/service/UEAppService.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="18" column="52" lean-forward="true" selection-start-line="18" selection-start-column="52" selection-end-line="18" selection-end-column="52" />
+            <state>
+              <caret selection-end-line="4" selection-end-column="28" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ui-routes.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ui-routes.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/ui-routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="836">
-              <caret line="202" column="7" selection-start-line="202" selection-start-column="6" selection-end-line="202" selection-end-column="7" />
+            <state relative-caret-position="9709">
+              <caret line="511" lean-forward="true" selection-start-line="511" selection-end-line="511" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LocationService.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/service/LocationService.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="720">
+              <caret line="124" column="2" selection-start-line="124" selection-start-column="1" selection-end-line="124" selection-end-column="2" />
             </state>
           </provider>
         </entry>
@@ -71,8 +77,8 @@
       <file leaf-file-name="Mp1Service.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/service/Mp1Service.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="499">
-              <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+            <state relative-caret-position="114">
+              <caret line="6" selection-start-line="6" selection-end-line="10" selection-end-column="2" />
             </state>
           </provider>
         </entry>
@@ -105,9 +111,10 @@
         <option value="$PROJECT_DIR$/service/UEAppService.js" />
         <option value="$PROJECT_DIR$/service/UEIdentityService.js" />
         <option value="$PROJECT_DIR$/index.js" />
-        <option value="$PROJECT_DIR$/routes/ui-routes.js" />
         <option value="$PROJECT_DIR$/service/Mp1Service.js" />
         <option value="$PROJECT_DIR$/service/DefaultService.js" />
+        <option value="$PROJECT_DIR$/routes/ui-routes.js" />
+        <option value="$PROJECT_DIR$/service/LocationService.js" />
       </list>
     </option>
   </component>
@@ -127,7 +134,7 @@
       <path value="$PROJECT_DIR$/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="75" />
     <option name="y" value="34" />
     <option name="width" value="1855" />
@@ -216,11 +223,14 @@
       <workItem from="1530695872314" duration="3937000" />
       <workItem from="1530722602987" duration="2601000" />
       <workItem from="1530766208117" duration="11119000" />
+      <workItem from="1530782529366" duration="3667000" />
+      <workItem from="1530803216708" duration="2943000" />
+      <workItem from="1530852381098" duration="763000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="108446000" />
+    <option name="totallyTimeSpent" value="115819000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
@@ -233,7 +243,7 @@
       <window_info anchor="bottom" id="Run" order="3" />
       <window_info id="npm" order="0" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="6" sideWeight="0.48853713" visible="true" weight="0.9654428" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="6" sideWeight="0.48853713" visible="true" weight="0.96436286" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="7" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -249,19 +259,19 @@
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info id="npm" order="0" side_tool="true" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="3" visible="true" weight="0.13584906" />
       <window_info id="Structure" order="1" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="10" />
-      <window_info anchor="bottom" id="Version Control" order="5" />
       <window_info anchor="bottom" id="Run" order="3" />
-      <window_info anchor="bottom" id="Find" order="4" />
+      <window_info anchor="bottom" id="Message" order="2" />
       <window_info anchor="bottom" id="Debug" order="7" />
       <window_info anchor="bottom" id="Terminal" order="6" sideWeight="0.48908296" weight="0.90994763" />
       <window_info anchor="bottom" id="Event Log" order="1" sideWeight="0.510917" side_tool="true" weight="0.91099477" />
-      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="2" />
+      <window_info anchor="bottom" id="Version Control" order="5" />
+      <window_info anchor="bottom" id="Find" order="4" />
       <window_info id="Favorites" order="2" side_tool="true" />
     </layout-to-restore>
   </component>
@@ -272,13 +282,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/service/DefaultService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21600">
-          <caret line="1200" column="2" lean-forward="true" selection-start-line="1200" selection-start-column="2" selection-end-line="1200" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="432">
@@ -512,42 +515,49 @@
     <entry file="file://$PROJECT_DIR$/service/UEIdentityService.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/service/UEAppService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="18" column="52" lean-forward="true" selection-start-line="18" selection-start-column="52" selection-end-line="18" selection-end-column="52" />
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/service/DefaultService.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="532">
-          <caret line="96" lean-forward="true" selection-start-line="96" selection-end-line="96" />
+        <state relative-caret-position="1824">
+          <caret line="96" selection-start-line="96" selection-end-line="96" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="152">
-          <caret line="8" column="22" lean-forward="true" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/service/UEAppService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="4" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/service/Mp1Service.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="499">
-          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+        <state relative-caret-position="114">
+          <caret line="6" selection-start-line="6" selection-end-line="10" selection-end-column="2" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/ui-routes.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="836">
-          <caret line="202" column="7" selection-start-line="202" selection-start-column="6" selection-end-line="202" selection-end-column="7" />
+        <state relative-caret-position="9709">
+          <caret line="511" lean-forward="true" selection-start-line="511" selection-end-line="511" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/service/LocationService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="124" column="2" selection-start-line="124" selection-start-column="1" selection-end-line="124" selection-end-column="2" />
         </state>
       </provider>
     </entry>
