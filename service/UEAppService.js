@@ -5,9 +5,144 @@ var AppService = function (app) {
 module.exports = AppService;
 
 AppService.prototype.app_listGET = function (req,callback) {
+    console.log("service.js - app_listGET method is called")
+    var self = this;
+    var db = self.app.db;
 
-    console.log("APP Method1");
-    callback(null,"DONE app_listGET");
+    var appName, appProvider, appSoftVersion, serviceCont, vendorId;
+
+    // Assigning values got from the URL to a variable
+    if (req.appName) {
+        appName = req.appName;
+    }
+    else {
+        appName = null
+    }
+
+    if (req.appProvider) {
+        appProvider = req.appProvider;
+    }
+    else {
+        appProvider = null
+    }
+
+    if (req.appSoftVersion) {
+        appSoftVersion = req.appSoftVersion;
+    }
+    else {
+        appSoftVersion = null
+    }
+
+    if (req.serviceCont) {
+        serviceCont = req.serviceCont;
+    }
+    else {
+        serviceCont = null
+    }
+
+    if (req.vendorId) {
+        vendorId = req.vendorId;
+    }
+    else {
+        vendorId = null
+    }
+
+    //Performing the Join operation and printing as JSON
+    if (appName == null && appProvider == null && appSoftVersion == null && serviceCont == null && vendorId == null) {
+        var collection = db.collection('applicationList')
+        collection.aggregate([
+            {
+                $lookup:
+                {
+                    from: "appInfo",
+                    localField: "appInfo_Id",
+                    foreignField: "appInfo_Id",
+                    as: "appInfoData"
+                }
+            },
+            {
+                $unwind: "$appInfoData"
+            },
+
+            {
+                $lookup:
+                {
+                    from: "appCharcs",
+                    localField: "appInfo_Id",
+                    foreignField: "appInfo_Id",
+                    as: "appCharcs"
+                }
+            },
+            {
+                $unwind: "$appCharcs"
+            },
+
+            {
+                $lookup:
+                {
+                    from: "vendorSpecificExt",
+                    localField: "vendorSpecificExt_Id",
+                    foreignField: "vendorSpecificExt_Id",
+                    as: "vendorSpecificExt"
+                }
+            },
+
+            {
+                $project:
+                {
+                    "appInfoData.appInfo_Id": 1,
+                    "appInfoData.appName": 1,
+                    "appInfoData.appProvider": 1,
+                    "appInfoData.appSoftVersion": 1,
+                    "appInfoData.appDescription": 1,
+                    "appCharcs.appInfo_Id": 1,
+                    "appCharcs.memory": 1,
+                    "appCharcs.storage": 1,
+                    "appCharcs.latency": 1,
+                    "appCharcs.bandwidth": 1,
+                    "appCharcs.serviceCont": 1,
+                    "vendorSpecificExt.vendorId": 1,
+                }
+            }
+        ]).toArray(function (err, item) {
+            if (err) {
+                console.log(err);
+                callback(null, err)
+            }
+            else {
+                var finalItem = [];
+                var finalItemArrObj = [];
+                var ApplicationList = {};
+                var appInfo = {};
+                var appCharcsData = {};
+
+                for (var i = 0; item.length > i; i++) {
+                    appInfo = {
+                        'appName': item[i]['appInfoData']['appName'],
+                        'appProvider': item[i]['appInfoData']['appProvider'],
+                        'appSoftVersion': item[i]['appInfoData']['appSoftVersion'],
+                        'appDescription': item[i]['appInfoData']['appDescription'],
+                        'appCharcs': {
+                            'memory': item[i]['appCharcs']['memory'],
+                            'storage': item[i]['appCharcs']['storage'],
+                            'latency': item[i]['appCharcs']['latency'],
+                            'bandwidth': item[i]['appCharcs']['bandwidth'],
+                            'serviceCont': item[i]['appCharcs']['serviceCont']
+                        },
+                    }
+
+                    finalItemArrObj.push({
+                        ApplicationList: {
+                            "appInfo": [appInfo],
+                            "vendorSpecificExt": item[i]['vendorSpecificExt'],
+                        }
+                    })
+                }
+                callback(null, finalItemArrObj)
+            }
+            console.log("Found the data!!!")
+        })
+    }
 };
 
 AppService.prototype.app_contextsPOST = function (req,callback) {

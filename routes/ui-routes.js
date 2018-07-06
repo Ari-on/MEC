@@ -79,7 +79,7 @@ UIRoutes.prototype.init = function() {
 
     app.get("/mx2/v1/app_list",function (req,res) {
 
-        console.log('GET Method',req.query);
+        console.log("ui-routes - app_listGET method is called");
 
         self.AppserviceInstance.app_listGET(req, function (err,result) {
             res.send(result);

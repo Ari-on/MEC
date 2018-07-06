@@ -22,10 +22,10 @@ MongoClient.connect(url, function (err, db) {
 
 app.listen (serverPort,function () {
     console.log('server running on http://localhost:'+serverPort);
+    console.log("##########################################");
 
 });
 
-console.log("##########################################");
 
 var WebRoutes = require("./routes/ui-routes.js");
 var webRoutes = new WebRoutes(app);
