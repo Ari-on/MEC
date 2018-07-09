@@ -20,38 +20,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="DefaultService.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/service/DefaultService.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1824">
-              <caret line="96" selection-start-line="96" selection-end-line="96" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="UEIdentityService.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/service/UEIdentityService.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="17" selection-start-line="17" selection-end-line="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UEAppService.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/service/UEAppService.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="4" selection-end-column="28" />
+            <state relative-caret-position="114">
+              <caret line="6" selection-start-line="6" selection-end-line="10" selection-end-column="2" />
             </state>
           </provider>
         </entry>
@@ -59,26 +32,17 @@
       <file leaf-file-name="ui-routes.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/ui-routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9709">
-              <caret line="511" lean-forward="true" selection-start-line="511" selection-end-line="511" />
+            <state relative-caret-position="296">
+              <caret line="818" column="32" lean-forward="true" selection-start-line="818" selection-start-column="32" selection-end-line="818" selection-end-column="67" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LocationService.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/service/LocationService.js">
+      <file leaf-file-name="RNIservice.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/service/RNIservice.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="720">
-              <caret line="124" column="2" selection-start-line="124" selection-start-column="1" selection-end-line="124" selection-end-column="2" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Mp1Service.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/service/Mp1Service.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="6" selection-start-line="6" selection-end-line="10" selection-end-column="2" />
+            <state relative-caret-position="834">
+              <caret line="279" selection-end-line="279" />
             </state>
           </provider>
         </entry>
@@ -96,6 +60,8 @@
     <findStrings>
       <find>callback</find>
       <find>console</find>
+      <find>SubscriptionLinkList_subscriptions_re_GET</find>
+      <find>appInstanceIdUe_identity_tag_infoGET</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -113,8 +79,9 @@
         <option value="$PROJECT_DIR$/index.js" />
         <option value="$PROJECT_DIR$/service/Mp1Service.js" />
         <option value="$PROJECT_DIR$/service/DefaultService.js" />
-        <option value="$PROJECT_DIR$/routes/ui-routes.js" />
         <option value="$PROJECT_DIR$/service/LocationService.js" />
+        <option value="$PROJECT_DIR$/routes/ui-routes.js" />
+        <option value="$PROJECT_DIR$/service/RNIservice.js" />
       </list>
     </option>
   </component>
@@ -148,7 +115,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -170,6 +136,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -225,15 +192,16 @@
       <workItem from="1530766208117" duration="11119000" />
       <workItem from="1530782529366" duration="3667000" />
       <workItem from="1530803216708" duration="2943000" />
-      <workItem from="1530852381098" duration="763000" />
+      <workItem from="1530852381098" duration="9979000" />
+      <workItem from="1531112595267" duration="1222000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="115819000" />
+    <option name="totallyTimeSpent" value="126257000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
+    <frame x="64" y="-11" width="1857" height="1092" extended-state="7" />
     <layout>
       <window_info content_ui="combo" id="Project" order="3" visible="true" weight="0.11135371" />
       <window_info anchor="bottom" id="TODO" order="10" />
@@ -259,20 +227,20 @@
       <window_info anchor="bottom" id="Docker" order="0" show_stripe_button="false" />
       <window_info id="npm" order="0" side_tool="true" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="3" visible="true" weight="0.13584906" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="Structure" order="1" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="10" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="5" />
       <window_info anchor="bottom" id="Run" order="3" />
       <window_info anchor="bottom" id="Message" order="2" />
       <window_info anchor="bottom" id="Debug" order="7" />
-      <window_info anchor="bottom" id="Terminal" order="6" sideWeight="0.48908296" weight="0.90994763" />
-      <window_info anchor="bottom" id="Event Log" order="1" sideWeight="0.510917" side_tool="true" weight="0.91099477" />
-      <window_info anchor="bottom" id="Version Control" order="5" />
-      <window_info anchor="bottom" id="Find" order="4" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="6" sideWeight="0.48853713" weight="0.96436286" />
+      <window_info anchor="bottom" id="Event Log" order="1" sideWeight="0.51146287" side_tool="true" weight="0.9654428" />
+      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="4" weight="0.32937366" />
+      <window_info content_ui="combo" id="Project" order="3" visible="true" weight="0.11135371" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -282,13 +250,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="24" selection-start-line="24" selection-end-line="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/controllers/Default.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1908">
@@ -512,24 +473,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/service/UEIdentityService.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/service/DefaultService.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1824">
           <caret line="96" selection-start-line="96" selection-end-line="96" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -542,6 +489,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/service/Mp1Service.js">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" column="19" lean-forward="true" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/service/LocationService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="537">
+          <caret line="103" lean-forward="true" selection-start-line="103" selection-end-line="103" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="22" selection-end-line="8" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/service/UEIdentityService.js">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
           <caret line="6" selection-start-line="6" selection-end-line="10" selection-end-column="2" />
         </state>
@@ -549,15 +517,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/ui-routes.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9709">
-          <caret line="511" lean-forward="true" selection-start-line="511" selection-end-line="511" />
+        <state relative-caret-position="296">
+          <caret line="818" column="32" lean-forward="true" selection-start-line="818" selection-start-column="32" selection-end-line="818" selection-end-column="67" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/service/LocationService.js">
+    <entry file="file://$PROJECT_DIR$/service/RNIservice.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="124" column="2" selection-start-line="124" selection-start-column="1" selection-end-line="124" selection-end-column="2" />
+        <state relative-caret-position="834">
+          <caret line="279" selection-end-line="279" />
         </state>
       </provider>
     </entry>

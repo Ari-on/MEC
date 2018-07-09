@@ -4,6 +4,7 @@ var Idservice  = require ('../service/UEIdentityService.js');
 var Appservice  = require ('../service/UEAppService.js');
 var Mp1service  = require ('../service/Mp1Service.js');
 var LocationService  = require ('../service/LocationService.js');
+var RNIservice  = require ('../service/RNIservice.js');
 
 
 var UIRoutes = function(app) {
@@ -14,6 +15,7 @@ var UIRoutes = function(app) {
     this.AppserviceInstance = new Appservice(app);//for  UE Application
     this.Mp1serviceInstance = new Mp1service(app);//for  Mp1
     this.LocationServiceInstance = new LocationService(app);//for Location
+    this.RNIserviceInstance = new RNIservice(app);//for RNI
 };
 
 
@@ -507,5 +509,429 @@ UIRoutes.prototype.init = function() {
     });
 
 /////////////////////////
+
+
+    /*RNI API*/
+
+///////////Query//////////
+
+    app.get("/rni/v1/queries/rab_info",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.rab_infoGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/queries/plmn_info",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.plmn_infoGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/queries/s1_bearer_info",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.s1_bearer_infoGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+//////////////////////////////////
+
+/////////subscriptions///////////
+
+    app.get("/rni/v1/subscriptions/",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.SubscriptionLinkList_subscriptionsGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/cell_change",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cc_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.post("/rni/v1/subscriptions/cell_change",function (req,res) {
+
+        console.log('POST Method',req.body);
+
+        self.RNIserviceInstance.CellChange_subscriptionsPOST(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
+
+        console.log('GET Method',req.query);
+        console.log('GET Method',req.params);
+
+        self.RNIserviceInstance.CellChange_subscriptionsGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
+
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
+
+
+        self.RNIserviceInstance.CellChange_subscriptionsPUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.delete("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
+
+        console.log('DELETE Method',req.params);
+
+        self.RNIserviceInstance.CellChange_subscriptionsSubscrIdDELETE(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/s1_bearer",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_s1_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.post("/rni/v1/subscriptions/s1_bearer",function (req,res) {
+
+        console.log('POST Method',req.body);
+
+        self.RNIserviceInstance.S1BearerSubscription_subscriptionsPOST(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
+
+        console.log('GET Method',req.query);
+        console.log('GET Method',req.params);
+
+        self.RNIserviceInstance.S1BearerSubscription_subscriptionsGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
+
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
+
+
+        self.RNIserviceInstance.S1BearerSubscription_subscriptionsPUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.delete("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
+
+        console.log('DELETE Method',req.params);
+
+        self.RNIserviceInstance.S1Bearer_subscriptionsSubscrIdDELETE(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/ta",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_ta_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.post("/rni/v1/subscriptions/ta",function (req,res) {
+
+        console.log('POST Method',req.body);
+
+        self.RNIserviceInstance.MeasTa_subscriptionsPOST(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
+
+        console.log('GET Method',req.query);
+        console.log('GET Method',req.params);
+
+        self.RNIserviceInstance.MeasTa_subscriptionsGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
+
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
+
+        self.RNIserviceInstance.MeasTa_subscriptionsPUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.delete("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
+
+        console.log('DELETE Method',req.params);
+
+        self.RNIserviceInstance.MeasTa_subscriptionsSubscrIdDELETE(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/meas_rep_ue",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_mr_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.post("/rni/v1/subscriptions/meas_rep_ue",function (req,res) {
+
+        console.log('POST Method',req.params);
+        console.log('POST Method',req.body);
+
+        self.RNIserviceInstance.MeasRepUe_subscriptionsPOST(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
+
+        console.log('GET Method',req.query);
+        console.log('GET Method',req.params);
+
+        self.RNIserviceInstance.MeasRepUe_subscriptionsGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
+
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
+
+        self.RNIserviceInstance.MeasRepUeReport_subscriptionsPUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.delete("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
+
+        console.log('DELETE Method',req.params);
+
+        self.RNIserviceInstance.MeasRepUe_subscriptionsSubscrIdDELETE(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/rab_est",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_re_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.post("/rni/v1/subscriptions/rab_est",function (req,res) {
+
+        console.log('POST Method',req.body);
+
+        self.RNIserviceInstance.RabEstSubscription_subscriptionsPOST(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
+
+        console.log('GET Method',req.query);
+        console.log('GET Method',req.params);
+
+        self.RNIserviceInstance.RabEstSubscription_subscriptionsGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
+
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
+
+        self.RNIserviceInstance.RabEstSubscription_subscriptionsPUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.delete("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
+
+        console.log('DELETE Method',req.query);
+
+        self.RNIserviceInstance.RabEst_subscriptionsSubscrIdDELETE(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/rab_mod",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_rm_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.post("/rni/v1/subscriptions/rab_mod",function (req,res) {
+
+        console.log('POST Method',req.body);
+
+        self.RNIserviceInstance.RabModSubscription_subscriptionsPOST(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
+
+        console.log('GET Method',req.query);
+        console.log('GET Method',req.params);
+
+        self.RNIserviceInstance.RabModSubscription_subscriptionsGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
+
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
+
+        self.RNIserviceInstance.RabModSubscription_subscriptionsPUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.delete("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
+
+        console.log('DELETE Method',req.params);
+
+        self.RNIserviceInstance.RabMod_subscriptionsSubscrIdDELETE(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/rab_rel",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_rr_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.post("/rni/v1/subscriptions/rab_rel",function (req,res) {
+
+        console.log('POST Method',req.body);
+
+        self.RNIserviceInstance.RabRelSubscription_subscriptionsPOST(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
+
+        console.log('GET Method',req.query);
+        console.log('GET Method',req.params);
+
+        self.RNIserviceInstance.RabRelSubscription_subscriptionsGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
+
+        console.log('GET Method',req.params);
+        console.log('GET Method',req.body);
+
+        self.RNIserviceInstance.RabRelSubscription_subscriptionsPUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.delete("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
+
+        console.log('DELETE Method',req.params);
+
+        self.RNIserviceInstance.RabRel_subscriptionsSubscrIdDELETE(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/ca_reconf",function (req,res) {
+
+        console.log('GET Method',req.query);
+
+        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cr_GET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.post("/rni/v1/subscriptions/ca_reconf",function (req,res) {
+
+        console.log('POST Method',req.body);
+
+        self.RNIserviceInstance.CaReConfSubscription_subscriptionsPOST(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.get("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
+
+        console.log('GET Method',req.query);
+        console.log('GET Method',req.params);
+
+        self.RNIserviceInstance.CaReConfSubscription_subscriptionsGET(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.put("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
+
+        console.log('PUT Method',req.params);
+        console.log('PUT Method',req.body);
+
+        self.RNIserviceInstance.CaReConfSubscription_subscriptionsPUT(req, function (err,result) {
+            res.send(result);
+        })
+    });
+
+    app.delete("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
+
+        console.log('DELETE Method',req.params);
+
+        self.RNIserviceInstance.CaReConf_subscriptionsSubscrIdDELETE(req, function (err,result) {
+            res.send(result);
+        })
+    });
 
 };
