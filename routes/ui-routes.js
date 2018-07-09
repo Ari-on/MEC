@@ -1,5 +1,5 @@
 
-var service  = require ('../service/DefaultService.js');
+var service  = require ('../service/BwAllocService.js');
 var Idservice  = require ('../service/UEIdentityService.js');
 var Appservice  = require ('../service/UEAppService.js');
 var Mp1service  = require ('../service/Mp1Service.js');
@@ -89,11 +89,9 @@ UIRoutes.prototype.init = function() {
     });
 
     app.post("/mx2/v1/app_contexts",function (req,res) {
-
-        console.log('POST Method',req.body);
-
-        self.AppserviceInstance.app_contextsPOST(req, function (err,result) {
-            res.send(result);
+        var appContext = req.body;
+        self.serviceInstance.app_contextsPOST(req, appContext, function(err, result){
+            res.send(result)
         })
     });
 
@@ -933,5 +931,4 @@ UIRoutes.prototype.init = function() {
             res.send(result);
         })
     });
-
 };

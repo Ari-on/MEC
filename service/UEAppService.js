@@ -145,10 +145,126 @@ AppService.prototype.app_listGET = function (req,callback) {
     }
 };
 
-AppService.prototype.app_contextsPOST = function (req,callback) {
+AppService.prototype.app_contextsPOST = function (req, appContext, callback) {
+console.log("app_contextsPOST method is called")
+  var self = this;
+  var db = self.app.db;
 
-    console.log("APP Method2");
-    callback(null,"DONE app_contextsPOST");
+  MongoClient.connect("mongodb://localhost:27017/MEC", function(err, db) {
+    if(err) { 
+      return console.log(err); 
+    }
+    else{
+      var body = appContext;
+
+      if (body !== undefined){
+        var appInfo_appName = body.appInfo['appName']
+        var appInfo_appProvider = body.appInfo['appProvider']
+        var appInfo_appSoftVersion = body.appInfo['appSoftVersion']
+        var appInfo_appDescription = body.appInfo['appDescription']
+        var appInfo_referenceURL = body.appInfo['referenceURL']
+        var appInfo_appPackageSource = body.appInfo['appInfo_appPackageSource']
+
+        var insertQuery = {
+          "applicationList_Id" : "applicationList_3",
+          "contextId": body.contextId,
+          "associateUeAppId": body.associateUeAppId,
+          "callbackReference": body.callbackReference,
+          "appInfo_Id" : "appInfo_3"
+        }
+        db.collection('applicationList').insertOne(insertQuery, function(err, res) {
+          if (err) {
+            throw err;
+          }
+          else {
+            db.collection('appInfo').insertOne({
+              "appInfo_Id" : "appInfo_3",
+              "appName": appInfo_appName,
+              "appProvider": appInfo_appProvider,
+              "appSoftVersion": appInfo_appSoftVersion,
+              "appDescription": appInfo_appDescription,
+              "referenceURL": appInfo_referenceURL,
+              "appPackageSource": appInfo_appPackageSource,
+              "applicationList_Id" : "applicationList_3"
+            });
+            
+            //Displaying the data after updation
+            var collection = db.collection('applicationList')
+            collection.aggregate([
+              {
+                $lookup:
+                {
+                  from : "appInfo",
+                  localField : "appInfo_Id",
+                  foreignField : "appInfo_Id",
+                  as : "appInfoData"
+                }
+              },
+              {
+                $unwind : "$appInfoData"
+              },
+              
+              {
+                $project:
+                {
+                  "appInfoData.appInfo_Id" : 1,
+                  "appInfoData.appName" : 1,
+                  "appInfoData.appProvider" : 1,
+                  "appInfoData.appSoftVersion" : 1,
+                  "appInfoData.appDescription" : 1,
+                }
+              }
+            ]).toArray(function(err,item){
+              if(err){
+                console.log(err);
+                callback(null, err)
+              }
+              else{
+                var finalItem = [];
+                var finalItemArrObj = [];
+                var ApplicationList = {};
+                var appInfo = {};
+                var appCharcsData  = {};
+
+                for (var i = 0; item.length > i; i++){
+                  appInfo = {
+                    'appName' : item[i]['appInfoData']['appName'],
+                    'appProvider' : item[i]['appInfoData']['appProvider'],
+                    'appSoftVersion' : item[i]['appInfoData']['appSoftVersion'],
+                    'appDescription' : item[i]['appInfoData']['appDescription'],
+                  }
+                  
+                  finalItemArrObj.push({
+                    ApplicationList: {
+                      "contextId" : item[i].contextId,
+                      "associateUeAppId" : item[i].associateUeAppId,
+                      "callbackReference" : item[i].callbackReference,
+                      "appInfo" : [appInfo],
+                    }
+                  })
+                }
+                callback(null,finalItemArrObj)
+              }
+            })
+            console.log("Refresh and check db!!!")
+          }
+        })
+      }
+      else{
+        console.log("No Body is passed")
+        // var errorbody = {
+        //   "Problem Details" : {
+        //     "type": "string",
+        //     "title": "string",
+        //     "status": 0,
+        //     "detail": "string",
+        //     "instance": "string"
+        //   }
+        // }
+        // resolve(errorbody)
+      }
+    }
+  })
 };
 
 AppService.prototype.app_contextsContextIdPUT = function (req,callback) {
