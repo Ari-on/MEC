@@ -81,8 +81,6 @@ UIRoutes.prototype.init = function() {
 
     app.get("/mx2/v1/app_list",function (req,res) {
 
-        console.log("ui-routes - app_listGET method is called");
-
         self.AppserviceInstance.app_listGET(req, function (err,result) {
             res.send(result);
         })
@@ -96,19 +94,18 @@ UIRoutes.prototype.init = function() {
     });
 
     app.put("/mx2/v1/app_contexts/:contextID",function (req,res) {
+        var contextID = req.params.contextID;
+        var appContext = req.body;
 
-        console.log('PUT Method',req.params);
-
-        self.AppserviceInstance.app_contextsContextIdPUT(req, function (err,result) {
+        self.serviceInstance.app_contextsContextIdPUT(req, contextID, appContext, function (err,result) {
             res.send(result);
         })
     });
 
     app.delete("/mx2/v1/app_contexts/:contextID",function (req,res) {
+        var contextID = req.params.contextID;
 
-        console.log('DELETE Method',req.params);
-
-        self.AppserviceInstance.app_contextsContextIdDELETE(req, function (err,result) {
+        self.serviceInstance.app_contextsContextIdDELETE(req, contextID, function (err,result) {
             res.send(result);
         })
     });
