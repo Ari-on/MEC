@@ -72,120 +72,151 @@ DefaultService.prototype.bw_allocationsAllocationIdGET = function(req,callback) 
   console.log("This is bw_allocationsAllocationIdGET method!!!")
     var self = this;
     var db = self.app.db;
-        var allocationId = req
-        if (allocationId != null){
-            var collection = db.collection('bwInfo')
-            collection.aggregate([
+    var allocationId = req
+    console.log("vvvvvvvvvvvvvv",typeof(allocationId))
+    if (allocationId != null){
+        var collection = db.collection('bwInfo')
+        collection.aggregate([
+            {
+                $match:
                 {
-                    $match:
-                    {
-                        allocation_Id : allocationId
-                    }
-                },
-                {
-                    $lookup:
-                    {
-                        from : "timeStamp",
-                        localField : "timeStamp_Id",
-                        foreignField : "timeStamp_Id",
-                        as : "timeStamp"
-                    }
-                },
-                {
-                    $unwind : "$timeStamp"
-                },
-
-                {
-                    $lookup:
-                    {
-                        from : "reqstType",
-                        localField : "reqstType",
-                        foreignField : "reqstType_Id",
-                        as : "requestType"
-                    }
-                },
-                {
-                    $unwind : "$requestType"
-                },
-
-                {
-                    $lookup:
-                    {
-                        from : "sessionFilter",
-                        localField : "appIns_Id",
-                        foreignField : "appIns_Id",
-                        as : "sessionFiltedInfo"
-                    }
-                },
-
-                {
-                    $lookup:
-                    {
-                        from : "ports",
-                        localField : "session_Id",
-                        foreignField : "session_Id",
-                        as : "ports"
-                    }
-                },
-                {
-                    $unwind : "$ports"
-                },
-
-                {
-                    $project:
-                    {
-                        _id : 0,
-            requestType : 1,
-            fixedBWPriority : 1,
-            fixedAllocation : 1,
-            allocationDirection : 1,
-            appIns_Id : 1,
-            "timeStamp.seconds" : 1 ,
-            "timeStamp.nanoSeconds" : 1,
-
-            "sessionFiltedInfo.session_Id" : 1,
-            "sessionFiltedInfo.sourceIP" : 1,
-            "ports" : 1,
-            "sessionFiltedInfo.destAddress" : 1,
-            "sessionFiltedInfo.protocol" : 1,
-                    }
+                    allocation_Id : allocationId
                 }
-            ]).toArray(function(err, item) {
-          if(err){
-            console.log(err)
-            callback(null,err)
-          }
-          else{
-              console.log(item)
-              var finalItemArrObj = [];
-              var bwInfo = {};
-            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            for(var i = 0 ; item.length > i; i++){
-
-              finalItemArrObj.push({
-                  bwInfo :{
-                  'timeStamp' : item[i]['timeStamp'],
-                  'appIns_Id' : item[i]['appIns_Id'],
-                  'requestType' : item[i].requestType['reqstTypeDescription'],
-                  'sessionFilter' : item[i]['sessionFiltedInfo'],
-                  'sourcePort' : item[i].ports['srcPort'],
-                  'dstPort' : item[i].ports['dstPort'],
-                  'fixedBWPriority' : item[i]['fixedBWPriority'],
-                  'fixedAllocation' : item[i]['fixedAllocation'],
-                  'allocationDirection' : item[i]['allocationDirection']
+            },
+            {
+                $lookup:
+                {
+                    from : "timeStamp",
+                    localField : "timeStamp_Id",
+                    foreignField : "timeStamp_Id",
+                    as : "timeStamp"
                 }
-              })
+            },
+            {
+                $unwind : "$timeStamp"
+            },
 
+            {
+                $lookup:
+                {
+                    from : "reqstType",
+                    localField : "reqstType",
+                    foreignField : "reqstType_Id",
+                    as : "requestType"
+                }
+            },
+            {
+                $unwind : "$requestType"
+            },
+
+            {
+                $lookup:
+                {
+                    from : "sessionFilter",
+                    localField : "appIns_Id",
+                    foreignField : "appIns_Id",
+                    as : "sessionFilterInfo"
+                }
+            },
+            {
+                $unwind : "$sessionFilterInfo"
+            },
+
+            {
+                $lookup:
+                {
+                    from : "ports",
+                    localField : "session_Id",
+                    foreignField : "session_Id",
+                    as : "ports"
+                }
+            },
+            {
+                $unwind : "$ports"
+            },
+
+            {
+                $project:
+                {
+                    _id : 0,
+        requestType : 1,
+        fixedBWPriority : 1,
+        fixedAllocation : 1,
+        allocationDirection : 1,
+        appIns_Id : 1,
+        "timeStamp.seconds" : 1 ,
+        "timeStamp.nanoSeconds" : 1,
+
+        "sessionFilterInfo.session_Id" : 1,
+        "sessionFilterInfo.sourceIP" : 1,
+        "ports" : 1,
+        "sessionFilterInfo.destAddress" : 1,
+        "sessionFilterInfo.protocol" : 1,
+                }
+            }
+        ]).toArray(function(err, item) {
+      if(err){
+        console.log(err)
+        callback(null,err)
+      }
+      else{
+          var finalItemArrObj = [];
+          var bwInfo = {};
+          var sessionFilter = {};
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        console.log(item.length)
+        for(var i = 0 ; item.length > i; i++){
+
+            sessionFilter = {
+                // session_Id : (item[i]['sessionFiltedInfo']['session_Id']),
+                sourceIP : item[i]['sessionFilterInfo']['sourceIP'],
+                sourcePort : [],
+                destAddress : item[i]['sessionFilterInfo']['destAddress'],
+                dstPort : [],
+                protocol : item[i]['sessionFilterInfo']['protocol']
+            }
+            if (item[i]['sessionFilterInfo']['session_Id'] == item[i]['ports']['session_Id'])
+            {
+                sessionFilter['sourcePort'].push(item[i]['ports']['srcPort'])
+                sessionFilter['dstPort'].push(item[i]['ports']['dstPort'])
             }
 
-              var result = {
-                  statuscode:"200",
-                  res: finalItemArrObj
-              }
-           callback(null,result);
-          }
-        });
+          finalItemArrObj.push({
+              bwInfo :{
+              'timeStamp' : item[i]['timeStamp'],
+              'appIns_Id' : item[i]['appIns_Id'],
+              'requestType' : item[i].requestType['reqstTypeDescription'],
+              'sessionFilter' : [sessionFilter],
+              //'sessionFilter' : item[i]['sessionFiltedInfo'],
+              //'sourcePort' : item[i].ports['srcPort'],
+              //'dstPort' : item[i].ports['dstPort'],
+              'fixedBWPriority' : item[i]['fixedBWPriority'],
+              'fixedAllocation' : item[i]['fixedAllocation'],
+              'allocationDirection' : item[i]['allocationDirection']
+            }
+          })
+
         }
+
+      for (var j = 0; finalItemArrObj.length > j; j++) {
+          for (var k = j + 1; finalItemArrObj.length > k; k++) {
+              if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
+                  finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['sourcePort'])
+                  finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['dstPort'])
+                  finalItemArrObj.splice(k, 1);
+                  j = 0;
+              }
+          }
+      }
+
+      var result = {
+          statuscode:"200",
+          res: finalItemArrObj
+      }
+        callback(null,result);
+       }
+      });
+    }
 }
 
 
@@ -473,10 +504,18 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
           session_Id = null
       }
     if(app_instance_id!= null && session_Id == null && app_name == null ){
+
           var collection = db.collection('bwInfo')
 
             collection.aggregate([
 
+                {
+                    $match :
+                        {
+                            appIns_Id : app_instance_id
+                            // appIns_Id : {$in : app_instance_id}
+                        }
+                },
                 { $lookup :
                   {
                     from : "timeStamp",
@@ -508,13 +547,6 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
                     localField : "appIns_Id",
                     foreignField : "appIns_Id",
                     as : "sessionFiltedInfo"
-                  }
-                },
-                {
-                  $match :
-                  {
-                    appIns_Id : {$in : app_instance_id}
-                    // $or : [{appIns_Id : {$in : app_instance_id}} , {session_Id :{$in : session_Id}}]
                   }
                 },
                 {
@@ -592,6 +624,12 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 
                 collection.aggregate([
 
+                    {
+                        $match :
+                            {
+                                session_Id : session_Id
+                            }
+                    },
                    { $lookup :
                       {
                         from : "timeStamp",
@@ -626,13 +664,6 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
                         foreignField : "appIns_Id",
                         as : "sessionFiltedInfo"
                       }
-                    },
-                    {
-                        $match :
-                        {
-                          session_Id : {$in : session_Id}
-                          // $or : [{appIns_Id : {$in : app_instance_id}} , {session_Id :{$in : session_Id}}]
-                        }
                     },
                     {
                       $lookup:
@@ -760,7 +791,8 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 
                 { $match :
                   {
-                    appName : {$in : app_name}
+                      appName : app_name
+                    // appName : {$in : app_name}
                   }
                 },
 
@@ -877,7 +909,8 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
                 },
                 { $match :
                   {
-                    appName : {$in : app_name}
+                    appName :  app_name
+                    // appName : {$in : app_name}
                   }
                 },
 
@@ -1017,7 +1050,6 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
             callback(null,err)
           }
           else{
-              var finalItem = [];
               var finalItemArrObj = [];
               var bwInfo = {};
               var sessionFilter = {};
@@ -1216,7 +1248,7 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                 console.log("Refresh and check db!!!")
             }
             var result = {
-                status:"status code : 200",
+                statuscode : "201",
                 res:myobj
             }
             callback(null,result)
