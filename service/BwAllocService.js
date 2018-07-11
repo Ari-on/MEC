@@ -1,5 +1,7 @@
 'use strict';
 
+var bodyParser = require('body-parser');
+var MongoClient = require('mongodb').MongoClient;
 
 var DefaultService = function (app) {
     this.app = app;
@@ -1350,10 +1352,7 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
           {
             $unwind : "$ports"
           },
-              // {
-              //   $group : { _id : "$ports.session_Id", srcPort : {$push : "$ports.srcPort" },dstPort : {$push : "$ports.dstPort" }  }
-              // },
-
+             
           {
             $project :
             {
@@ -1369,8 +1368,6 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
               "sessionFiltedInfo.session_Id" : 1,
               "sessionFiltedInfo.sourceIP" : 1,
               "ports" : 1,
-              // "srcPort" : 1,
-              // "dstPort" : 1,
               "sessionFiltedInfo.destAddress" : 1,
               "sessionFiltedInfo.protocol" : 1,
             }
