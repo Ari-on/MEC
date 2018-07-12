@@ -23,7 +23,7 @@ DefaultService.prototype.bw_allocationsAllocationIdDELETE = function(req,callbac
 	var db = self.app.db;
 
 	var allocationId = req;
-	db.collection('bwInfo').findOne({"allocationDirection" : allocationId}, function(err,result){
+	db.collection('bwInfo').findOne({"allocation_Id" : allocationId}, function(err,result){
 		if (err){
 				console.log(err);
 				callback(null,err)
@@ -438,6 +438,7 @@ DefaultService.prototype.bw_allocationsAllocationIdPATCH = function(req,callback
 		]).toArray(function(err, item){
 			if(err) {
 				console.log(err)
+				callback(null,err)
 			}
 			else{
 				var finalItem = [];
@@ -483,7 +484,6 @@ DefaultService.prototype.bw_allocationsAllocationIdPATCH = function(req,callback
 					}
 				}  
 			}
-			console.log(finalItemArrObj)
 			console.log("Refresh and check the DB")
 			var result = {
 				statuscode:"200",
@@ -879,6 +879,9 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 					as : "sessionFiltedInfo"
 				}
 			},
+            {
+                $unwind : "$sessionFiltedInfo"
+            },
 
 			{
 				$lookup:
@@ -892,6 +895,18 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 			{
 				$unwind : "$appInfo"
 			},
+            {
+                $lookup:
+                    {
+                        from : "ports",
+                        localField : "session_Id",
+                        foreignField : "session_Id",
+                        as : "ports"
+                    }
+            },
+            {
+                $unwind : "$ports"
+            },
 
 			{
 				$project :
@@ -902,8 +917,8 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 					,allocationDirection : 1
 					,appIns_Id : 1
 					,"timeStamp.seconds" : 1
-					,"timeStamp.nanoSeconds" : 1
-
+					,"timeStamp.nanoSeconds" : 1,
+					"ports" : 1
 					,"sessionFiltedInfo.session_Id" : 1
 					,"sessionFiltedInfo.sourceIP" : 1
 					,"sessionFiltedInfo.sourcePort" : 1
@@ -1029,6 +1044,9 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 					as : "sessionFiltedInfo"
 				}
 			},
+            {
+                $unwind : "$sessionFiltedInfo"
+            },
 
 			{
 				$lookup:
@@ -1042,18 +1060,29 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 			{
 				$unwind : "$appInfo"
 			},
-
+            {
+                $lookup:
+                    {
+                        from : "ports",
+                        localField : "session_Id",
+                        foreignField : "session_Id",
+                        as : "ports"
+                    }
+            },
+            {
+                $unwind : "$ports"
+            },
 			{
 				$project :
 				{
-					requestType : 1
-					,fixedBWPriority : 1
-					,fixedAllocation : 1
-					,allocationDirection : 1
-					,appIns_Id : 1
+					"requestType" : 1
+					,"fixedBWPriority" : 1
+					,"fixedAllocation" : 1
+					,"allocationDirection" : 1
+					,"appIns_Id" : 1
 					,"timeStamp.seconds" : 1
-					,"timeStamp.nanoSeconds" : 1
-
+					,"timeStamp.nanoSeconds" : 1,
+					"ports" : 1
 					,"sessionFiltedInfo.session_Id" : 1
 					,"sessionFiltedInfo.sourceIP" : 1
 					,"sessionFiltedInfo.sourcePort" : 1
@@ -1190,6 +1219,20 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 					$unwind : "$requestType"
 			},
 
+            {
+                $lookup:
+                    {
+                        from : "ports",
+                        localField : "appInfo.session_Id",
+                        foreignField : "session_Id",
+                        as : "ports"
+                    }
+            },
+            {
+                $unwind : "$ports"
+            },
+
+
 			{ $match :
 				{
 					appName : app_name
@@ -1205,8 +1248,8 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 					,"appInfo.allocationDirection" : 1
 					,"appInfo.appIns_Id" : 1
 					,"timeStamp.seconds" : 1
-					,"timeStamp.nanoSeconds" : 1
-
+					,"timeStamp.nanoSeconds" : 1,
+                    "ports" : 1
 					,"sessionFiltedInfo.session_Id" : 1
 					,"sessionFiltedInfo.sourceIP" : 1
 					,"sessionFiltedInfo.sourcePort" : 1
@@ -1245,12 +1288,12 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 						finalItemArrObj.push({
 							bwInfo :{
 								'timeStamp' : item[i]['timeStamp'],
-								'appIns_Id' : item[i]['appIns_Id'],
+								'appIns_Id' : item[i]['appInfo']['appIns_Id'],
 								'requestType' : item[i].requestType['reqstTypeDescription'],
 								'sessionFilter' : [sessionFilter],
-								'fixedBWPriority' : item[i]['fixedBWPriority'],
-								'fixedAllocation' : item[i]['fixedAllocation'],
-								'allocationDirection' : item[i]['allocationDirection']
+								'fixedBWPriority' : item[i]['appInfo']['fixedBWPriority'],
+								'fixedAllocation' : item[i]['appInfo']['fixedAllocation'],
+								'allocationDirection' : item[i]['appInfo']['allocationDirection']
 							}
 						})
 					}
@@ -1738,7 +1781,7 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
 					{
 						$match:
 						{
-							allocation_Id : allocationId
+							allocation_Id : insertquery.allocation_Id
 						}
 					},
 
