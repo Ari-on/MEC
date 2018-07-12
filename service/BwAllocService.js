@@ -643,7 +643,7 @@ DefaultService.prototype.bw_allocationsAllocationIdPUT = function(req,callback) 
 		}
 
 	//Querying the DB
-	collection = db.collection('bwInfo')
+	var collection = db.collection('bwInfo')
 	collection.aggregate([
 		{
 			$match:
@@ -1342,6 +1342,19 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 			{
 					$unwind : "$requestType"
 			},
+
+            {
+                $lookup:
+                    {
+                        from : "ports",
+                        localField : "appInfo.session_Id",
+                        foreignField : "session_Id",
+                        as : "ports"
+                    }
+            },
+            {
+                $unwind : "$ports"
+            },
 			
 			{ $match :
 				{
@@ -1359,8 +1372,8 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 					,"appInfo.allocationDirection" : 1
 					,"appInfo.appIns_Id" : 1
 					,"timeStamp.seconds" : 1
-					,"timeStamp.nanoSeconds" : 1
-
+					,"timeStamp.nanoSeconds" : 1,
+                     "ports" : 1
 					,"sessionFiltedInfo.session_Id" : 1
 					,"sessionFiltedInfo.sourceIP" : 1
 					,"sessionFiltedInfo.sourcePort" : 1
@@ -1381,6 +1394,7 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 				var sessionFilter = {};
 
 				if (item.length > 0) {
+
 					for(var i = 0 ; item.length > i; i++){
 							sessionFilter = {
 									sourceIP : item[i]['sessionFiltedInfo']['sourceIP'],
@@ -1398,12 +1412,12 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 						finalItemArrObj.push({
 								bwInfo :{
 								'timeStamp' : item[i]['timeStamp'],
-								'appIns_Id' : item[i]['appIns_Id'],
+								'appIns_Id' : item[i]['appInfo']['appIns_Id'],
 								'requestType' : item[i].requestType['reqstTypeDescription'],
 								'sessionFilter' : [sessionFilter],
-								'fixedBWPriority' : item[i]['fixedBWPriority'],
-								'fixedAllocation' : item[i]['fixedAllocation'],
-								'allocationDirection' : item[i]['allocationDirection']
+								'fixedBWPriority' : item[i]['appInfo']['fixedBWPriority'],
+								'fixedAllocation' : item[i]['appInfo']['fixedAllocation'],
+								'allocationDirection' : item[i]['appInfo']['allocationDirection']
 							}
 						})
 					}
@@ -1719,7 +1733,7 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
 				}
 					
 				//Querying the DB
-				collection = db.collection('bwInfo')
+				var collection = db.collection('bwInfo')
 				collection.aggregate([
 					{
 						$match:
