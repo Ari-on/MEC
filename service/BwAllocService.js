@@ -92,7 +92,6 @@ DefaultService.prototype.bw_allocationsAllocationIdGET = function(req,callback) 
 	var db = self.app.db;
 	var allocationId = req
 
-	if (allocationId != null){
 		var collection = db.collection('bwInfo')
 		collection.aggregate([
 			{
@@ -177,70 +176,73 @@ DefaultService.prototype.bw_allocationsAllocationIdGET = function(req,callback) 
 				console.log(err)
 				callback(null,err)
 			}
-			else{
-				var finalItemArrObj = [];
-				var bwInfo = {};
-				var sessionFilter = {};
-				console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				for(var i = 0 ; item.length > i; i++){
-					sessionFilter = {
-						sourceIP : item[i]['sessionFilterInfo']['sourceIP'],
-						sourcePort : [],
-						destAddress : item[i]['sessionFilterInfo']['destAddress'],
-						dstPort : [],
-						protocol : item[i]['sessionFilterInfo']['protocol']
-					}
-					console.log('sessionFilterInfo : \n', sessionFilter)
+			else {
+                if (item.length > 0) {
 
-					if (item[i]['sessionFilterInfo']['session_Id'] == item[i]['ports']['session_Id']){
-						sessionFilter['sourcePort'].push(item[i]['ports']['srcPort'])
-						sessionFilter['dstPort'].push(item[i]['ports']['dstPort'])
-					}
-					
-					finalItemArrObj.push({
-						bwInfo :{ 
-							'timeStamp' : item[i]['timeStamp'],
-							'appIns_Id' : item[i]['appIns_Id'],
-							'requestType' : item[i].requestType['reqstTypeDescription'],
-							'sessionFilter' : [sessionFilter],
-							'fixedBWPriority' : item[i]['fixedBWPriority'],
-							'fixedAllocation' : item[i]['fixedAllocation'],
-							'allocationDirection' : item[i]['allocationDirection']
-						}
-					})
-				}
-				for (var j = 0; finalItemArrObj.length > j; j++) {
-					for (var k = j + 1; finalItemArrObj.length > k; k++) {
-						if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
-							finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['sourcePort'])
-							finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['dstPort'])
-							finalItemArrObj.splice(k, 1);
-							j = 0;
-						}
-					}
-				}
+                    var finalItemArrObj = [];
+                    var bwInfo = {};
+                    var sessionFilter = {};
+                    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    for (var i = 0; item.length > i; i++) {
+                        sessionFilter = {
+                            sourceIP: item[i]['sessionFilterInfo']['sourceIP'],
+                            sourcePort: [],
+                            destAddress: item[i]['sessionFilterInfo']['destAddress'],
+                            dstPort: [],
+                            protocol: item[i]['sessionFilterInfo']['protocol']
+                        }
 
-				var result = {
-					statuscode:"400",
-					res: finalItemArrObj
-				}
-				callback(null,result);
-			}
+                        if (item[i]['sessionFilterInfo']['session_Id'] == item[i]['ports']['session_Id']) {
+                            sessionFilter['sourcePort'].push(item[i]['ports']['srcPort'])
+                            sessionFilter['dstPort'].push(item[i]['ports']['dstPort'])
+                        }
+
+                        finalItemArrObj.push({
+                            bwInfo: {
+                                'timeStamp': item[i]['timeStamp'],
+                                'appIns_Id': item[i]['appIns_Id'],
+                                'requestType': item[i].requestType['reqstTypeDescription'],
+                                'sessionFilter': [sessionFilter],
+                                'fixedBWPriority': item[i]['fixedBWPriority'],
+                                'fixedAllocation': item[i]['fixedAllocation'],
+                                'allocationDirection': item[i]['allocationDirection']
+                            }
+                        })
+                    }
+                    for (var j = 0; finalItemArrObj.length > j; j++) {
+                        for (var k = j + 1; finalItemArrObj.length > k; k++) {
+                            if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
+                                finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['sourcePort'])
+                                finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['dstPort'])
+                                finalItemArrObj.splice(k, 1);
+                                j = 0;
+                            }
+                        }
+                    }
+
+                    var result = {
+                        statuscode: "200",
+                        res: finalItemArrObj
+                    }
+                    callback(null, result);
+                }// end of main if
+
+                else {
+                    var result = {
+                        statuscode: "400",
+                        ProblemDetails: {
+                            "type": "string",
+                            "title": "string",
+                            "status": 0,
+                            "detail": "string",
+                            "instance": "string"
+                        }
+                    }
+                    callback(null, result);
+                }
+            }
 		});
-	}// end of main if
-	else{
-		var result = {
-			statuscode: "400",
-			ProblemDetails: {
-				"type": "string",
-				"title": "string",
-				"status": 0,
-				"detail": "string",
-				"instance": "string"
-			}
-		}
-		callback(null, result);
-	}
+
 }
 
 
@@ -259,7 +261,7 @@ DefaultService.prototype.bw_allocationsAllocationIdPATCH = function(req,callback
 	var allocationId = req.params.allocationID
 	var myobj = req.body
 
-	if(myobj.sessionFilter !== null){
+	if(myobj.sessionFilter !== undefined){
 		var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"]
 		var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"]
 		var sessionFilter_dstAddress = myobj.sessionFilter[0]["dstAddress"]
@@ -529,7 +531,7 @@ DefaultService.prototype.bw_allocationsAllocationIdPUT = function(req,callback) 
 	var allocationId = req.params.allocationID
 	var myobj = req.body
 
-	if(myobj.sessionFilter !== null){
+	if(myobj.sessionFilter !== undefined){
 
 		var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"]
 		var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"]
@@ -1906,7 +1908,7 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
 					}
 					console.log("Refresh db and check")
 					var result = {
-						statuscode:"200",
+						statuscode:"201",
 						res:finalItemArrObj 
 					}
 					callback(null,result)
