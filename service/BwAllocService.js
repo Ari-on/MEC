@@ -1348,6 +1348,11 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 			{
 				$unwind : "$appInfo"
 			},
+			{ $match :
+				{
+					"appInfo.appIns_Id" : app_instance_id
+				}
+			},
 
 			{ 
 				$lookup :
@@ -1360,6 +1365,12 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
 			},
 			{
 				$unwind : "$sessionFiltedInfo"
+			},
+			{ $match :
+				{
+					"sessionFiltedInfo.session_Id" : session_Id
+					
+				}
 			},
 
 			{ 
