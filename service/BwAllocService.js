@@ -1715,6 +1715,30 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                     "allocation_Id": "alloc_"+allocation_Id
                 }
 
+               var bwInfo  = {
+                    "timeStamp": {
+                        "seconds": myobj.timeStamp["seconds"],
+						"nanoSeconds": myobj.timeStamp["nanoSeconds"]
+                    },
+                    "appInsId": "appInfo_"+appInfo_Id,
+                        "requestType": "",
+                        "sessionFilter": [
+                        {
+                            "sourceIp": sessionFilter_sourceIp,
+                            "sourcePort":
+                                sessionFilter_sourcePort,
+                            "dstAddress": sessionFilter_dstAddress,
+                            "dstPort": sessionFilter_dstPort,
+                            "protocol": sessionFilter_protocol
+                        }
+                    ],
+                        "fixedBWPriority": myobj.fixedBWPriority,
+                        "fixedAllocation": myobj.fixedAllocation,
+                        "allocationDirection": myobj.allocationDirection
+                }
+
+
+
 
                 db.collection('bwInfo').insertOne(insertquery, function (err, res) {
                     if (err) {
@@ -1851,6 +1875,8 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
 
 
                         if (insertquery["reqstType"] == "APPLICATION_SPECIFIC_BW_ALLOCATION" || insertquery["reqstType"] == "application_specific_bw_allocation") {
+
+                        	bwInfo.requestType = "0"
                             var myquery = {"reqstType": "APPLICATION_SPECIFIC_BW_ALLOCATION"}
                             var newvalues = {$set: {"reqstType": "0"}};
 
@@ -1860,6 +1886,8 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                         }
 
                         else if (insertquery["reqstType"] == "SESSION_SPECIFIC_BW_ALLOCATION" || insertquery["reqstType"] == "session_specific_bw_allocation") {
+
+                        	bwInfo.requestType = "1"
                             var myquery = {"reqstType": "SESSION_SPECIFIC_BW_ALLOCATION"}
                             var newvalues = {$set: {"reqstType": "1"}};
 
@@ -1956,7 +1984,7 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                             if (err) {
                                 console.log(err)
                             }
-                            else {
+                            else { ////////
                                 var finalItem = [];
                                 var finalItemArrObj = [];
                                 var bwInfo = {};
@@ -1999,14 +2027,17 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                                         }
                                     }
                                 }
+
                             }
-                            console.log("Refresh db and check")
-                            var result = {
-                                statuscode: "201",
-                                res: finalItemArrObj
-                            }
-                            callback(null, result)
+
                         })
+
+                        console.log("Refresh db and check")
+                        var result = {
+                            statuscode: "201",
+                            res: bwInfo
+                        }
+                        callback(null, result)
                     }// end of main ELSE
                 })
             }
