@@ -1683,239 +1683,336 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
 	var db = self.app.db;
 
 	var myobj = req.body
-	if (myobj !== undefined){
-		var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"]
-		var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"]
-		var sessionFilter_dstAddress = myobj.sessionFilter[0]["dstAddress"]
-		var sessionFilter_dstPort = myobj.sessionFilter[0]["dstPort"]
-		var sessionFilter_protocol = myobj.sessionFilter[0]["protocol"]
+	if (myobj.sessionFilter !== undefined){
 
-		var insertquery = {
-			"bwInfo_Id" : "bwInfo_4",
-			"reqstType" : myobj.requestType,
-			"fixedBWPriority" : myobj.fixedBWPriority,
-			"fixedAllocation" : myobj.fixedAllocation,
-			"allocationDirection" : myobj.allocationDirection,
-			"timeStamp_Id" : "timeStamp_3",
-			"appIns_Id" : myobj.appInsId,
-			"session_Id" : "session_3",
-			"appInfo_Id" : "appInfo_3",
-			"allocation_Id" : "alloc_3"
-		}
+        db.collection('counter').find().toArray(function (err,countResult) {
+            if (err) {
+                throw err;
+            }
+            else {
 
-		db.collection('bwInfo').insertOne(insertquery, function(err, res) {
-			if (err) {
-				throw err;
-			}
-			else {
-				db.collection('timeStamp').insertOne(
-					{
-						"timeStamp_Id" : "timeStamp_3",
-						"seconds": myobj.timeStamp["seconds"],
-						"nanoSeconds": myobj.timeStamp["nanoSeconds"],
-						"bwInfo_Id" : "bwInfo_4"
-					}
-				);
+            	var session_Id = parseInt(countResult[3].session_Id)+1,
+					appInfo_Id = parseInt(countResult[2].appInfo_Id)+1,
+					allocation_Id = parseInt(countResult[1].allocation_Id)+1,
+					timeStamp_Id = parseInt(countResult[4].timeStamp_Id)+1,
+					bwInfo_Id = parseInt(countResult[5].bwInfo_Id)+1
+                var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"]
+                var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"]
+                var sessionFilter_dstAddress = myobj.sessionFilter[0]["dstAddress"]
+                var sessionFilter_dstPort = myobj.sessionFilter[0]["dstPort"]
+                var sessionFilter_protocol = myobj.sessionFilter[0]["protocol"]
 
-				db.collection('sessionFilter').insertOne(
-						{
-								"session_Id" : "session_3",
-								"sourceIP" : sessionFilter_sourceIp,
-								"destAddress" : sessionFilter_dstAddress,
-								"protocol" : sessionFilter_protocol,
-								"appIns_Id" : myobj.appInsId,
+                var insertquery = {
+                    "bwInfo_Id": "bwInfo_"+bwInfo_Id,
+                    "reqstType": myobj.requestType,
+                    "fixedBWPriority": myobj.fixedBWPriority,
+                    "fixedAllocation": myobj.fixedAllocation,
+                    "allocationDirection": myobj.allocationDirection,
+                    "timeStamp_Id": "timeStamp_"+timeStamp_Id,
+                    "appIns_Id": myobj.appInsId,
+                    "session_Id": "session_"+session_Id,
+                    "appInfo_Id": "appInfo_"+appInfo_Id,
+                    "allocation_Id": "alloc_"+allocation_Id
+                }
+
+
+                db.collection('bwInfo').insertOne(insertquery, function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    else {
+                        db.collection('timeStamp').insertOne(
+                            {
+                                "timeStamp_Id": insertquery.timeStamp_Id,
+                                "seconds": myobj.timeStamp["seconds"],
+                                "nanoSeconds": myobj.timeStamp["nanoSeconds"],
+                                "bwInfo_Id": insertquery.bwInfo_Id
+                            }
+                        );
+
+                        db.collection('sessionFilter').insertOne(
+                            {
+                                "session_Id": insertquery.session_Id,
+                                "sourceIP": sessionFilter_sourceIp,
+                                "destAddress": sessionFilter_dstAddress,
+                                "protocol": sessionFilter_protocol,
+                                "appIns_Id": myobj.appInsId,
+                            }
+                        );
+
+                        var mainLength;
+                        var portValue = countResult[0].port_Id+1
+                        if (sessionFilter_sourcePort.length >= sessionFilter_dstPort.length) {
+                            mainLength = sessionFilter_sourcePort.length
+                        } else {
+                            mainLength = sessionFilter_dstPort.length
+                        }
+                        var sourcePort, destPort;
+                        for (var i = 0; i < mainLength; i++) {
+                            if (sessionFilter_dstPort[i]) {
+                                destPort = sessionFilter_dstPort[i]
+                            }
+                            else {
+                                destPort = ''
+                            }
+                            if (sessionFilter_sourcePort[i]) {
+                                sourcePort = sessionFilter_sourcePort[i]
+                            }
+                            else {
+                                sourcePort = ''
+                            }
+                            var port_Id = parseInt(portValue)+parseInt(i)
+                            db.collection('ports').insertOne({
+                                "port_Id": "port_"+port_Id,
+                                "srcPort": sourcePort,
+                                "dstPort": destPort,
+                                "session_Id": insertquery["session_Id"]
+                            })
+                        }
+                        var updateData0 = {
+                            port_Id : countResult[0].port_Id+mainLength
 						}
-				);
 
-				var port_Id = 0
-				var mainLength;
-				if(sessionFilter_sourcePort.length >= sessionFilter_dstPort.length){
-						mainLength = sessionFilter_sourcePort.length
-				}else{
-						mainLength = sessionFilter_dstPort.length
-				}
-				var sourcePort, destPort;
-				for(var i = 0; i < mainLength; i++){
-					if(sessionFilter_dstPort[i]){
-						destPort = sessionFilter_dstPort[i]
-					}
-					else{
-						destPort = ''
-					}
-					if(sessionFilter_sourcePort[i]){
-						sourcePort = sessionFilter_sourcePort[i]
-					}
-					else{
-						sourcePort = ''
-					}
-					db.collection('ports').insertOne({
-						"port_Id" : i+1,
-						"srcPort" : sourcePort,
-						"dstPort" : destPort,
-						"session_Id" : insertquery["session_Id"]
-					})
-				}
+                        db.collection('counter').update({"port_Id":countResult[0].port_Id}, {$set: updateData0}, function (err, resp) {
+                            if (err) {
+                            	console.log(err)
+                                throw err;
+                            }
+                            else {
+                                console.log("Counter Ports Updated")
+                            }
+                        })
 
-				if (insertquery["reqstType"] == "APPLICATION_SPECIFIC_BW_ALLOCATION" || insertquery["reqstType"] == "application_specific_bw_allocation"){
-					var myquery = {"reqstType" : "APPLICATION_SPECIFIC_BW_ALLOCATION"}
-					var newvalues = {$set: {"reqstType" : "0"} };
+                        var updateData1 = {
+                            allocation_Id : countResult[1].allocation_Id+1
+                        }
 
-					db.collection("bwInfo").updateOne(myquery, newvalues, function(err, res) {
-							if (err) throw err;
-					});
-				}
+                        db.collection('counter').update({"allocation_Id":countResult[1].allocation_Id}, {$set: updateData1}, function (err, resp) {
+                            if (err) {
+                                console.log(err)
+                                throw err;
+                            }
+                            else {
+                                console.log("")
+                            }
+                        })
 
-				else if(insertquery["reqstType"] == "SESSION_SPECIFIC_BW_ALLOCATION" || insertquery["reqstType"] == "session_specific_bw_allocation"){
-					var myquery = {"reqstType" : "SESSION_SPECIFIC_BW_ALLOCATION"}
-					var newvalues = {$set: {"reqstType" : "1"} };
+                        var updateData2 = {
+                            appInfo_Id : countResult[2].appInfo_Id+1
+                        }
+                        db.collection('counter').update({"appInfo_Id":countResult[2].appInfo_Id}, {$set: updateData2}, function (err, resp) {
+                            if (err) {
+                                console.log(err)
+                                throw err;
+                            }
+                            else {
+                                console.log("")
+                            }
+                        })
 
-					db.collection("bwInfo").updateOne(myquery, newvalues, function(err, res) {
-							if (err) throw err;
-					});
-				}
-				else{
-						console.log("final else case --")
-				}
-					
-				//Querying the DB
-				var collection = db.collection('bwInfo')
-				collection.aggregate([
-					{
-						$match:
-						{
-							allocation_Id : insertquery.allocation_Id
-						}
-					},
+                        var updateData3 = {
+                            session_Id : countResult[3].session_Id+1
+                        }
+                        db.collection('counter').update({"session_Id":countResult[3].session_Id}, {$set: updateData3}, function (err, resp) {
+                            if (err) {
+                                console.log(err)
+                                throw err;
+                            }
+                            else {
+                                console.log("")
+                            }
+                        })
 
-					{
-						$lookup:
-						{
-							from : "timeStamp",
-							localField : "timeStamp_Id",
-							foreignField : "timeStamp_Id",
-							as : "timeStamp"
-						}
-					},
-					{
-						$unwind : "$timeStamp"
-					},
+                        var updateData4 = {
+                            timeStamp_Id : countResult[4].timeStamp_Id+1
+                        }
+                        db.collection('counter').update({"timeStamp_Id":countResult[4].timeStamp_Id}, {$set: updateData4}, function (err, resp) {
+                            if (err) {
+                                console.log(err)
+                                throw err;
+                            }
+                            else {
+                                console.log("")
+                            }
+                        })
 
-					{
-						$lookup:
-						{
-							from : "reqstType",
-							localField : "reqstType",
-							foreignField : "reqstType_Id",
-							as : "requestType"
-						}
-					},
-					{
-						$unwind : "$requestType"
-					},
+                        var updateData5 = {
+                             bwInfo_Id : countResult[5].bwInfo_Id+1
+                        }
+						db.collection('counter').update({"bwInfo_Id":countResult[5].bwInfo_Id}, {$set: updateData5}, function (err, resp) {
+                            if (err) {
+                                console.log(err)
+                                throw err;
+                            }
+                            else {
+                                console.log("")
+                            }
+                        })
 
-					{
-						$lookup:
-						{
-							from : "sessionFilter",
-							localField : "appIns_Id",
-							foreignField : "appIns_Id",
-							as : "sessionFiltedInfo"
-						}
-					},
-					{
-						$unwind : "$sessionFiltedInfo"
-					},
 
-					{
-						$lookup:
-						{
-							from : "ports",
-							localField : "session_Id",
-							foreignField : "session_Id",
-							as : "ports"
-						}
-					},
-					{
-						$unwind : "$ports"
-					},
+                        if (insertquery["reqstType"] == "APPLICATION_SPECIFIC_BW_ALLOCATION" || insertquery["reqstType"] == "application_specific_bw_allocation") {
+                            var myquery = {"reqstType": "APPLICATION_SPECIFIC_BW_ALLOCATION"}
+                            var newvalues = {$set: {"reqstType": "0"}};
 
-					{
-						$project:
-						{
-							_id : 0,
-							requestType : 1,
-							fixedBWPriority : 1,
-							fixedAllocation : 1,
-							allocationDirection : 1,
-							appIns_Id : 1,
-							"timeStamp.seconds" : 1 ,
-							"timeStamp.nanoSeconds" : 1,
+                            db.collection("bwInfo").updateOne(myquery, newvalues, function (err, res) {
+                                if (err) throw err;
+                            });
+                        }
 
-							"sessionFiltedInfo.session_Id" : 1,
-							"sessionFiltedInfo.sourceIP" : 1,
-							"ports" : 1,
-							"sessionFiltedInfo.destAddress" : 1,
-							"sessionFiltedInfo.protocol" : 1,
-						}
-					}
-				]).toArray(function(err, item){
-					if(err) {
-						console.log(err)
-					}
-					else{
-						var finalItem = [];
-						var finalItemArrObj = [];
-						var bwInfo = {};
-						var sessionFilter = {};
+                        else if (insertquery["reqstType"] == "SESSION_SPECIFIC_BW_ALLOCATION" || insertquery["reqstType"] == "session_specific_bw_allocation") {
+                            var myquery = {"reqstType": "SESSION_SPECIFIC_BW_ALLOCATION"}
+                            var newvalues = {$set: {"reqstType": "1"}};
 
-						for(var i = 0 ; item.length > i; i++){
-							sessionFilter = {
-								sourceIP : item[i]['sessionFiltedInfo']['sourceIP'],
-								sourcePort : [],
-								destAddress : item[i]['sessionFiltedInfo']['destAddress'],
-								dstPort : [],
-								protocol : item[i]['sessionFiltedInfo']['protocol']
-							}
+                            db.collection("bwInfo").updateOne(myquery, newvalues, function (err, res) {
+                                if (err) throw err;
+                            });
+                        }
+                        else {
+                            console.log("final else case --")
+                        }
 
-							if (item[i]['sessionFiltedInfo']['session_Id'] == item[i]['ports']['session_Id']){
-								sessionFilter['sourcePort'].push(item[i]['ports']['srcPort'])
-								sessionFilter['dstPort'].push(item[i]['ports']['dstPort'])
-							}
+                        //Querying the DB
+                        var collection = db.collection('bwInfo')
+                        collection.aggregate([
+                            {
+                                $match:
+                                    {
+                                        allocation_Id: insertquery.allocation_Id
+                                    }
+                            },
 
-							finalItemArrObj.push({
-								bwInfo :{ 
-									'timeStamp' : item[i]['timeStamp'],
-									'appIns_Id' : item[i]['appIns_Id'],
-									'requestType' : item[i].requestType['reqstTypeDescription'],
-									'sessionFilter' : [sessionFilter],
-									'fixedBWPriority' : item[i]['fixedBWPriority'],
-									'fixedAllocation' : item[i]['fixedAllocation'],
-									'allocationDirection' : item[i]['allocationDirection']
-								}
-							})
+                            {
+                                $lookup:
+                                    {
+                                        from: "timeStamp",
+                                        localField: "timeStamp_Id",
+                                        foreignField: "timeStamp_Id",
+                                        as: "timeStamp"
+                                    }
+                            },
+                            {
+                                $unwind: "$timeStamp"
+                            },
 
-							for (var j = 0; finalItemArrObj.length > j; j++) {
-								for (var k = j + 1; finalItemArrObj.length > k; k++) {
-									if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
-										finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['sourcePort'])
-										finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['dstPort'])
-										finalItemArrObj.splice(k, 1);
-										j = 0;
-									}
-								}
-							}
-						}  
-					}
-					console.log("Refresh db and check")
-					var result = {
-						statuscode:"201",
-						res:finalItemArrObj 
-					}
-					callback(null,result)
-				})
-			}// end of main ELSE	
-		})
-	}
+                            {
+                                $lookup:
+                                    {
+                                        from: "reqstType",
+                                        localField: "reqstType",
+                                        foreignField: "reqstType_Id",
+                                        as: "requestType"
+                                    }
+                            },
+                            {
+                                $unwind: "$requestType"
+                            },
+
+                            {
+                                $lookup:
+                                    {
+                                        from: "sessionFilter",
+                                        localField: "appIns_Id",
+                                        foreignField: "appIns_Id",
+                                        as: "sessionFiltedInfo"
+                                    }
+                            },
+                            {
+                                $unwind: "$sessionFiltedInfo"
+                            },
+
+                            {
+                                $lookup:
+                                    {
+                                        from: "ports",
+                                        localField: "session_Id",
+                                        foreignField: "session_Id",
+                                        as: "ports"
+                                    }
+                            },
+                            {
+                                $unwind: "$ports"
+                            },
+
+                            {
+                                $project:
+                                    {
+                                        _id: 0,
+                                        requestType: 1,
+                                        fixedBWPriority: 1,
+                                        fixedAllocation: 1,
+                                        allocationDirection: 1,
+                                        appIns_Id: 1,
+                                        "timeStamp.seconds": 1,
+                                        "timeStamp.nanoSeconds": 1,
+
+                                        "sessionFiltedInfo.session_Id": 1,
+                                        "sessionFiltedInfo.sourceIP": 1,
+                                        "ports": 1,
+                                        "sessionFiltedInfo.destAddress": 1,
+                                        "sessionFiltedInfo.protocol": 1,
+                                    }
+                            }
+                        ]).toArray(function (err, item) {
+                            if (err) {
+                                console.log(err)
+                            }
+                            else {
+                                var finalItem = [];
+                                var finalItemArrObj = [];
+                                var bwInfo = {};
+                                var sessionFilter = {};
+
+                                for (var i = 0; item.length > i; i++) {
+                                    sessionFilter = {
+                                        sourceIP: item[i]['sessionFiltedInfo']['sourceIP'],
+                                        sourcePort: [],
+                                        destAddress: item[i]['sessionFiltedInfo']['destAddress'],
+                                        dstPort: [],
+                                        protocol: item[i]['sessionFiltedInfo']['protocol']
+                                    }
+
+                                    if (item[i]['sessionFiltedInfo']['session_Id'] == item[i]['ports']['session_Id']) {
+                                        sessionFilter['sourcePort'].push(item[i]['ports']['srcPort'])
+                                        sessionFilter['dstPort'].push(item[i]['ports']['dstPort'])
+                                    }
+
+                                    finalItemArrObj.push({
+                                        bwInfo: {
+                                            'timeStamp': item[i]['timeStamp'],
+                                            'appIns_Id': item[i]['appIns_Id'],
+                                            'requestType': item[i].requestType['reqstTypeDescription'],
+                                            'sessionFilter': [sessionFilter],
+                                            'fixedBWPriority': item[i]['fixedBWPriority'],
+                                            'fixedAllocation': item[i]['fixedAllocation'],
+                                            'allocationDirection': item[i]['allocationDirection']
+                                        }
+                                    })
+
+                                    for (var j = 0; finalItemArrObj.length > j; j++) {
+                                        for (var k = j + 1; finalItemArrObj.length > k; k++) {
+                                            if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
+                                                finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['sourcePort'])
+                                                finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['dstPort'])
+                                                finalItemArrObj.splice(k, 1);
+                                                j = 0;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            console.log("Refresh db and check")
+                            var result = {
+                                statuscode: "201",
+                                res: finalItemArrObj
+                            }
+                            callback(null, result)
+                        })
+                    }// end of main ELSE
+                })
+            }
+        });//end of counter collection
+
+	}//end of if(myObj !== undefined)
 
 	else {
 		console.log("No Body is passed")
