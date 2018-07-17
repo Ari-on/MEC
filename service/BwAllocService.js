@@ -1689,29 +1689,29 @@ DefaultService.prototype.bw_allocationsGET = function(req,callback) {
  * returns inline_response_200
  **/
 DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
-	console.log("This is bw_allocationsPOST method!!!")
+	console.log("This is bw_allocationsPOST method!!!");
 	var self = this;
 	var db = self.app.db;
 
-	var myobj = req.body
-	if (myobj.sessionFilter !== undefined){
+	var myobj = req.body;
+	if (myobj.sessionFilter !== undefined) {
 
-        db.collection('counter').find().toArray(function (err,countResult) {
+        db.collection('counter').find().toArray(function (err, countResult) {
             if (err) {
                 throw err;
             }
-            else {
+            else {       //ELSE1
 
-            	var session_Id = parseInt(countResult[3].seq)+1,
-					appInfo_Id = parseInt(countResult[2].seq)+1,
-					allocation_Id = parseInt(countResult[1].seq)+1,
-					timeStamp_Id = parseInt(countResult[4].seq)+1,
-					bwInfo_Id = parseInt(countResult[5].seq)+1
-                var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"]
-                var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"]
-                var sessionFilter_dstAddress = myobj.sessionFilter[0]["dstAddress"]
-                var sessionFilter_dstPort = myobj.sessionFilter[0]["dstPort"]
-                var sessionFilter_protocol = myobj.sessionFilter[0]["protocol"]
+                var session_Id = parseInt(countResult[3].seq) + 1,
+                    appInfo_Id = parseInt(countResult[2].seq) + 1,
+                    allocation_Id = parseInt(countResult[1].seq) + 1,
+                    timeStamp_Id = parseInt(countResult[4].seq) + 1,
+                    bwInfo_Id = parseInt(countResult[5].seq) + 1;
+                var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"];
+                var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"];
+                var sessionFilter_dstAddress = myobj.sessionFilter[0]["dstAddress"];
+                var sessionFilter_dstPort = myobj.sessionFilter[0]["dstPort"];
+                var sessionFilter_protocol = myobj.sessionFilter[0]["protocol"];
 
                 var insertquery = {
                     "bwInfo_Id": bwInfo_Id,
@@ -1724,12 +1724,12 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                     "session_Id": session_Id,
                     "appInfo_Id": appInfo_Id,
                     "allocation_Id": allocation_Id
-                }
+                };
 
                 var query = {
-                   reqstTypeDescription : myobj.requestType
-                }
-                db.collection('reqstType').find(query).toArray(function (err,reqTypeResult) {
+                    reqstTypeDescription: myobj.requestType
+                };
+                db.collection('reqstType').find(query).toArray(function (err, reqTypeResult) {
                     if (err) {
                         throw err;
                     }
@@ -1737,15 +1737,24 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
 
                         result = {
                             statuscode: 400,
-                            res: {}
-                        }
+                            res: {
+                                "Problem Details": {
+                                    "type": "string",
+                                    "title": "string",
+                                    "status": "400",
+                                    "detail": "string",
+                                    "instance": "string"
+                                }
+                            }
+                        };
                         callback(null, result)
 
                     }
 
-                    else {
 
-                        insertquery.reqstType = reqTypeResult[0].reqstType_Id
+                    else {    //ELSE2
+
+                        insertquery.reqstType = reqTypeResult[0].reqstType_Id;
 
                         var bwInfo = {
                             "timeStamp": {
@@ -1757,8 +1766,7 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                             "sessionFilter": [
                                 {
                                     "sourceIp": sessionFilter_sourceIp,
-                                    "sourcePort":
-                                    sessionFilter_sourcePort,
+                                    "sourcePort": sessionFilter_sourcePort,
                                     "dstAddress": sessionFilter_dstAddress,
                                     "dstPort": sessionFilter_dstPort,
                                     "protocol": sessionFilter_protocol
@@ -1767,14 +1775,14 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                             "fixedBWPriority": myobj.fixedBWPriority,
                             "fixedAllocation": myobj.fixedAllocation,
                             "allocationDirection": myobj.allocationDirection
-                        }
+                        };
 
 
                         db.collection('bwInfo').insertOne(insertquery, function (err, res) {
                             if (err) {
                                 throw err;
                             }
-                            else {
+                            else {   //ELSE3
                                 db.collection('timeStamp').insertOne(
                                     {
                                         "timeStamp_Id": insertquery.timeStamp_Id,
@@ -1815,7 +1823,7 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                                     else {
                                         sourcePort = ''
                                     }
-                                    var port_Id = parseInt(portValue) + parseInt(i)
+                                    var port_Id = parseInt(portValue) + parseInt(i);
                                     db.collection('ports').insertOne({
                                         "port_Id": port_Id,
                                         "srcPort": sourcePort,
@@ -1825,95 +1833,95 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                                 }
                                 var updateData0 = {
                                     seq: countResult[0].seq + mainLength
-                                }
+                                };
 
                                 db.collection('counter').update({"_id": "port_Id"}, {$set: updateData0}, function (err, resp) {
                                     if (err) {
-                                        console.log(err)
+                                        console.log(err);
                                         throw err;
                                     }
                                     else {
                                         console.log("Counter Ports Updated")
                                     }
-                                })
+                                });
 
                                 var updateData1 = {
                                     seq: countResult[1].seq + 1
-                                }
+                                };
 
                                 db.collection('counter').update({"_id": "allocation_Id"}, {$set: updateData1}, function (err, resp) {
                                     if (err) {
-                                        console.log(err)
+                                        console.log(err);
                                         throw err;
                                     }
                                     else {
                                         console.log("")
                                     }
-                                })
+                                });
 
                                 var updateData2 = {
                                     seq: countResult[2].seq + 1
-                                }
+                                };
                                 db.collection('counter').update({"_id": "appInfo_Id"}, {$set: updateData2}, function (err, resp) {
                                     if (err) {
-                                        console.log(err)
+                                        console.log(err);
                                         throw err;
                                     }
                                     else {
                                         console.log("")
                                     }
-                                })
+                                });
 
                                 var updateData3 = {
                                     seq: countResult[3].seq + 1
-                                }
+                                };
                                 db.collection('counter').update({"_id": "session_Id"}, {$set: updateData3}, function (err, resp) {
                                     if (err) {
-                                        console.log(err)
+                                        console.log(err);
                                         throw err;
                                     }
                                     else {
                                         console.log("")
                                     }
-                                })
+                                });
 
                                 var updateData4 = {
                                     seq: countResult[4].seq + 1
-                                }
+                                };
                                 db.collection('counter').update({"_id": "timeStamp_Id"}, {$set: updateData4}, function (err, resp) {
                                     if (err) {
-                                        console.log(err)
+                                        console.log(err);
                                         throw err;
                                     }
                                     else {
                                         console.log("")
                                     }
-                                })
+                                });
 
                                 var updateData5 = {
                                     seq: countResult[5].seq + 1
-                                }
+                                };
                                 db.collection('counter').update({"_id": "bwInfo_Id"}, {$set: updateData5}, function (err, resp) {
                                     if (err) {
-                                        console.log(err)
+                                        console.log(err);
                                         throw err;
                                     }
                                     else {
                                         console.log("")
                                     }
-                                })
+                                });
 
-                                console.log("Refresh db and check")
+                                console.log("Refresh db and check");
                                 var result = {
                                     statuscode: "201",
-                                    res: bwInfo
-                                }
+                                    bwInfo: bwInfo
+                                };
                                 callback(null, result)
-                            }// end of main ELSE
-                        })
-                    }
-                })
-            }
+                            }// end of ELSE3
+                        });//end of Insert operation
+                    }//end of ELSE2
+                });//end of ReqstType operation
+              }//end of Main ELSE1
         });//end of counter collection
 
 	}//end of if(myObj !== undefined)
@@ -1928,12 +1936,12 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
 				"detail": "string",
 				"instance": "string"
 			}
-		}
+		};
 
 		var result = {
 				statuscode:"400",
 				res:errorbody
-		}
+		};
 		callback(null,result)
 	}
 };
