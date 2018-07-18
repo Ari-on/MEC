@@ -1702,189 +1702,24 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
             }
             else {       //ELSE1
 
-                var session_Id = parseInt(countResult[3].seq) + 1,
-                    appInfo_Id = parseInt(countResult[2].seq) + 1,
-                    allocation_Id = parseInt(countResult[1].seq) + 1,
-                    timeStamp_Id = parseInt(countResult[4].seq) + 1,
-                    bwInfo_Id = parseInt(countResult[5].seq) + 1;
-                var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"];
-                var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"];
-                var sessionFilter_dstAddress = myobj.sessionFilter[0]["dstAddress"];
-                var sessionFilter_dstPort = myobj.sessionFilter[0]["dstPort"];
-                var sessionFilter_protocol = myobj.sessionFilter[0]["protocol"];
-
-                var insertquery = {
-                    "bwInfo_Id": bwInfo_Id,
-                    "reqstType": "",
-                    "fixedBWPriority": myobj.fixedBWPriority,
-                    "fixedAllocation": myobj.fixedAllocation,
-                    "allocationDirection": myobj.allocationDirection,
-                    "timeStamp_Id": timeStamp_Id,
-                    "appIns_Id": myobj.appInsId,
-                    "session_Id": session_Id,
-                    "appInfo_Id": appInfo_Id,
-                    "allocation_Id": allocation_Id
+                var updateData2 = {
+                    seq: countResult[2].seq + 1
                 };
-
-                var query = {
-                    reqstTypeDescription: myobj.requestType
-                };
-                db.collection('reqstType').find(query).toArray(function (err, reqTypeResult) {
+                db.collection('counter').update({"_id": "appInfo_Id"}, {$set: updateData2}, function (err, resp) {
                     if (err) {
+                        console.log(err);
                         throw err;
                     }
-                    else if (reqTypeResult[0].reqstType_Id === undefined) {
-
-                        result = {
-                            statuscode: 400,
-                            res: {
-                                "Problem Details": {
-                                    "type": "string",
-                                    "title": "string",
-                                    "status": "400",
-                                    "detail": "string",
-                                    "instance": "string"
-                                }
-                            }
+                    else {
+                        var updateData3 = {
+                            seq: countResult[3].seq + 1
                         };
-                        callback(null, result)
-
-                    }
-
-
-                    else {    //ELSE2
-
-                        insertquery.reqstType = reqTypeResult[0].reqstType_Id;
-
-                        var bwInfo = {
-                            "timeStamp": {
-                                "seconds": myobj.timeStamp["seconds"],
-                                "nanoSeconds": myobj.timeStamp["nanoSeconds"]
-                            },
-                            "appInsId": myobj.appInsId,
-                            "requestType": insertquery.reqstType,
-                            "sessionFilter": [
-                                {
-                                    "sourceIp": sessionFilter_sourceIp,
-                                    "sourcePort": sessionFilter_sourcePort,
-                                    "dstAddress": sessionFilter_dstAddress,
-                                    "dstPort": sessionFilter_dstPort,
-                                    "protocol": sessionFilter_protocol
-                                }
-                            ],
-                            "fixedBWPriority": myobj.fixedBWPriority,
-                            "fixedAllocation": myobj.fixedAllocation,
-                            "allocationDirection": myobj.allocationDirection
-                        };
-
-
-                        db.collection('bwInfo').insertOne(insertquery, function (err, res) {
+                        db.collection('counter').update({"_id": "session_Id"}, {$set: updateData3}, function (err, resp) {
                             if (err) {
+                                console.log(err);
                                 throw err;
                             }
-                            else {   //ELSE3
-                                db.collection('timeStamp').insertOne(
-                                    {
-                                        "timeStamp_Id": insertquery.timeStamp_Id,
-                                        "seconds": myobj.timeStamp["seconds"],
-                                        "nanoSeconds": myobj.timeStamp["nanoSeconds"],
-                                        "bwInfo_Id": insertquery.bwInfo_Id
-                                    }
-                                );
-
-                                db.collection('sessionFilter').insertOne(
-                                    {
-                                        "session_Id": insertquery.session_Id,
-                                        "sourceIP": sessionFilter_sourceIp,
-                                        "destAddress": sessionFilter_dstAddress,
-                                        "protocol": sessionFilter_protocol,
-                                        "appIns_Id": myobj.appInsId,
-                                    }
-                                );
-
-                                var mainLength;
-                                var portValue = countResult[0].seq + 1
-                                if (sessionFilter_sourcePort.length >= sessionFilter_dstPort.length) {
-                                    mainLength = sessionFilter_sourcePort.length
-                                } else {
-                                    mainLength = sessionFilter_dstPort.length
-                                }
-                                var sourcePort, destPort;
-                                for (var i = 0; i < mainLength; i++) {
-                                    if (sessionFilter_dstPort[i]) {
-                                        destPort = sessionFilter_dstPort[i]
-                                    }
-                                    else {
-                                        destPort = ''
-                                    }
-                                    if (sessionFilter_sourcePort[i]) {
-                                        sourcePort = sessionFilter_sourcePort[i]
-                                    }
-                                    else {
-                                        sourcePort = ''
-                                    }
-                                    var port_Id = parseInt(portValue) + parseInt(i);
-                                    db.collection('ports').insertOne({
-                                        "port_Id": port_Id,
-                                        "srcPort": sourcePort,
-                                        "dstPort": destPort,
-                                        "session_Id": insertquery["session_Id"]
-                                    })
-                                }
-                                var updateData0 = {
-                                    seq: countResult[0].seq + mainLength
-                                };
-
-                                db.collection('counter').update({"_id": "port_Id"}, {$set: updateData0}, function (err, resp) {
-                                    if (err) {
-                                        console.log(err);
-                                        throw err;
-                                    }
-                                    else {
-                                        console.log("Counter Ports Updated")
-                                    }
-                                });
-
-                                var updateData1 = {
-                                    seq: countResult[1].seq + 1
-                                };
-
-                                db.collection('counter').update({"_id": "allocation_Id"}, {$set: updateData1}, function (err, resp) {
-                                    if (err) {
-                                        console.log(err);
-                                        throw err;
-                                    }
-                                    else {
-                                        console.log("")
-                                    }
-                                });
-
-                                var updateData2 = {
-                                    seq: countResult[2].seq + 1
-                                };
-                                db.collection('counter').update({"_id": "appInfo_Id"}, {$set: updateData2}, function (err, resp) {
-                                    if (err) {
-                                        console.log(err);
-                                        throw err;
-                                    }
-                                    else {
-                                        console.log("")
-                                    }
-                                });
-
-                                var updateData3 = {
-                                    seq: countResult[3].seq + 1
-                                };
-                                db.collection('counter').update({"_id": "session_Id"}, {$set: updateData3}, function (err, resp) {
-                                    if (err) {
-                                        console.log(err);
-                                        throw err;
-                                    }
-                                    else {
-                                        console.log("")
-                                    }
-                                });
-
+                            else {
                                 var updateData4 = {
                                     seq: countResult[4].seq + 1
                                 };
@@ -1894,33 +1729,195 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
                                         throw err;
                                     }
                                     else {
-                                        console.log("")
+                                        var updateData5 = {
+                                            seq: countResult[5].seq + 1
+                                        };
+                                        db.collection('counter').update({"_id": "bwInfo_Id"}, {$set: updateData5}, function (err, resp) {
+                                            if (err) {
+                                                console.log(err);
+                                                throw err;
+                                            }
+                                            else {
+                                                db.collection('counter').find().toArray(function (err, countResult2) {
+                                                	if(countResult2) {
+                                                        var session_Id = parseInt(countResult2[3].seq),
+                                                            appInfo_Id = parseInt(countResult2[2].seq),
+                                                            allocation_Id = parseInt(countResult2[1].seq) + 1,
+                                                            timeStamp_Id = parseInt(countResult2[4].seq),
+                                                            bwInfo_Id = parseInt(countResult2[5].seq);
+                                                        var sessionFilter_sourceIp = myobj.sessionFilter[0]["sourceIp"];
+                                                        var sessionFilter_sourcePort = myobj.sessionFilter[0]["sourcePort"];
+                                                        var sessionFilter_dstAddress = myobj.sessionFilter[0]["dstAddress"];
+                                                        var sessionFilter_dstPort = myobj.sessionFilter[0]["dstPort"];
+                                                        var sessionFilter_protocol = myobj.sessionFilter[0]["protocol"];
+
+                                                        var insertquery = {
+                                                            "bwInfo_Id": bwInfo_Id,
+                                                            // "reqstType": "",
+                                                            "fixedBWPriority": myobj.fixedBWPriority,
+                                                            "fixedAllocation": myobj.fixedAllocation,
+                                                            "allocationDirection": myobj.allocationDirection,
+                                                            "timeStamp_Id": timeStamp_Id,
+                                                            "appIns_Id": myobj.appInsId,
+                                                            "session_Id": session_Id,
+                                                            "appInfo_Id": appInfo_Id,
+                                                            "allocation_Id": allocation_Id
+                                                        };
+
+                                                        var query = {
+                                                            reqstTypeDescription: myobj.requestType
+                                                        };
+
+                                                        db.collection('reqstType').find(query).toArray(function (err, reqTypeResult) {
+                                                            if (err) {
+                                                                throw err;
+                                                            }
+                                                            else if (reqTypeResult.length === 0) {
+
+                                                                result = {
+                                                                    statuscode: 400,
+                                                                    res: {
+                                                                        "Problem Details": {
+                                                                            "type": "string",
+                                                                            "title": "string",
+                                                                            "status": "400",
+                                                                            "detail": "Request Type is not valid in database.",
+                                                                            "instance": "string"
+                                                                        }
+                                                                    }
+                                                                };
+                                                                callback(null, result)
+
+                                                            }
+                                                            else {    //ELSE2
+
+                                                                insertquery.reqstType = reqTypeResult[0].reqstType_Id;
+
+                                                                db.collection('bwInfo').insertOne(insertquery, function (err, res) {
+                                                                    if (err) {
+                                                                        throw err;
+                                                                    }
+                                                                    else {   //ELSE3
+                                                                        db.collection('timeStamp').insertOne(
+                                                                            {
+                                                                                "timeStamp_Id": insertquery.timeStamp_Id,
+                                                                                "seconds": myobj.timeStamp["seconds"],
+                                                                                "nanoSeconds": myobj.timeStamp["nanoSeconds"],
+                                                                                "bwInfo_Id": insertquery.bwInfo_Id
+                                                                            }
+                                                                        );
+
+                                                                        db.collection('sessionFilter').insertOne(
+                                                                            {
+                                                                                "session_Id": insertquery.session_Id,
+                                                                                "sourceIP": sessionFilter_sourceIp,
+                                                                                "destAddress": sessionFilter_dstAddress,
+                                                                                "protocol": sessionFilter_protocol,
+                                                                                "appIns_Id": myobj.appInsId,
+                                                                            }
+                                                                        );
+
+                                                                        var mainLength;
+                                                                        var portValue = countResult[0].seq + 1
+                                                                        if (sessionFilter_sourcePort.length >= sessionFilter_dstPort.length) {
+                                                                            mainLength = sessionFilter_sourcePort.length
+                                                                        } else {
+                                                                            mainLength = sessionFilter_dstPort.length
+                                                                        }
+                                                                        var sourcePort, destPort;
+                                                                        for (var i = 0; i < mainLength; i++) {
+                                                                            if (sessionFilter_dstPort[i]) {
+                                                                                destPort = sessionFilter_dstPort[i]
+                                                                            }
+                                                                            else {
+                                                                                destPort = ''
+                                                                            }
+                                                                            if (sessionFilter_sourcePort[i]) {
+                                                                                sourcePort = sessionFilter_sourcePort[i]
+                                                                            }
+                                                                            else {
+                                                                                sourcePort = ''
+                                                                            }
+                                                                            var port_Id = parseInt(portValue) + parseInt(i);
+                                                                            db.collection('ports').insertOne({
+                                                                                "port_Id": port_Id,
+                                                                                "srcPort": sourcePort,
+                                                                                "dstPort": destPort,
+                                                                                "session_Id": insertquery["session_Id"]
+                                                                            })
+                                                                        }
+                                                                        var updateData0 = {
+                                                                            seq: countResult[0].seq + mainLength
+                                                                        };
+
+                                                                        db.collection('counter').update({"_id": "port_Id"}, {$set: updateData0}, function (err, resp) {
+                                                                            if (err) {
+                                                                                console.log(err);
+                                                                                throw err;
+                                                                            }
+                                                                            else {
+                                                                                console.log("Counter Ports Updated")
+                                                                                var updateData1 = {
+                                                                                    seq: countResult[1].seq + 1
+                                                                                };
+
+                                                                                db.collection('counter').update({"_id": "allocation_Id"}, {$set: updateData1}, function (err, resp) {
+                                                                                    if (err) {
+                                                                                        console.log(err);
+                                                                                        throw err;
+                                                                                    }
+                                                                                    else {
+                                                                                        console.log("Allocation ID count Updated!")
+                                                                                        var bwInfo = {
+                                                                                            "timeStamp": {
+                                                                                                "seconds": myobj.timeStamp["seconds"],
+                                                                                                "nanoSeconds": myobj.timeStamp["nanoSeconds"]
+                                                                                            },
+                                                                                            "appInsId": myobj.appInsId,
+                                                                                            "requestType": insertquery.reqstType,
+                                                                                            "sessionFilter": [
+                                                                                                {
+                                                                                                    "sourceIp": sessionFilter_sourceIp,
+                                                                                                    "sourcePort": sessionFilter_sourcePort,
+                                                                                                    "dstAddress": sessionFilter_dstAddress,
+                                                                                                    "dstPort": sessionFilter_dstPort,
+                                                                                                    "protocol": sessionFilter_protocol
+                                                                                                }
+                                                                                            ],
+                                                                                            "fixedBWPriority": myobj.fixedBWPriority,
+                                                                                            "fixedAllocation": myobj.fixedAllocation,
+                                                                                            "allocationDirection": myobj.allocationDirection
+                                                                                        };
+
+                                                                                        console.log("Refresh db and check!");
+                                                                                        var result = {
+                                                                                            statuscode: "201",
+                                                                                            bwInfo: bwInfo
+                                                                                        };
+                                                                                        callback(null, result)
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        });
+                                                                    }// end of ELSE3
+                                                                });//end of Insert operation
+                                                            }//end of ELSE2
+                                                        });//end of ReqstType operation
+                                                    }
+                                                    else{
+                                                        console.log(err);
+                                                        throw err;
+													}
+
+												})
+                                            }
+                                        });
                                     }
                                 });
-
-                                var updateData5 = {
-                                    seq: countResult[5].seq + 1
-                                };
-                                db.collection('counter').update({"_id": "bwInfo_Id"}, {$set: updateData5}, function (err, resp) {
-                                    if (err) {
-                                        console.log(err);
-                                        throw err;
-                                    }
-                                    else {
-                                        console.log("")
-                                    }
-                                });
-
-                                console.log("Refresh db and check");
-                                var result = {
-                                    statuscode: "201",
-                                    bwInfo: bwInfo
-                                };
-                                callback(null, result)
-                            }// end of ELSE3
-                        });//end of Insert operation
-                    }//end of ELSE2
-                });//end of ReqstType operation
+                            }
+                        });
+                    }
+                });
               }//end of Main ELSE1
         });//end of counter collection
 
@@ -1933,7 +1930,7 @@ DefaultService.prototype.bw_allocationsPOST = function(req,callback) {
 				"type": "string",
 				"title": "string",
 				"status": "400",
-				"detail": "string",
+				"detail": "Please enter Request Body for the POST method",
 				"instance": "string"
 			}
 		};
