@@ -18,6 +18,7 @@ var UIRoutes = function(app) {
     this.RNIserviceInstance = new RNIservice(app);//for RNI
 };
 
+var tokenValidation = 'sairamMEC';
 
 module.exports    = UIRoutes;
 
@@ -30,115 +31,176 @@ UIRoutes.prototype.init = function() {
 
     app.get("/bwm/v1/bw_allocations/",function (req,res) {
 
-        self.seviceInstance.bw_allocationsGET(req.query, function (err,result) {
+        self.seviceInstance.bw_allocationsGET(req.query, function (err, result) {
             res.send(result);
-
         })
-
     });
 
     app.post("/bwm/v1/bw_allocations/",function (req,res) {
 
-        self.seviceInstance.bw_allocationsPOST(req, function (err,result) {
+        self.seviceInstance.bw_allocationsPOST(req, function (err, result) {
             res.send(result);
         })
-
     });
 
     app.get("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        self.seviceInstance.bw_allocationsAllocationIdGET(req.params.allocationID, function (err,result) {
+        self.seviceInstance.bw_allocationsAllocationIdGET(req.params.allocationID, function (err, result) {
             res.send(result);
         })
-
     });
 
     app.patch("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        self.seviceInstance.bw_allocationsAllocationIdPATCH(req, function (err,result) {
+        self.seviceInstance.bw_allocationsAllocationIdPATCH(req, function (err, result) {
             res.send(result);
         })
-
     });
 
     app.put("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        self.seviceInstance.bw_allocationsAllocationIdPUT(req, function (err,result) {
+        self.seviceInstance.bw_allocationsAllocationIdPUT(req, function (err, result) {
             res.send(result);
         })
-
     });
 
     app.delete("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        self.seviceInstance.bw_allocationsAllocationIdDELETE(req.params.allocationID, function (err,result) {
+        self.seviceInstance.bw_allocationsAllocationIdDELETE(req.params.allocationID, function (err, result) {
             res.send(result);
         })
-
     });
 
     /* UE Application API */
 
     app.get("/mx2/v1/app_list",function (req,res) {
 
-        self.AppserviceInstance.app_listGET(req, function (err,result) {
-            res.send(result);
-        })
+        if(tokenValidation === 'sairamMEC') {
+            self.AppserviceInstance.app_listGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.post("/mx2/v1/app_contexts",function (req,res) {
-        var appContext = req.body;
-        self.serviceInstance.app_contextsPOST(req, appContext, function(err, result){
-            res.send(result)
-        })
+
+        if(tokenValidation === 'sairamMEC') {
+            var appContext = req.body;
+            self.serviceInstance.app_contextsPOST(req, appContext, function (err, result) {
+                res.send(result)
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.put("/mx2/v1/app_contexts/:contextID",function (req,res) {
-        var contextID = req.params.contextID;
-        var appContext = req.body;
 
-        self.serviceInstance.app_contextsContextIdPUT(req, contextID, appContext, function (err,result) {
-            res.send(result);
-        })
+        if(tokenValidation === 'sairamMEC') {
+            var contextID = req.params.contextID;
+            var appContext = req.body;
+
+            self.serviceInstance.app_contextsContextIdPUT(req, contextID, appContext, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.delete("/mx2/v1/app_contexts/:contextID",function (req,res) {
-        var contextID = req.params.contextID;
 
-        self.serviceInstance.app_contextsContextIdDELETE(req, contextID, function (err,result) {
-            res.send(result);
-        })
+        if(tokenValidation === 'sairamMEC') {
+            var contextID = req.params.contextID;
+
+            self.serviceInstance.app_contextsContextIdDELETE(req, contextID, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     /* UE Identity API */
 
     app.get("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
 
-        console.log('GET Method',req.params);
-        console.log('GET Method',req.query);
+            console.log('GET Method', req.params);
+            console.log('GET Method', req.query);
 
-        self.IdserviceInstance.appInstanceIdUe_identity_tag_infoGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.IdserviceInstance.appInstanceIdUe_identity_tag_infoGET(req, function (err, result) {
+                res.send(result);
+            })
     });
 
     app.put("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('PUT Method', req.params);
+            console.log('PUT Method', req.body);
 
-        self.IdserviceInstance.appInstanceIdUe_identity_tag_infoPUT(req, function (err,result) {
-            res.send(result);
-        })
+            self.IdserviceInstance.appInstanceIdUe_identity_tag_infoPUT(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     /* Mp1 API */
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules",function (req,res) {
 
-        console.log('GET Method',req.params);
+        console.log('GET Method', req.params);
 
-        self.Mp1serviceInstance.ApplicationsDnsRules_GET(req, function (err,result) {
+        self.Mp1serviceInstance.ApplicationsDnsRules_GET(req, function (err, result) {
             res.send(result);
         })
     });
@@ -147,7 +209,7 @@ UIRoutes.prototype.init = function() {
 
         console.log('GET Method',req.params);
 
-        self.Mp1serviceInstance.ApplicationsDnsRule_GET(req, function (err,result) {
+        self.Mp1serviceInstance.ApplicationsDnsRule_GET(req, function (err, result) {
             res.send(result);
         })
     });
@@ -157,7 +219,7 @@ UIRoutes.prototype.init = function() {
         console.log('PUT Method',req.params);
         console.log('PUT Method',req.body);
 
-        self.Mp1serviceInstance.ApplicationsDnsRule_PUT(req, function (err,result) {
+        self.Mp1serviceInstance.ApplicationsDnsRule_PUT(req, function (err, result) {
             res.send(result);
         })
     });
@@ -166,7 +228,7 @@ UIRoutes.prototype.init = function() {
 
         console.log('GET Method',req.params);
 
-        self.Mp1serviceInstance.ApplicationsSubscriptions_GET(req, function (err,result) {
+        self.Mp1serviceInstance.ApplicationsSubscriptions_GET(req, function (err, result) {
             res.send(result);
         })
     });
@@ -176,7 +238,7 @@ UIRoutes.prototype.init = function() {
         console.log('POST Method',req.params);
         console.log('POST Method',req.body);
 
-        self.Mp1serviceInstance.ApplicationsSubscriptions_POST(req, function (err,result) {
+        self.Mp1serviceInstance.ApplicationsSubscriptions_POST(req, function (err, result) {
             res.send(result);
         })
     });
@@ -185,7 +247,7 @@ UIRoutes.prototype.init = function() {
 
         console.log('GET Method',req.params);
 
-        self.Mp1serviceInstance.ApplicationsSubscription_GET(req, function (err,result) {
+        self.Mp1serviceInstance.ApplicationsSubscription_GET(req, function (err, result) {
             res.send(result);
         })
     });
@@ -194,99 +256,99 @@ UIRoutes.prototype.init = function() {
 
         console.log('DELETE Method',req.params);
 
-        self.Mp1serviceInstance.ApplicationsSubscription_DELETE(req, function (err,result) {
+        self.Mp1serviceInstance.ApplicationsSubscription_DELETE(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules",function (req,res) {
 
-        console.log('GET Method',req.params);
+        console.log('GET Method', req.params);
 
-        self.Mp1serviceInstance.ApplicationsTrafficRules_GET(req, function (err,result) {
+        self.Mp1serviceInstance.ApplicationsTrafficRules_GET(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
 
-        console.log('GET Method',req.params);
+        console.log('GET Method', req.params);
 
-        self.Mp1serviceInstance.ApplicationsTrafficRule_GET(req, function (err,result) {
+        self.Mp1serviceInstance.ApplicationsTrafficRule_GET(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.put("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+        console.log('PUT Method', req.params);
+        console.log('PUT Method', req.body);
 
-        self.Mp1serviceInstance.ApplicationsTrafficRules_PUT(req, function (err,result) {
+        self.Mp1serviceInstance.ApplicationsTrafficRules_PUT(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/services",function (req,res) {
 
-        console.log('GET Method',req.query);
+        console.log('GET Method', req.query);
 
-        self.Mp1serviceInstance.Services_GET(req, function (err,result) {
+        self.Mp1serviceInstance.Services_GET(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.put("/exampleAPI/mp1/v1/services",function (req,res) {
 
-        console.log('PUT Method',req.body);
+        console.log('PUT Method', req.body);
 
-        self.Mp1serviceInstance.Services_PUT(req, function (err,result) {
+        self.Mp1serviceInstance.Services_PUT(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
 
-        console.log('GET Method',req.params);
+        console.log('GET Method', req.params);
 
-        self.Mp1serviceInstance.ServicesServiceId_GET(req, function (err,result) {
+        self.Mp1serviceInstance.ServicesServiceId_GET(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.put("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+        console.log('PUT Method', req.params);
+        console.log('PUT Method', req.body);
 
-        self.Mp1serviceInstance.ServicesServiceId_PUT(req, function (err,result) {
+        self.Mp1serviceInstance.ServicesServiceId_PUT(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/timing/current_time",function (req,res) {
 
-        console.log('GET Method',req.query);
+        console.log('GET Method', req.query);
 
-        self.Mp1serviceInstance.TimingCurrentTime_GET(req, function (err,result) {
+        self.Mp1serviceInstance.TimingCurrentTime_GET(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/timing/timing_caps",function (req,res) {
 
-        console.log('GET Method',req.query);
+        console.log('GET Method', req.query);
 
-        self.Mp1serviceInstance.TimingCaps_GET(req, function (err,result) {
+        self.Mp1serviceInstance.TimingCaps_GET(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/transports",function (req,res) {
 
-        console.log('GET Method',req.query);
+        console.log('GET Method', req.query);
 
-        self.Mp1serviceInstance.Transports_GET(req, function (err,result) {
+        self.Mp1serviceInstance.Transports_GET(req, function (err, result) {
             res.send(result);
         })
     });
@@ -512,29 +574,69 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/queries/rab_info",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
 
-        self.RNIserviceInstance.rab_infoGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.rab_infoGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
+
     });
 
     app.get("/rni/v1/queries/plmn_info",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
 
-        self.RNIserviceInstance.plmn_infoGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/queries/s1_bearer_info",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
 
-        self.RNIserviceInstance.s1_bearer_infoGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.s1_bearer_infoGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
 //////////////////////////////////
@@ -543,98 +645,217 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
 
-        self.RNIserviceInstance.SubscriptionLinkList_subscriptionsGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.SubscriptionLinkList_subscriptionsGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/cell_change",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
 
-        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cc_GET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cc_GET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.post("/rni/v1/subscriptions/cell_change",function (req,res) {
 
-        console.log('POST Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.CellChange_subscriptionsPOST(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.CellChange_subscriptionsPOST(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
+            console.log('GET Method', req.params);
 
-        self.RNIserviceInstance.CellChange_subscriptionsGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.CellChange_subscriptionsGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.put("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('PUT Method', req.params);
+            console.log('PUT Method', req.body);
 
 
-        self.RNIserviceInstance.CellChange_subscriptionsPUT(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.CellChange_subscriptionsPUT(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.delete("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method',req.params);
+        console.log('DELETE Method', req.params);
 
-        self.RNIserviceInstance.CellChange_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        self.RNIserviceInstance.CellChange_subscriptionsSubscrIdDELETE(req, function (err, result) {
             res.send(result);
         })
+
     });
 
     app.get("/rni/v1/subscriptions/s1_bearer",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
 
-        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_s1_GET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.SubscriptionLinkList_subscriptions_s1_GET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.post("/rni/v1/subscriptions/s1_bearer",function (req,res) {
 
-        console.log('POST Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
 
-        self.RNIserviceInstance.S1BearerSubscription_subscriptionsPOST(req, function (err,result) {
-            res.send(result);
-        })
+            console.log('POST Method', req.body);
+
+            self.RNIserviceInstance.S1BearerSubscription_subscriptionsPOST(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
+
     });
 
     app.get("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
+        if(tokenValidation === 'sairamMEC') {
 
-        self.RNIserviceInstance.S1BearerSubscription_subscriptionsGET(req, function (err,result) {
-            res.send(result);
-        })
+            console.log('GET Method', req.query);
+            console.log('GET Method', req.params);
+
+            self.RNIserviceInstance.S1BearerSubscription_subscriptionsGET(req, function (err, result) {
+                res.send(result);
+            })
+        }else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.put("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('PUT Method', req.params);
+            console.log('PUT Method', req.body);
 
-
-        self.RNIserviceInstance.S1BearerSubscription_subscriptionsPUT(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.S1BearerSubscription_subscriptionsPUT(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.delete("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
@@ -648,40 +869,96 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/ta",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
 
-        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_ta_GET(req, function (err,result) {
-            res.send(result);
-        })
+            console.log('GET Method', req.query);
+
+            self.RNIserviceInstance.SubscriptionLinkList_subscriptions_ta_GET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.post("/rni/v1/subscriptions/ta",function (req,res) {
 
-        console.log('POST Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
 
-        self.RNIserviceInstance.MeasTa_subscriptionsPOST(req, function (err,result) {
-            res.send(result);
-        })
+            console.log('POST Method', req.body);
+
+            self.RNIserviceInstance.MeasTa_subscriptionsPOST(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
+        if(tokenValidation === 'sairamMEC') {
 
-        self.RNIserviceInstance.MeasTa_subscriptionsGET(req, function (err,result) {
-            res.send(result);
-        })
+            console.log('GET Method', req.query);
+            console.log('GET Method', req.params);
+
+            self.RNIserviceInstance.MeasTa_subscriptionsGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.put("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
 
-        self.RNIserviceInstance.MeasTa_subscriptionsPUT(req, function (err,result) {
-            res.send(result);
-        })
+            console.log('PUT Method', req.params);
+            console.log('PUT Method', req.body);
+
+            self.RNIserviceInstance.MeasTa_subscriptionsPUT(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.delete("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
@@ -695,88 +972,195 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/meas_rep_ue",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
 
-        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_mr_GET(req, function (err,result) {
-            res.send(result);
-        })
+            console.log('GET Method', req.query);
+
+            self.RNIserviceInstance.SubscriptionLinkList_subscriptions_mr_GET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.post("/rni/v1/subscriptions/meas_rep_ue",function (req,res) {
 
-        console.log('POST Method',req.params);
-        console.log('POST Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
 
-        self.RNIserviceInstance.MeasRepUe_subscriptionsPOST(req, function (err,result) {
-            res.send(result);
-        })
+            console.log('POST Method', req.params);
+            console.log('POST Method', req.body);
+
+            self.RNIserviceInstance.MeasRepUe_subscriptionsPOST(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
+            console.log('GET Method', req.params);
 
-        self.RNIserviceInstance.MeasRepUe_subscriptionsGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.MeasRepUe_subscriptionsGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.put("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('PUT Method', req.params);
+            console.log('PUT Method', req.body);
 
-        self.RNIserviceInstance.MeasRepUeReport_subscriptionsPUT(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.MeasRepUeReport_subscriptionsPUT(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.delete("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method',req.params);
+        console.log('DELETE Method', req.params);
 
-        self.RNIserviceInstance.MeasRepUe_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        self.RNIserviceInstance.MeasRepUe_subscriptionsSubscrIdDELETE(req, function (err, result) {
             res.send(result);
         })
+
     });
 
     app.get("/rni/v1/subscriptions/rab_est",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
 
-        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_re_GET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.SubscriptionLinkList_subscriptions_re_GET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.post("/rni/v1/subscriptions/rab_est",function (req,res) {
 
-        console.log('POST Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.RabEstSubscription_subscriptionsPOST(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.RabEstSubscription_subscriptionsPOST(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
+            console.log('GET Method', req.params);
 
-        self.RNIserviceInstance.RabEstSubscription_subscriptionsGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.RabEstSubscription_subscriptionsGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.put("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('PUT Method', req.params);
+            console.log('PUT Method', req.body);
 
-        self.RNIserviceInstance.RabEstSubscription_subscriptionsPUT(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.RabEstSubscription_subscriptionsPUT(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.delete("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
@@ -790,40 +1174,92 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/rab_mod",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
 
-        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_rm_GET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.SubscriptionLinkList_subscriptions_rm_GET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.post("/rni/v1/subscriptions/rab_mod",function (req,res) {
 
-        console.log('POST Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.RabModSubscription_subscriptionsPOST(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.RabModSubscription_subscriptionsPOST(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
+            console.log('GET Method', req.params);
 
-        self.RNIserviceInstance.RabModSubscription_subscriptionsGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.RabModSubscription_subscriptionsGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.put("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('PUT Method', req.params);
+            console.log('PUT Method', req.body);
 
-        self.RNIserviceInstance.RabModSubscription_subscriptionsPUT(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.RabModSubscription_subscriptionsPUT(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.delete("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
@@ -837,40 +1273,92 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/rab_rel",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
 
-        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_rr_GET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.SubscriptionLinkList_subscriptions_rr_GET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.post("/rni/v1/subscriptions/rab_rel",function (req,res) {
 
-        console.log('POST Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.RabRelSubscription_subscriptionsPOST(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.RabRelSubscription_subscriptionsPOST(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
+            console.log('GET Method', req.params);
 
-        self.RNIserviceInstance.RabRelSubscription_subscriptionsGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.RabRelSubscription_subscriptionsGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.put("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.params);
-        console.log('GET Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.params);
+            console.log('GET Method', req.body);
 
-        self.RNIserviceInstance.RabRelSubscription_subscriptionsPUT(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.RabRelSubscription_subscriptionsPUT(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.delete("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
@@ -884,40 +1372,92 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/ca_reconf",function (req,res) {
 
-        console.log('GET Method',req.query);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
 
-        self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cr_GET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cr_GET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.post("/rni/v1/subscriptions/ca_reconf",function (req,res) {
 
-        console.log('POST Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.CaReConfSubscription_subscriptionsPOST(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.CaReConfSubscription_subscriptionsPOST(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('GET Method', req.query);
+            console.log('GET Method', req.params);
 
-        self.RNIserviceInstance.CaReConfSubscription_subscriptionsGET(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.CaReConfSubscription_subscriptionsGET(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.put("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+        if(tokenValidation === 'sairamMEC') {
+            console.log('PUT Method', req.params);
+            console.log('PUT Method', req.body);
 
-        self.RNIserviceInstance.CaReConfSubscription_subscriptionsPUT(req, function (err,result) {
-            res.send(result);
-        })
+            self.RNIserviceInstance.CaReConfSubscription_subscriptionsPUT(req, function (err, result) {
+                res.send(result);
+            })
+        }
+        else{
+            res.status(401).json({
+                "ProblemDetails": {
+                    "type": "string",
+                    "title": "string",
+                    "status": 401,
+                    "detail": "Token Validation Failed",
+                    "instance": "string"
+                }
+            })
+        }
     });
 
     app.delete("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
