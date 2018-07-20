@@ -1004,4 +1004,5 @@ UIRoutes.prototype.init = function() {
             res.send(result);
         })
     });
+
 };

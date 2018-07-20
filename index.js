@@ -45,6 +45,23 @@ app.listen (serverPort,function () {
 // });
 
 
+
 var WebRoutes = require("./routes/ui-routes.js");
 var webRoutes = new WebRoutes(app);
 webRoutes.init();
+
+app.use(function(req, res, next){
+    // res.status(404);
+
+    // respond with json
+    if (req.accepts('json')) {
+        res.status(404).send({Problem_Details: {
+                "type": "string",
+                "title": "string",
+                "status": 404,
+                "detail": "Page Not Found",
+                "instance": "string"
+            }});
+        // return;
+    }
+});

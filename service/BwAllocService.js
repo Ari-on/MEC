@@ -863,7 +863,7 @@ DefaultService.prototype.bw_allocationsAllocationIdPATCH = function(req,callback
 // };
 
 
-/*
+/**
  *
  * This method updates the information about a specific bandwidthAllocation resource. 
  *
@@ -871,7 +871,7 @@ DefaultService.prototype.bw_allocationsAllocationIdPATCH = function(req,callback
  * bwInfo BwInfo BwInfo with updated information is included as entity body of the request
  * returns inline_response_200
  *
-*/
+**/
 DefaultService.prototype.bw_allocationsAllocationIdPUT = function(req,callback) {
     console.log("This is bw_allocationsAllocationIdPUT method!!!")
     var self = this;
@@ -2249,6 +2249,13 @@ DefaultService.prototype.bw_allocationsPOST = function (req, callback) {
                                                                                 }
                                                                             );
 
+                                                                            db.collection('appInfo').insertOne(
+                                                                                {
+                                                                                    "appInfo_Id": insertquery.appInfo_Id,
+                                                                                    "appName": "app"+insertquery.appInfo_Id,
+                                                                                }
+                                                                            );
+
                                                                             var mainLength;
                                                                             var portValue = countResult[0].seq + 1
                                                                             if (sessionFilter_sourcePort.length >= sessionFilter_dstPort.length) {
@@ -2323,7 +2330,7 @@ DefaultService.prototype.bw_allocationsPOST = function (req, callback) {
 
                                                                                             console.log("Refresh db and check!");
                                                                                             var result = {
-                                                                                                statuscode: "201",
+                                                                                                statuscode: 201,
                                                                                                 bwInfo: bwInfo
                                                                                             };
                                                                                             callback(null, result)
