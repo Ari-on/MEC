@@ -2305,13 +2305,13 @@ DefaultService.prototype.bw_allocationsPOST = function (req, callback) {
                                                                                                     "seconds": myobj.timeStamp["seconds"],
                                                                                                     "nanoSeconds": myobj.timeStamp["nanoSeconds"]
                                                                                                 },
-                                                                                                "appInsId": myobj.appInsId,
+                                                                                                "appIns_Id": myobj.appInsId,
                                                                                                 "requestType": insertquery.reqstType,
                                                                                                 "sessionFilter": [
                                                                                                     {
-                                                                                                        "sourceIp": sessionFilter_sourceIp,
+                                                                                                        "sourceIP": sessionFilter_sourceIp,
                                                                                                         "sourcePort": sessionFilter_sourcePort,
-                                                                                                        "dstAddress": sessionFilter_dstAddress,
+                                                                                                        "destAddress": sessionFilter_dstAddress,
                                                                                                         "dstPort": sessionFilter_dstPort,
                                                                                                         "protocol": sessionFilter_protocol
                                                                                                     }
