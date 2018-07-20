@@ -132,8 +132,8 @@ DefaultService.prototype.bw_allocationsAllocationIdGET = function(req,callback) 
 				$lookup:
 				{
 					from : "sessionFilter",
-					localField : "appIns_Id",
-					foreignField : "appIns_Id",
+					localField : "session_Id",
+					foreignField : "session_Id",
 					as : "sessionFilterInfo"
 				}
 			},
