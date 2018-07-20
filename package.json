@@ -18,6 +18,7 @@
     "connect": "^3.2.0",
     "express": "^4.16.3",
     "js-yaml": "^3.3.0",
+    "jsonwebtoken": "^8.3.0",
     "mongodb": "^2.2.33",
     "nodemon": "^1.17.5",
     "reload": "^2.3.0",
