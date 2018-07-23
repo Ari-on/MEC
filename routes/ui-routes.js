@@ -32,7 +32,9 @@ function verifyToken(req, res, next) {
     var token = req.headers['x-access-token'];
 
     if (!token) {
-        res.status(401).send({"ProblemDetails": {
+        res.status(401).send({
+            "statuscode" : 401,
+            "ProblemDetails": {
                 "type": "string",
                 "title": "string",
                 "status": 401,
@@ -47,6 +49,7 @@ function verifyToken(req, res, next) {
             if (err) {
                 console.log('First status ---');
                 return res.status(403).send({
+                    "statuscode" : 403,
                     "ProblemDetails": {
                         "type": "string",
                         "title": "string",
