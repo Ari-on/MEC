@@ -109,42 +109,42 @@ UIRoutes.prototype.init = function() {
 
     /* BWM API */
 
-    app.get("/bwm/v1/bw_allocations/",verifyToken,function (req,res) {
+    app.get("/bwm/v1/bw_allocations/",function (req,res) {
 
         self.seviceInstance.bw_allocationsGET(req.query, function (err, result) {
             res.send(result);
         })
     });
 
-    app.post("/bwm/v1/bw_allocations/",verifyToken,function (req,res) {
+    app.post("/bwm/v1/bw_allocations/",function (req,res) {
 
         self.seviceInstance.bw_allocationsPOST(req, function (err, result) {
             res.send(result);
         })
     });
 
-    app.get("/bwm/v1/bw_allocations/:allocationID",verifyToken,function (req,res) {
+    app.get("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
         self.seviceInstance.bw_allocationsAllocationIdGET(req.params.allocationID, function (err, result) {
             res.send(result);
         })
     });
 
-    app.patch("/bwm/v1/bw_allocations/:allocationID",verifyToken,function (req,res) {
+    app.patch("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
         self.seviceInstance.bw_allocationsAllocationIdPATCH(req, function (err, result) {
             res.send(result);
         })
     });
 
-    app.put("/bwm/v1/bw_allocations/:allocationID",verifyToken,function (req,res) {
+    app.put("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
         self.seviceInstance.bw_allocationsAllocationIdPUT(req, function (err, result) {
             res.send(result);
         })
     });
 
-    app.delete("/bwm/v1/bw_allocations/:allocationID",verifyToken,function (req,res) {
+    app.delete("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
         self.seviceInstance.bw_allocationsAllocationIdDELETE(req.params.allocationID, function (err, result) {
             res.send(result);
@@ -153,7 +153,7 @@ UIRoutes.prototype.init = function() {
 
     /* UE Application API */
 
-    app.get("/mx2/v1/app_list",verifyToken,function (req,res,next) {
+    app.get("/mx2/v1/app_list",function (req,res,next) {
 
         self.AppserviceInstance.app_listGET(req, function (err, result) {
             res.send(result);
@@ -161,7 +161,7 @@ UIRoutes.prototype.init = function() {
 
     });
 
-    app.post("/mx2/v1/app_contexts",verifyToken,function (req,res,next) {
+    app.post("/mx2/v1/app_contexts",function (req,res,next) {
 
             var appContext = req.body;
             self.AppserviceInstance.app_contextsPOST(req, appContext, function (err, result) {
@@ -169,7 +169,7 @@ UIRoutes.prototype.init = function() {
             })
     });
 
-    app.put("/mx2/v1/app_contexts/:contextID",verifyToken,function (req,res,next) {
+    app.put("/mx2/v1/app_contexts/:contextID",function (req,res,next) {
 
         var contextID = req.params.contextID;
         var appContext = req.body;
@@ -179,7 +179,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.delete("/mx2/v1/app_contexts/:contextID",verifyToken,function (req,res,next) {
+    app.delete("/mx2/v1/app_contexts/:contextID",function (req,res,next) {
 
         var contextID = req.params.contextID;
 
@@ -190,7 +190,7 @@ UIRoutes.prototype.init = function() {
 
     /* UE Identity API */
 
-    app.get("/ui/v1/:appInstId/ue_identity_tag_info",verifyToken,function (req,res) {
+    app.get("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
 
         console.log('GET Method', req.params);
         console.log('GET Method', req.query);
@@ -200,7 +200,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/ui/v1/:appInstId/ue_identity_tag_info",verifyToken,function (req,res,next) {
+    app.put("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res,next) {
 
         console.log('PUT Method', req.params);
         console.log('PUT Method', req.body);
@@ -212,7 +212,7 @@ UIRoutes.prototype.init = function() {
 
     /* Mp1 API */
 
-    app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules",function (req,res) {
 
         console.log('GET Method', req.params);
 
@@ -221,7 +221,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",function (req,res) {
 
         console.log('GET Method',req.params);
 
@@ -230,7 +230,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",verifyToken,function (req,res) {
+    app.put("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",function (req,res) {
 
         console.log('PUT Method',req.params);
         console.log('PUT Method',req.body);
@@ -240,7 +240,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
 
         console.log('GET Method',req.params);
 
@@ -249,7 +249,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.post("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",verifyToken,function (req,res) {
+    app.post("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
 
         console.log('POST Method',req.params);
         console.log('POST Method',req.body);
@@ -259,7 +259,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",function (req,res) {
 
         console.log('GET Method',req.params);
 
@@ -268,7 +268,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.delete("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",verifyToken,function (req,res) {
+    app.delete("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",function (req,res) {
 
         console.log('DELETE Method',req.params);
 
@@ -277,7 +277,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules",function (req,res) {
 
         console.log('GET Method', req.params);
 
@@ -286,7 +286,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
 
         console.log('GET Method', req.params);
 
@@ -295,7 +295,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",verifyToken,function (req,res) {
+    app.put("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
 
         console.log('PUT Method', req.params);
         console.log('PUT Method', req.body);
@@ -305,7 +305,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/exampleAPI/mp1/v1/services",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/services",function (req,res) {
 
         console.log('GET Method', req.query);
 
@@ -314,7 +314,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/exampleAPI/mp1/v1/services",verifyToken,function (req,res) {
+    app.put("/exampleAPI/mp1/v1/services",function (req,res) {
 
         console.log('PUT Method', req.body);
 
@@ -323,7 +323,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/exampleAPI/mp1/v1/services/:serviceId",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
 
         console.log('GET Method', req.params);
 
@@ -332,7 +332,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/exampleAPI/mp1/v1/services/:serviceId",verifyToken,function (req,res) {
+    app.put("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
 
         console.log('PUT Method', req.params);
         console.log('PUT Method', req.body);
@@ -342,7 +342,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/exampleAPI/mp1/v1/timing/current_time",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/timing/current_time",function (req,res) {
 
         console.log('GET Method', req.query);
 
@@ -351,7 +351,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/exampleAPI/mp1/v1/timing/timing_caps",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/timing/timing_caps",function (req,res) {
 
         console.log('GET Method', req.query);
 
@@ -360,7 +360,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/exampleAPI/mp1/v1/transports",verifyToken,function (req,res) {
+    app.get("/exampleAPI/mp1/v1/transports",function (req,res) {
 
         console.log('GET Method', req.query);
 
@@ -588,7 +588,7 @@ UIRoutes.prototype.init = function() {
 
 ///////////Query//////////
 
-    app.get("/rni/v1/queries/rab_info",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/queries/rab_info",function (req,res) {
 
         console.log('GET Method', req.query);
 
@@ -597,7 +597,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/queries/plmn_info",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/queries/plmn_info",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -606,7 +606,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/queries/s1_bearer_info",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/queries/s1_bearer_info",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -619,7 +619,7 @@ UIRoutes.prototype.init = function() {
 
 /////////subscriptions///////////
 
-    app.get("/rni/v1/subscriptions/",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -628,7 +628,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/cell_change",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/cell_change",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -637,7 +637,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.post("/rni/v1/subscriptions/cell_change",verifyToken,function (req,res,next) {
+    app.post("/rni/v1/subscriptions/cell_change",function (req,res,next) {
 
         console.log('POST Method', req.body);
 
@@ -646,7 +646,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/cell_change/:subscriptionId",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res,next) {
 
         console.log('GET Method', req.query);
         console.log('GET Method', req.params);
@@ -656,7 +656,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/rni/v1/subscriptions/cell_change/:subscriptionId",verifyToken,function (req,res,next) {
+    app.put("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res,next) {
 
         console.log('PUT Method', req.params);
         console.log('PUT Method', req.body);
@@ -677,7 +677,7 @@ UIRoutes.prototype.init = function() {
 
     });
 
-    app.get("/rni/v1/subscriptions/s1_bearer",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/s1_bearer",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -686,7 +686,7 @@ UIRoutes.prototype.init = function() {
         });
     });
 
-    app.post("/rni/v1/subscriptions/s1_bearer",verifyToken,function (req,res,next) {
+    app.post("/rni/v1/subscriptions/s1_bearer",function (req,res,next) {
 
         console.log('POST Method', req.body);
 
@@ -695,7 +695,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/s1_bearer/:subscriptionId",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res,next) {
 
         console.log('GET Method', req.query);
         console.log('GET Method', req.params);
@@ -705,7 +705,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/rni/v1/subscriptions/s1_bearer/:subscriptionId",verifyToken,function (req,res,next) {
+    app.put("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res,next) {
 
         console.log('PUT Method', req.params);
         console.log('PUT Method', req.body);
@@ -724,7 +724,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/ta",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/ta",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -733,7 +733,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.post("/rni/v1/subscriptions/ta",verifyToken,function (req,res,next) {
+    app.post("/rni/v1/subscriptions/ta",function (req,res,next) {
 
         console.log('POST Method', req.body);
 
@@ -742,7 +742,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/ta/:subscriptionId",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res,next) {
 
         console.log('GET Method', req.query);
         console.log('GET Method', req.params);
@@ -752,7 +752,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/rni/v1/subscriptions/ta/:subscriptionId",verifyToken,function (req,res,next) {
+    app.put("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res,next) {
 
         console.log('PUT Method', req.params);
         console.log('PUT Method', req.body);
@@ -771,7 +771,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/meas_rep_ue",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/meas_rep_ue",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -780,7 +780,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.post("/rni/v1/subscriptions/meas_rep_ue",verifyToken,function (req,res,next) {
+    app.post("/rni/v1/subscriptions/meas_rep_ue",function (req,res,next) {
 
         console.log('POST Method', req.params);
         console.log('POST Method', req.body);
@@ -790,7 +790,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res,next) {
 
         console.log('GET Method', req.query);
         console.log('GET Method', req.params);
@@ -800,7 +800,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",verifyToken,function (req,res,next) {
+    app.put("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res,next) {
 
         console.log('PUT Method', req.params);
         console.log('PUT Method', req.body);
@@ -820,7 +820,7 @@ UIRoutes.prototype.init = function() {
 
     });
 
-    app.get("/rni/v1/subscriptions/rab_est",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/rab_est",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -829,7 +829,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.post("/rni/v1/subscriptions/rab_est",verifyToken,function (req,res,next) {
+    app.post("/rni/v1/subscriptions/rab_est",function (req,res,next) {
 
         console.log('POST Method', req.body);
 
@@ -838,7 +838,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/rab_est/:subscriptionId",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res,next) {
 
         console.log('GET Method', req.query);
         console.log('GET Method', req.params);
@@ -848,7 +848,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/rni/v1/subscriptions/rab_est/:subscriptionId",verifyToken,function (req,res,next) {
+    app.put("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res,next) {
 
         console.log('PUT Method', req.params);
         console.log('PUT Method', req.body);
@@ -867,7 +867,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/rab_mod",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/rab_mod",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -876,7 +876,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.post("/rni/v1/subscriptions/rab_mod",verifyToken,function (req,res,next) {
+    app.post("/rni/v1/subscriptions/rab_mod",function (req,res,next) {
 
         console.log('POST Method', req.body);
 
@@ -885,7 +885,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/rab_mod/:subscriptionId",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res,next) {
 
         console.log('GET Method', req.query);
         console.log('GET Method', req.params);
@@ -895,7 +895,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/rni/v1/subscriptions/rab_mod/:subscriptionId",verifyToken,function (req,res,next) {
+    app.put("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res,next) {
 
         console.log('PUT Method', req.params);
         console.log('PUT Method', req.body);
@@ -914,7 +914,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/rab_rel",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/rab_rel",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -923,7 +923,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.post("/rni/v1/subscriptions/rab_rel",verifyToken,function (req,res,next) {
+    app.post("/rni/v1/subscriptions/rab_rel",function (req,res,next) {
 
         console.log('POST Method', req.body);
 
@@ -932,7 +932,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/rab_rel/:subscriptionId",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res,next) {
 
         console.log('GET Method', req.query);
         console.log('GET Method', req.params);
@@ -942,7 +942,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/rni/v1/subscriptions/rab_rel/:subscriptionId",verifyToken,function (req,res,next) {
+    app.put("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res,next) {
 
         console.log('GET Method', req.params);
         console.log('GET Method', req.body);
@@ -961,7 +961,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/ca_reconf",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/ca_reconf",function (req,res,next) {
 
         console.log('GET Method', req.query);
 
@@ -970,7 +970,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.post("/rni/v1/subscriptions/ca_reconf",verifyToken,function (req,res,next) {
+    app.post("/rni/v1/subscriptions/ca_reconf",function (req,res,next) {
 
         console.log('POST Method', req.body);
 
@@ -979,7 +979,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.get("/rni/v1/subscriptions/ca_reconf/:subscriptionId",verifyToken,function (req,res,next) {
+    app.get("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res,next) {
 
         console.log('GET Method', req.query);
         console.log('GET Method', req.params);
@@ -989,7 +989,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/rni/v1/subscriptions/ca_reconf/:subscriptionId",verifyToken,function (req,res,next) {
+    app.put("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res,next) {
 
         console.log('PUT Method', req.params);
         console.log('PUT Method', req.body);
