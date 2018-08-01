@@ -1,4 +1,6 @@
 var jwt = require('jsonwebtoken');
+var xlsx = require('node-xlsx');
+var fs = require('fs');
 
 var service  = require ('../service/BwAllocService.js');
 var Idservice  = require ('../service/UEIdentityService.js');
@@ -105,6 +107,27 @@ UIRoutes.prototype.init = function() {
 
         res.status(200).send(result)
     });
+
+    app.get("/read_Excel",function (req,res) {
+
+        var obj = xlsx.parse('/home/w5rtc/Downloads/BWM_POST_Body.xlsx'); // parses a file
+
+        var obj = xlsx.parse(fs.readFileSync('/home/w5rtc/Downloads/BWM_POST_Body.xlsx')); // parses a buffer
+        var file_Content = obj[0].data;
+        // console.log(obj)
+        // console.log(file_Content)
+        var result = {}
+        for (i = 1;i < file_Content.length;i++){
+            result['req'+i.toString()] = {}
+            for (j = 0;j < file_Content[i].length;j++){
+                // console.log(file_Content[0][j],file_Content[i][j])
+                result['req'+i.toString()][file_Content[0][j]] = file_Content[i][j]
+            }
+        }
+        // console.log(result)
+        res.send(result);
+    });
+
 
 
     /* BWM API */
@@ -596,7 +619,6 @@ UIRoutes.prototype.init = function() {
             res.send(result);
         })
     });
-
     app.get("/rni/v1/queries/plmn_info",function (req,res,next) {
 
         console.log('GET Method', req.query);

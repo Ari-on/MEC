@@ -44,8 +44,6 @@ app.listen (serverPort,function () {
 //     }
 // });
 
-
-
 var WebRoutes = require("./routes/ui-routes.js");
 var webRoutes = new WebRoutes(app);
 webRoutes.init();
