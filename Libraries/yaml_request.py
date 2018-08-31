@@ -71,24 +71,25 @@ def WriteTags(fileName):
 						for k,v in firstObject.items():
 							if v == "":
 								key = k
-								with open("final_"+in_file, 'w') as outfile:
+								finalFile = "final_"+in_file.split('/')[-1]
+								with open('./outputFiles/'+finalFile, 'w') as outfile:
 									data["definitions"][item]["example"][key] = [subtags]
 									yaml.dump(data, outfile, default_flow_style=False)
 				
 					else:
 						pass
 				
-		readyamlFile(fileName)
+		readyamlFile(finalFile)
 		
-def readyamlFile(fileName):
+def readyamlFile(finalFile):
 	List = []
-	if os.path.isfile("final_"+in_file):
-		with open("final_"+in_file, 'r') as infile:
+	if os.path.isfile('./outputFiles/'+finalFile):
+		with open('./outputFiles/'+finalFile, 'r') as infile:
 			for line in infile:
 				List.append(line)
 				
 	
-		with open("final_"+in_file, 'w') as outfile:
+		with open('./outputFiles/'+finalFile,'w') as outfile:
 			for x in List:
 				if "- '" in x:
 					x = x.replace("- '","- ")
@@ -99,8 +100,8 @@ def readyamlFile(fileName):
 					outfile.write(x)
 			outfile.close()
 	else:
-		Request_Body_creation.DescriptionEditing(fileName)
-		Request_Body_creation.replaceTag(fileName)	
+		Request_Body_creation.DescriptionEditing('./outputFiles/'+finalFile)
+		Request_Body_creation.replaceTag('./outputFiles/'+finalFile)	
 
 	
 # yfile = EditingFile()

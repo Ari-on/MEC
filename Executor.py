@@ -36,7 +36,7 @@ def Yaml2Json(yaml_file):
 	"""
 
 
-	in_file = "final_"+yaml_file
+	in_file = "./outputFiles/final_"+yaml_file.split('/')[-1]
 	create_db_Excel.readSwagger(in_file)
 	
 
@@ -49,7 +49,7 @@ def Yaml2Json(yaml_file):
 				creates a (postman collection .json v1 file)
 				
 	"""
-	out_file = 'swagger.json'
+	out_file = './outputFiles/swagger.json'
 	with open(in_file) as file1:
 		data = yaml.load(file1)
 	with open(out_file, 'w') as file2:
@@ -77,7 +77,7 @@ def Yaml2Json(yaml_file):
 				creates a (postman collection .json v1 file)
 				
 	"""
-	removing_value_from_requestBody.RequestBody_value('postman_collection.json')
+	removing_value_from_requestBody.RequestBody_value('./outputFiles/postman_collection.json')
 
 
 
@@ -90,8 +90,9 @@ def Yaml2Json(yaml_file):
                 creates a (postman collection .json v1 file)
 				
     """
-	validation_file = in_file.strip(".yaml")
-	postman_validation.readExcel(validation_file+".csv")
+	validation_file = "final_"+yaml_file.split('/')[-1].strip(".yaml")
+	print(validation_file)
+	postman_validation.readExcel(validation_file)
 	
 def swagger2postman():
 	os.system ("node ./Libraries/swagger2postman.js")

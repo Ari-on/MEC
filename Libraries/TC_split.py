@@ -4,7 +4,7 @@ import json
 #This will read and get the json content in a variable
 
 def splitCollection():
-	JsonFile = open('postman_collection.json','r+')
+	JsonFile = open('./outputFiles/postman_collection.json','r+')
 	jsonContent = json.load(JsonFile)
 
 	global insertContent
@@ -36,7 +36,7 @@ def splitCollection():
 
 					#This will take the copy of base content len(urlList) times in a list accordingly 
 					for i in range (0,len(urlList)):
-						JsonFile = open('postman_collection.json','r+')
+						JsonFile = open('./outputFiles/postman_collection.json','r+')
 
 						readContent = json.load(JsonFile)
 						JsonFile.close()
@@ -72,5 +72,5 @@ def splitCollection():
 
 		
 	#This will add the new contents into the existing file
-	with open('postman_collection.json', 'w') as outfile:
+	with open('./outputFiles/postman_collection.json', 'w') as outfile:
 		json.dump(jsonContent, outfile,indent=4,ensure_ascii=False)

@@ -16,7 +16,7 @@ def readSwagger(yaml_file):
 	outFileName = ntpath.basename(inFileName)
 	print("ntpath",outFileName)
 	outputFileName = outFileName.strip(".yaml")
-	outFileName = outputFileName + ".csv"
+	outFileName = './outputFiles/'+outputFileName + ".csv"
 
 	if not fileExists:
 		flag = 0

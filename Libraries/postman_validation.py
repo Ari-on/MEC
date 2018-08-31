@@ -13,9 +13,10 @@ def readExcel(csv_File): #This method will read the Excel file and take the TAG 
 	Tag = ["bwInfo"]
 	dataType = []
 	subDataType = []
-	yamlFile = csv_File.strip(".csv")+'.yaml'
+	#yamlFile = csv_File.strip(".csv")+'.yaml'
+	yamlFile = './outputFiles/'+csv_File+'.yaml'
 
-	with open(csv_File, 'rb') as csvfile:
+	with open('./outputFiles/'+csv_File+'.csv', 'rb') as csvfile:
 		spamreader = csv.reader(csvfile)
 		for row in spamreader:
 			number_of_columns = len(row)
@@ -47,7 +48,7 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile):#This will add the
 
 	swaggerFile = open(yamlFile,'r')
 	yamlContent = yaml.load(swaggerFile)
-	JsonFile = open('postman_collection.json','r+')
+	JsonFile = open('./outputFiles/postman_collection.json','r+')
 	jsonContent = json.load(JsonFile)
 	for content in jsonContent['requests']:
 			url = content['url']
@@ -415,6 +416,6 @@ def write_req_body(jsonContent,dataType,subDataType):
 
 			content['rawModeData'] = content['rawModeData']+'}'
 
-	with open('postman_collection.json', 'w') as outfile:
+	with open('./outputFiles/postman_collection.json', 'w') as outfile:
 		json.dump(jsonContent, outfile,indent=4,ensure_ascii=False)
 
