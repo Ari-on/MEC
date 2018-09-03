@@ -3,20 +3,20 @@
         {
             "description": "Folder for bw_allocations", 
             "collection_name": "BWM API", 
-            "collection": "214a4189-3770-4974-ad6f-701000f24538", 
-            "id": "d9df575e-7f3f-4283-989e-07c0ba332ba6", 
-            "collection_id": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collection": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
+            "id": "c3606d14-1004-426b-b9e1-77d64390a861", 
+            "collection_id": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "order": [
-                "ec827a28-fcc6-404f-846a-4211093e3334", 
-                "967b6978-91f1-427f-bda0-68ccee4464d1", 
-                "520badc9-00c3-412a-963b-d9ccda1431a8", 
-                "bd8ccb94-a935-4861-a5e0-d88321f10316", 
-                "92892de4-5130-4dbb-a3d6-b2015ff4761b", 
-                "27146223-77c8-41cd-a615-26801ac69938", 
-                "ec827a28-fcc6-404f-846a-4211093e33340", 
-                "ec827a28-fcc6-404f-846a-4211093e33341", 
-                "ec827a28-fcc6-404f-846a-4211093e33342", 
-                "ec827a28-fcc6-404f-846a-4211093e33343"
+                "e8cd47fa-56b5-4a9e-add6-36209519e7f6", 
+                "3c68395d-a7fe-4e20-8ee8-4f4578661918", 
+                "c6430d00-84ef-43ac-8b31-56f8252bd924", 
+                "9b185078-39af-4654-9897-b72452bdfa4e", 
+                "6019d42e-794a-4cfc-bcaf-eb537e3c7d28", 
+                "960eb176-7feb-4301-a168-13f484ff00f4", 
+                "e8cd47fa-56b5-4a9e-add6-36209519e7f60", 
+                "e8cd47fa-56b5-4a9e-add6-36209519e7f61", 
+                "e8cd47fa-56b5-4a9e-add6-36209519e7f62", 
+                "e8cd47fa-56b5-4a9e-add6-36209519e7f63"
             ], 
             "name": "bw_allocations"
         }
@@ -85,19 +85,19 @@
                 }
             ], 
             "description": "This method retrieves information about a list of bandwidthAllocation resources", 
-            "collectionId": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collectionId": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "url": "{{scheme}}://{{host}}:{{port}}/bwm/v1/bw_allocations?app_instance_id={{app_instance_id}}&app_name={{app_name}}&session_id={{session_id}}", 
             "method": "GET", 
             "headers": "Accept: application/json\nContent-Type: application/json\n", 
             "descriptionFormat": "html", 
             "version": 2, 
             "rawModeData": null, 
-            "time": 1535693712790, 
+            "time": 1535957574427, 
             "synced": false, 
             "pathVariables": {}, 
             "preRequestScript": "", 
             "data": [], 
-            "id": "ec827a28-fcc6-404f-846a-4211093e3334", 
+            "id": "e8cd47fa-56b5-4a9e-add6-36209519e7f6", 
             "responses": []
         }, 
         {
@@ -233,19 +233,19 @@
                 }
             ], 
             "description": "This method is used to create a bandwidthAllocation resource.", 
-            "collectionId": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collectionId": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "url": "{{scheme}}://{{host}}:{{port}}/bwm/v1/bw_allocations", 
             "method": "POST", 
             "headers": "Accept: application/json\nContent-Type: application/json\n", 
             "descriptionFormat": "html", 
             "version": 2, 
             "rawModeData": "{\n    \"allocationDirection\": \"{{allocationDirection}}\",\n    \"appInsId\": \"{{appInsId}}\",\n    \"requestType\": \"{{requestType}}\",\n    \"timeStamp\": {\n        \"seconds\": \"{{seconds}}\",\n        \"nanoSeconds\": \"{{nanoSeconds}}\"\n    },\n    \"fixedBWPriority\": \"{{fixedBWPriority}}\",\n    \"sessionFilter\": [\n        {\n        \"SourcePort\": [\"{{SourcePort}}\"],\n        \"DstAddress\": \"{{DstAddress}}\",\n        \"DstPort\": [\"{{DstPort}}\"],\n        \"Protocol\": \"{{Protocol}}\",\n        \"SourceIp\": \"{{SourceIp}}\"\n        }\n    ],\n    \"fixedAllocation\": \"{{fixedAllocation}}\"\n}", 
-            "time": 1535693712790, 
+            "time": 1535957574428, 
             "synced": false, 
             "pathVariables": {}, 
             "preRequestScript": "", 
             "data": [], 
-            "id": "967b6978-91f1-427f-bda0-68ccee4464d1", 
+            "id": "3c68395d-a7fe-4e20-8ee8-4f4578661918", 
             "responses": []
         }, 
         {
@@ -307,21 +307,21 @@
                 }
             ], 
             "description": "This method retrieves information about a specific bandwidthAllocation resource. ", 
-            "collectionId": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collectionId": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "url": "{{scheme}}://{{host}}:{{port}}/bwm/v1/bw_allocations/:allocationId", 
             "method": "GET", 
             "headers": "Accept: application/json\nContent-Type: application/json\n", 
             "descriptionFormat": "html", 
             "version": 2, 
             "rawModeData": null, 
-            "time": 1535693712791, 
+            "time": 1535957574428, 
             "synced": false, 
             "pathVariables": {
                 "allocationId": "{{allocationId}}"
             }, 
             "preRequestScript": "", 
             "data": [], 
-            "id": "520badc9-00c3-412a-963b-d9ccda1431a8", 
+            "id": "c6430d00-84ef-43ac-8b31-56f8252bd924", 
             "responses": []
         }, 
         {
@@ -518,21 +518,21 @@
                 }
             ], 
             "description": "This method updates the information about a specific bandwidthAllocation resource. ", 
-            "collectionId": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collectionId": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "url": "{{scheme}}://{{host}}:{{port}}/bwm/v1/bw_allocations/:allocationId", 
             "method": "PUT", 
             "headers": "Accept: application/json\nContent-Type: application/json\n", 
             "descriptionFormat": "html", 
             "version": 2, 
             "rawModeData": "{\n    \"allocationDirection\": \"{{allocationDirection}}\",\n    \"appInsId\": \"{{appInsId}}\",\n    \"requestType\": \"{{requestType}}\",\n    \"timeStamp\": {\n        \"seconds\": \"{{seconds}}\",\n        \"nanoSeconds\": \"{{nanoSeconds}}\"\n    },\n    \"fixedBWPriority\": \"{{fixedBWPriority}}\",\n    \"sessionFilter\": [\n        {\n        \"SourcePort\": [\"{{SourcePort}}\"],\n        \"DstAddress\": \"{{DstAddress}}\",\n        \"DstPort\": [\"{{DstPort}}\"],\n        \"Protocol\": \"{{Protocol}}\",\n        \"SourceIp\": \"{{SourceIp}}\"\n        }\n    ],\n    \"fixedAllocation\": \"{{fixedAllocation}}\"\n}", 
-            "time": 1535693712791, 
+            "time": 1535957574428, 
             "synced": false, 
             "pathVariables": {
                 "allocationId": "{{allocationId}}"
             }, 
             "preRequestScript": "", 
             "data": [], 
-            "id": "bd8ccb94-a935-4861-a5e0-d88321f10316", 
+            "id": "9b185078-39af-4654-9897-b72452bdfa4e", 
             "responses": []
         }, 
         {
@@ -723,49 +723,49 @@
                 }
             ], 
             "description": "This method updates the information about a specific bandwidthAllocation resource. ", 
-            "collectionId": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collectionId": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "url": "{{scheme}}://{{host}}:{{port}}/bwm/v1/bw_allocations/:allocationId", 
             "method": "PATCH", 
             "headers": "Accept: application/json\nContent-Type: application/json\n", 
             "descriptionFormat": "html", 
             "version": 2, 
             "rawModeData": "{\n    \"allocationDirection\": \"{{allocationDirection}}\",\n    \"appInsId\": \"{{appInsId}}\",\n    \"requestType\": \"{{requestType}}\",\n    \"fixedBWPriority\": \"{{fixedBWPriority}}\",\n    \"sessionFilter\": [\n        {\n        \"SourcePort\": [\"{{SourcePort}}\"],\n        \"DstAddress\": \"{{DstAddress}}\",\n        \"DstPort\": [\"{{DstPort}}\"],\n        \"Protocol\": \"{{Protocol}}\",\n        \"SourceIp\": \"{{SourceIp}}\"\n        }\n    ],\n    \"fixedAllocation\": \"{{fixedAllocation}}\"\n}", 
-            "time": 1535693712791, 
+            "time": 1535957574428, 
             "synced": false, 
             "pathVariables": {
                 "allocationId": "{{allocationId}}"
             }, 
             "preRequestScript": "", 
             "data": [], 
-            "id": "92892de4-5130-4dbb-a3d6-b2015ff4761b", 
+            "id": "6019d42e-794a-4cfc-bcaf-eb537e3c7d28", 
             "responses": []
         }, 
         {
             "dataMode": "params", 
             "tests": "", 
             "description": "Remove a specific bandwidthAllocation resource. DELETE method is typically used in \"Unregister from Bandwidth Management Service\" procedure", 
-            "collectionId": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collectionId": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "url": "{{scheme}}://{{host}}:{{port}}/bwm/v1/bw_allocations/:allocationId", 
             "method": "DELETE", 
             "headers": "Accept: application/json\nContent-Type: application/json\n", 
             "descriptionFormat": "html", 
             "version": 2, 
             "rawModeData": null, 
-            "time": 1535693712791, 
+            "time": 1535957574428, 
             "synced": false, 
             "pathVariables": {
                 "allocationId": "{{allocationId}}"
             }, 
             "preRequestScript": "", 
             "data": [], 
-            "id": "27146223-77c8-41cd-a615-26801ac69938", 
+            "id": "960eb176-7feb-4301-a168-13f484ff00f4", 
             "responses": []
         }, 
         {
             "dataMode": "params", 
             "tests": "", 
             "responses": [], 
-            "collectionId": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collectionId": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "url": "{{scheme}}://{{host}}:{{port}}/bwm/v1/bw_allocations?app_instance_id={{app_instance_id}}", 
             "description": "This method retrieves information about a list of bandwidthAllocation resources", 
             "method": "GET", 
@@ -773,7 +773,7 @@
             "descriptionFormat": "html", 
             "version": 2, 
             "rawModeData": null, 
-            "time": 1535693712790, 
+            "time": 1535957574427, 
             "synced": false, 
             "events": [
                 {
@@ -832,14 +832,14 @@
             ], 
             "preRequestScript": "", 
             "data": [], 
-            "id": "ec827a28-fcc6-404f-846a-4211093e33340", 
+            "id": "e8cd47fa-56b5-4a9e-add6-36209519e7f60", 
             "pathVariables": {}
         }, 
         {
             "dataMode": "params", 
             "tests": "", 
             "responses": [], 
-            "collectionId": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collectionId": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "url": "{{scheme}}://{{host}}:{{port}}/bwm/v1/bw_allocations?app_name={{app_name}}", 
             "description": "This method retrieves information about a list of bandwidthAllocation resources", 
             "method": "GET", 
@@ -847,7 +847,7 @@
             "descriptionFormat": "html", 
             "version": 2, 
             "rawModeData": null, 
-            "time": 1535693712790, 
+            "time": 1535957574427, 
             "synced": false, 
             "events": [
                 {
@@ -906,14 +906,14 @@
             ], 
             "preRequestScript": "", 
             "data": [], 
-            "id": "ec827a28-fcc6-404f-846a-4211093e33341", 
+            "id": "e8cd47fa-56b5-4a9e-add6-36209519e7f61", 
             "pathVariables": {}
         }, 
         {
             "dataMode": "params", 
             "tests": "", 
             "responses": [], 
-            "collectionId": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collectionId": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "url": "{{scheme}}://{{host}}:{{port}}/bwm/v1/bw_allocations?session_id={{session_id}}", 
             "description": "This method retrieves information about a list of bandwidthAllocation resources", 
             "method": "GET", 
@@ -921,7 +921,7 @@
             "descriptionFormat": "html", 
             "version": 2, 
             "rawModeData": null, 
-            "time": 1535693712790, 
+            "time": 1535957574427, 
             "synced": false, 
             "events": [
                 {
@@ -980,14 +980,14 @@
             ], 
             "preRequestScript": "", 
             "data": [], 
-            "id": "ec827a28-fcc6-404f-846a-4211093e33342", 
+            "id": "e8cd47fa-56b5-4a9e-add6-36209519e7f62", 
             "pathVariables": {}
         }, 
         {
             "dataMode": "params", 
             "tests": "", 
             "responses": [], 
-            "collectionId": "214a4189-3770-4974-ad6f-701000f24538", 
+            "collectionId": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
             "url": "{{scheme}}://{{host}}:{{port}}/bwm/v1/bw_allocations", 
             "description": "This method retrieves information about a list of bandwidthAllocation resources", 
             "method": "GET", 
@@ -995,7 +995,7 @@
             "descriptionFormat": "html", 
             "version": 2, 
             "rawModeData": null, 
-            "time": 1535693712790, 
+            "time": 1535957574427, 
             "synced": false, 
             "events": [
                 {
@@ -1054,10 +1054,10 @@
             ], 
             "preRequestScript": "", 
             "data": [], 
-            "id": "ec827a28-fcc6-404f-846a-4211093e33343", 
+            "id": "e8cd47fa-56b5-4a9e-add6-36209519e7f63", 
             "pathVariables": {}
         }
     ], 
-    "id": "214a4189-3770-4974-ad6f-701000f24538", 
+    "id": "e14bafd6-6a53-4fb9-84dd-7e8e51e64b98", 
     "name": "BWM API"
 }

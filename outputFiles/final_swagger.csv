@@ -1,0 +1,1 @@
+fixedBWPriority,allocationDirection,appInsId,sessionFilter.SourcePort,sessionFilter.DstAddress,sessionFilter.DstPort,sessionFilter.Protocol,sessionFilter.SourceIp,requestType,timeStamp.seconds,timeStamp.nanoSeconds,fixedAllocation
