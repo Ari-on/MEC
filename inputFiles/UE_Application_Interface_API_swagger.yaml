@@ -1,0 +1,583 @@
+---
+swagger: "2.0"
+info:
+  description: "The ETSI MEC ISG MEC016 UE Application Interface API described using\
+    \ OpenAPI"
+  version: "1.1.1"
+  title: "UE Application Interface API"
+  license:
+    name: "ETSI Forge copyright notice"
+    url: "https://forge.etsi.org/etsi-forge-copyright-notice.txt"
+host: "127.0.0.1:8081"
+basePath: "/mx2/v1"
+schemes:
+- "http"
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+security:
+- OauthSecurity:
+  - "all"
+paths:
+  /app_list:
+    get:
+      description: "The GET method can be used to query information about the available\
+        \ mobile edge applications."
+      operationId: "app_listGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appName"
+        in: "query"
+        description: "Name to identify the mobile edge application"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      - name: "appProvider"
+        in: "query"
+        description: "Provider of the mobile edge application"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      - name: "appSoftVersion"
+        in: "query"
+        description: "Software version of the mobile edge application"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      - name: "serviceCont"
+        in: "query"
+        description: "Required service continuity mode for this application"
+        required: false
+        type: "string"
+        enum:
+        - "SERVICE_CONTINUITY_NOT_REQUIRED"
+        - "SERVICE_CONTINUITY_REQUIRED"
+      - name: "vendorId"
+        in: "query"
+        description: "Vendor identifier"
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "The response body contains the ApplicationList resource available\
+            \ for the querying UE application"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+        400:
+          description: "Incorrect parameters were passed in the request.More information\
+            \ should be provided in the \"detail\" attribute of the \"ProblemDetails\"\
+            \ structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        401:
+          description: "An erroneous or missing bearer token. More information should\
+            \ be provided in the \"detail\" attribute of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "The operation is not allowed given the current status of the\
+            \ resource. More information should be provided in the \"detail\" attribute\
+            \ of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "The client provided a URI that cannot be mapped to a valid\
+            \ resource URL. More information should be provided in the \"detail\"\
+            \ attribute of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /app_contexts:
+    post:
+      description: "The POST method can be used to create a new application context.\
+        \ Upon success, the response contains entity body describing the created application\
+        \ context."
+      operationId: "app_contextsPOST"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "appContext"
+        description: "Uniquely identifies the application context in the mobile edge\
+          \ system. It is assigned by the mobile edge system and included in the response\
+          \ to an AppContext create."
+        required: true
+        schema:
+          $ref: "#/definitions/AppContext"
+      responses:
+        201:
+          description: "The response body contains the Application Context as it was\
+            \ created by the mobile edge system"
+          schema:
+            $ref: "#/definitions/inline_response_201"
+        400:
+          description: "Incorrect parameters were passed in the request.More information\
+            \ should be provided in the \"detail\" attribute of the \"ProblemDetails\"\
+            \ structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        401:
+          description: "An erroneous or missing bearer token. More information should\
+            \ be provided in the \"detail\" attribute of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "The operation is not allowed given the current status of the\
+            \ resource. More information should be provided in the \"detail\" attribute\
+            \ of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "The client provided a URI that cannot be mapped to a valid\
+            \ resource URL. More information should be provided in the \"detail\"\
+            \ attribute of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /app_contexts/{contextId}:
+    put:
+      description: "The PUT method is used to update the callback reference of the\
+        \ existing application context. Upon successful operation, the target resource\
+        \ is updated with new callback reference."
+      operationId: "app_contextsContextIdPUT"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "contextId"
+        in: "path"
+        description: "Uniquely identifies the application context in the mobile edge\
+          \ system. It is assigned by the mobile edge system and included in the response\
+          \ to an AppContext create."
+        required: true
+        type: "string"
+      - in: "body"
+        name: "appContext"
+        description: "Uniquely identifies the application context in the mobile edge\
+          \ system. It is assigned by the mobile edge system and included in the response\
+          \ to an AppContext create."
+        required: true
+        schema:
+          $ref: "#/definitions/AppContext"
+      responses:
+        204:
+          description: "Upon success, a response 204 No Content without any response\
+            \ body is returned."
+        400:
+          description: "Incorrect parameters were passed in the request.More information\
+            \ should be provided in the \"detail\" attribute of the \"ProblemDetails\"\
+            \ structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        401:
+          description: "An erroneous or missing bearer token. More information should\
+            \ be provided in the \"detail\" attribute of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "The operation is not allowed given the current status of the\
+            \ resource. More information should be provided in the \"detail\" attribute\
+            \ of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "The client provided a URI that cannot be mapped to a valid\
+            \ resource URL. More information should be provided in the \"detail\"\
+            \ attribute of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+    delete:
+      description: "The DELETE method is used to delete the resource that represents\
+        \ the existing application context."
+      operationId: "app_contextsContextIdDELETE"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "contextId"
+        in: "path"
+        description: "Uniquely identifies the application context in the mobile edge\
+          \ system. It is assigned by the mobile edge system and included in the response\
+          \ to an AppContext create."
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "Upon success, a response 204 No Content without any response\
+            \ body is returned."
+        400:
+          description: "Incorrect parameters were passed in the request. More information\
+            \ should be provided in the \"detail\" attribute of the \"ProblemDetails\"\
+            \ structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        401:
+          description: "An erroneous or missing bearer token. More information should\
+            \ be provided in the \"detail\" attribute of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "The operation is not allowed given the current status of the\
+            \ resource. More information should be provided in the \"detail\" attribute\
+            \ of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "The client provided a URI that cannot be mapped to a valid\
+            \ resource URL. More information should be provided in the \"detail\"\
+            \ attribute of the \"ProblemDetails\" structure."
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+securityDefinitions:
+  OauthSecurity:
+    type: "oauth2"
+    tokenUrl: "https://oauth.exampleAPI/token"
+    flow: "application"
+    scopes:
+      all: "Single oauth2 scope for API"
+definitions:
+  ProblemDetails:
+    type: "object"
+    properties:
+      type:
+        $ref: "#/definitions/Problem.type"
+      title:
+        $ref: "#/definitions/Problem.title"
+      status:
+        $ref: "#/definitions/Problem.status"
+      detail:
+        $ref: "#/definitions/Problem.detail"
+      instance:
+        $ref: "#/definitions/Problem.instance"
+  Problem.type:
+    type: "string"
+    format: "uri"
+    description: "A URI reference according to IETF RFC 3986 that identifies the problem\
+      \ type"
+  Problem.title:
+    type: "string"
+    description: "A short, human-readable summary of the problem type"
+  Problem.status:
+    type: "integer"
+    format: "uint32"
+    description: "The HTTP status code for this occurrence of the problem"
+  Problem.detail:
+    type: "string"
+    description: "A human-readable explanation specific to this occurrence of the\
+      \ problem"
+  Problem.instance:
+    type: "string"
+    format: "uri"
+    description: "A URI reference that identifies the specific occurrence of the problem"
+  ApplicationList:
+    type: "object"
+    properties:
+      appInfo:
+        $ref: "#/definitions/AppInfo"
+      vendorSpecificExt:
+        $ref: "#/definitions/VendorSpecificExt"
+    description: "Information on available applications"
+    example:
+      appInfo: ""
+      vendorSpecificExt: ""
+  AppContext:
+    type: "object"
+    required:
+    - "appInfo"
+    - "associateUeAppId"
+    - "contextId"
+    properties:
+      contextId:
+        $ref: "#/definitions/ContextId"
+      associateUeAppId:
+        $ref: "#/definitions/AssociateUeAppId"
+      callbackReference:
+        $ref: "#/definitions/CallbackReference"
+      appInfo:
+        $ref: "#/definitions/RequiredAppInfo"
+    description: "Information on application context created by the mobile edge system"
+    example:
+      associateUeAppId: {}
+      callbackReference: {}
+      appInfo:
+        appSoftVersion: {}
+        appPackageSource: {}
+        appName: {}
+        appDescription: {}
+        appProvider: {}
+        referenceURL: {}
+      contextId: {}
+  NotificationEvent:
+    type: "object"
+    required:
+    - "referenceURI"
+    properties:
+      referenceURI:
+        $ref: "#/definitions/ReferenceURL"
+    description: "The parameters used in the method \"Receiving notification events\"\
+      ."
+  VendorSpecificExt:
+    type: "array"
+    description: "Extension for vendor-specific information"
+    items:
+      $ref: "#/definitions/VendorSpecificExt_inner"
+  ContextId:
+    type: "string"
+    description: "Uniquely identifies the application context in the mobile edge system.\
+      \ Assigned by the mobile edge system and included in the response. The length\
+      \ of the value shall not exceed 32 characters."
+  AssociateUeAppId:
+    type: "string"
+    description: "Uniquely identifies the UE application. Included in the request.\
+      \ The length of the value shall not exceed 32 characters."
+  VendorId:
+    type: "string"
+    description: "Vendor identifier. The length of the value shall not exceed 32 characters.\
+      \ The rest of the structure of vendor specific extension is not defined"
+  AppInfo:
+    type: "array"
+    description: "User applications available for the UE application"
+    items:
+      $ref: "#/definitions/AppInfo_inner"
+  RequiredAppInfo:
+    type: "object"
+    required:
+    - "appName"
+    - "appProvider"
+    - "referenceURL"
+    properties:
+      appName:
+        $ref: "#/definitions/AppName"
+      appProvider:
+        $ref: "#/definitions/AppProvider"
+      appSoftVersion:
+        $ref: "#/definitions/AppSoftVersion"
+      appDescription:
+        $ref: "#/definitions/AppDescription"
+      referenceURL:
+        $ref: "#/definitions/ReferenceURL"
+      appPackageSource:
+        $ref: "#/definitions/AppPackageSource"
+    description: "Included in the request"
+    example:
+      appSoftVersion: {}
+      appPackageSource: {}
+      appName: {}
+      appDescription: {}
+      appProvider: {}
+      referenceURL: {}
+  AppCharcs:
+    type: "object"
+    properties:
+      memory:
+        $ref: "#/definitions/Memory"
+      storage:
+        $ref: "#/definitions/Storage"
+      latency:
+        $ref: "#/definitions/Latency"
+      bandwidth:
+        $ref: "#/definitions/Bandwidth"
+      serviceCont:
+        $ref: "#/definitions/ServiceCont"
+    description: "The application characteristics relate to the system resources consumed\
+      \ by the application. UE application can use this information e.g., for estimating\
+      \ the cost of use of the application or for the expected user experience"
+  Memory:
+    type: "integer"
+    format: "uint32"
+    description: "The maximum size in Mbytes of the memory resource reserved for the\
+      \ mobile edge application instance in the mobile edge system"
+  Storage:
+    type: "integer"
+    format: "uint32"
+    description: "The maximum size in Mbytes of the storage resource expected to be\
+      \ used by the mobile edge application instance in the mobile edge system"
+  Latency:
+    type: "integer"
+    format: "uint32"
+    description: "The target round trip time in milliseconds supported by the mobile\
+      \ edge system for the mobile edge application instance"
+  Bandwidth:
+    type: "integer"
+    format: "uint32"
+    description: "The required connection bandwidth in kbit/s for the use of the mobile\
+      \ edge application instance"
+  ServiceCont:
+    type: "string"
+    description: "Required service continuity mode for this application."
+    enum:
+    - "SERVICE_CONTINUITY_NOT_REQUIRED"
+    - "SERVICE_CONTINUITY_REQUIRED"
+  AppName:
+    type: "string"
+    description: "Name of the mobile edge application. The length of the value shall\
+      \ not exceed 32 characters."
+  AppProvider:
+    type: "string"
+    description: "Provider of the mobile edge application. The length of the value\
+      \ shall not exceed 32 characters."
+  AppSoftVersion:
+    type: "string"
+    description: "Software version of the mobile edge application. The length of the\
+      \ value shall not exceed 32 characters."
+  AppDescription:
+    type: "string"
+    description: "Human readable description of the mobile edge application. NOTE:\
+      \ the language support may be limited. The length of the value shall not exceed\
+      \ 128 characters."
+  CallbackReference:
+    type: "string"
+    format: "uri"
+    description: "URI assigned by the UE application to receive application lifecycle\
+      \ related notifications. Included in the request. This subscription stays alive\
+      \ for the lifetime of the application context."
+  ReferenceURL:
+    type: "string"
+    format: "uri"
+    description: "Address of the user application. Used as the reference URL for the\
+      \ application. Assigned by the mobile edge system and included in the response"
+  AppPackageSource:
+    type: "string"
+    format: "uri"
+    description: "URI of the application package. Included in the request if the application\
+      \ is not one in the ApplicationList. appPackageSource enables on-boarding of\
+      \ the application package into the mobile edge system. The application package\
+      \ shall comply with the definitions in clause 6.2.1.2 of ETSI GS MEC 010-2"
+  inline_response_200:
+    required:
+    - "ApplicationList"
+    properties:
+      ApplicationList:
+        $ref: "#/definitions/ApplicationList"
+    example:
+      ApplicationList:
+        appInfo: ""
+        vendorSpecificExt: ""
+  inline_response_400:
+    properties:
+      ProblemDetails:
+        $ref: "#/definitions/ProblemDetails"
+  inline_response_403:
+    required:
+    - "ProblemDetails"
+    properties:
+      ProblemDetails:
+        $ref: "#/definitions/ProblemDetails"
+  inline_response_201:
+    required:
+    - "AppContext"
+    properties:
+      AppContext:
+        $ref: "#/definitions/AppContext"
+    example:
+      AppContext:
+        associateUeAppId: {}
+        callbackReference: {}
+        appInfo:
+          appSoftVersion: {}
+          appPackageSource: {}
+          appName: {}
+          appDescription: {}
+          appProvider: {}
+          referenceURL: {}
+        contextId: {}
+  VendorSpecificExt_inner:
+    required:
+    - "vendorId"
+    properties:
+      vendorId:
+        $ref: "#/definitions/VendorId"
+  AppInfo_inner:
+    required:
+    - "appDescription"
+    - "appName"
+    - "appProvider"
+    properties:
+      appName:
+        $ref: "#/definitions/AppName"
+      appProvider:
+        $ref: "#/definitions/AppProvider"
+      appSoftVersion:
+        $ref: "#/definitions/AppSoftVersion"
+      appDescription:
+        $ref: "#/definitions/AppDescription"
+      appCharcs:
+        $ref: "#/definitions/AppCharcs"
+parameters:
+  Query.AppName:
+    name: "appName"
+    in: "query"
+    description: "Name to identify the mobile edge application"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "multi"
+  Query.AppProvider:
+    name: "appProvider"
+    in: "query"
+    description: "Provider of the mobile edge application"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "multi"
+  Query.AppSoftVersion:
+    name: "appSoftVersion"
+    in: "query"
+    description: "Software version of the mobile edge application"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "multi"
+  Query.ServiceCont:
+    name: "serviceCont"
+    in: "query"
+    description: "Required service continuity mode for this application"
+    required: false
+    type: "string"
+    enum:
+    - "SERVICE_CONTINUITY_NOT_REQUIRED"
+    - "SERVICE_CONTINUITY_REQUIRED"
+  Body.AppContext:
+    in: "body"
+    name: "appContext"
+    description: "Uniquely identifies the application context in the mobile edge system.\
+      \ It is assigned by the mobile edge system and included in the response to an\
+      \ AppContext create."
+    required: true
+    schema:
+      $ref: "#/definitions/AppContext"
+  Query.VendorId:
+    name: "vendorId"
+    in: "query"
+    description: "Vendor identifier"
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "multi"
+  Path.ContextId:
+    name: "contextId"
+    in: "path"
+    description: "Uniquely identifies the application context in the mobile edge system.\
+      \ It is assigned by the mobile edge system and included in the response to an\
+      \ AppContext create."
+    required: true
+    type: "string"
+externalDocs:
+  description: "ETSI GS MEC016 UE Application Interface API, V1.1.1"
+  url: "http://www.etsi.org/deliver/etsi_gs/MEC/001_099/016/01.01.01_60/gs_MEC016v010101p.pdf"
