@@ -26,24 +26,6 @@ app.listen (serverPort,function () {
 
 });
 
-// app.use((req, res, next) => {
-//     const error = new Error('Not Found!');
-//     error.status = 404;
-//     next(error);
-// });
-//
-//
-// app.use((error, req, res, next) => {
-//     if (error) {
-//         res.status(error.status || 500);
-//         res.json({
-//             error: {message: error.message}
-//         });
-//     } else{
-//         next();
-//     }
-// });
-
 var WebRoutes = require("./routes/ui-routes.js");
 var webRoutes = new WebRoutes(app);
 webRoutes.init();

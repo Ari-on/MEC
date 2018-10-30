@@ -616,7 +616,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.rab_infoGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
     app.get("/rni/v1/queries/plmn_info",function (req,res,next) {
@@ -624,7 +642,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -633,7 +669,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.s1_bearer_infoGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -646,7 +700,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptionsGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -655,7 +727,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cc_GET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -663,9 +753,45 @@ UIRoutes.prototype.init = function() {
 
         console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.CellChange_subscriptionsPOST(req, function (err, result) {
+        var content_Type = req.headers['content-type'];
+
+        if (content_Type != 'application/json'){
+
+            var result = {
+                statuscode: 415,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 415,
+                    "detail": "Unsupported Media Type",
+                    "instance": "string"
+                }
+            };
             res.send(result);
-        })
+        }
+        else {
+            self.RNIserviceInstance.CellChange_subscriptionsPOST(req, function (err, result) {
+                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                    res.send(result);
+                }
+                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                    res.send(result);
+                }
+                else {
+                    var result = {
+                        statuscode: 406,
+                        ProblemDetails: {
+                            "type": "string",
+                            "title": "string",
+                            "status": 406,
+                            "detail": "request.headers.accept is different",
+                            "instance": "string"
+                        }
+                    };
+                    res.send(result);
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res,next) {
@@ -674,7 +800,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.params);
 
         self.RNIserviceInstance.CellChange_subscriptionsGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -685,7 +829,25 @@ UIRoutes.prototype.init = function() {
 
 
         self.RNIserviceInstance.CellChange_subscriptionsPUT(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -704,7 +866,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_s1_GET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         });
     });
 
@@ -712,10 +892,48 @@ UIRoutes.prototype.init = function() {
 
         console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.S1BearerSubscription_subscriptionsPOST(req, function (err, result) {
+        var content_Type = req.headers['content-type'];
+
+        if (content_Type != 'application/json'){
+
+            var result = {
+                statuscode: 415,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 415,
+                    "detail": "Unsupported Media Type",
+                    "instance": "string"
+                }
+            };
             res.send(result);
-        })
+        }
+        else {
+            self.RNIserviceInstance.S1BearerSubscription_subscriptionsPOST(req, function (err, result) {
+                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                    res.send(result);
+                }
+                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                    res.send(result);
+                }
+                else {
+                    var result = {
+                        statuscode: 406,
+                        ProblemDetails: {
+                            "type": "string",
+                            "title": "string",
+                            "status": 406,
+                            "detail": "request.headers.accept is different",
+                            "instance": "string"
+                        }
+                    };
+                    res.send(result);
+                }
+                ;
+            })
+        }
     });
+
 
     app.get("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res,next) {
 
@@ -723,7 +941,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.params);
 
         self.RNIserviceInstance.S1BearerSubscription_subscriptionsGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -733,7 +969,25 @@ UIRoutes.prototype.init = function() {
         console.log('PUT Method', req.body);
 
         self.RNIserviceInstance.S1BearerSubscription_subscriptionsPUT(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -751,7 +1005,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_ta_GET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -759,9 +1031,45 @@ UIRoutes.prototype.init = function() {
 
         console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.MeasTa_subscriptionsPOST(req, function (err, result) {
+        var content_Type = req.headers['content-type'];
+
+        if (content_Type != 'application/json'){
+
+            var result = {
+                statuscode: 415,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 415,
+                    "detail": "Unsupported Media Type",
+                    "instance": "string"
+                }
+            };
             res.send(result);
-        })
+        }
+        else {
+            self.RNIserviceInstance.MeasTa_subscriptionsPOST(req, function (err, result) {
+                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                    res.send(result);
+                }
+                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                    res.send(result);
+                }
+                else {
+                    var result = {
+                        statuscode: 406,
+                        ProblemDetails: {
+                            "type": "string",
+                            "title": "string",
+                            "status": 406,
+                            "detail": "request.headers.accept is different",
+                            "instance": "string"
+                        }
+                    };
+                    res.send(result);
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res,next) {
@@ -770,7 +1078,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.params);
 
         self.RNIserviceInstance.MeasTa_subscriptionsGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            };
         })
     });
 
@@ -780,7 +1106,25 @@ UIRoutes.prototype.init = function() {
         console.log('PUT Method', req.body);
 
         self.RNIserviceInstance.MeasTa_subscriptionsPUT(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -798,7 +1142,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_mr_GET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -807,9 +1169,45 @@ UIRoutes.prototype.init = function() {
         console.log('POST Method', req.params);
         console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.MeasRepUe_subscriptionsPOST(req, function (err, result) {
+        var content_Type = req.headers['content-type'];
+
+        if (content_Type != 'application/json'){
+
+            var result = {
+                statuscode: 415,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 415,
+                    "detail": "Unsupported Media Type",
+                    "instance": "string"
+                }
+            };
             res.send(result);
-        })
+        }
+        else {
+            self.RNIserviceInstance.MeasRepUe_subscriptionsPOST(req, function (err, result) {
+                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                    res.send(result);
+                }
+                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                    res.send(result);
+                }
+                else {
+                    var result = {
+                        statuscode: 406,
+                        ProblemDetails: {
+                            "type": "string",
+                            "title": "string",
+                            "status": 406,
+                            "detail": "request.headers.accept is different",
+                            "instance": "string"
+                        }
+                    };
+                    res.send(result);
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res,next) {
@@ -818,7 +1216,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.params);
 
         self.RNIserviceInstance.MeasRepUe_subscriptionsGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -828,7 +1244,25 @@ UIRoutes.prototype.init = function() {
         console.log('PUT Method', req.body);
 
         self.RNIserviceInstance.MeasRepUeReport_subscriptionsPUT(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -847,7 +1281,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_re_GET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -855,9 +1307,45 @@ UIRoutes.prototype.init = function() {
 
         console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.RabEstSubscription_subscriptionsPOST(req, function (err, result) {
+        var content_Type = req.headers['content-type'];
+
+        if (content_Type != 'application/json'){
+
+            var result = {
+                statuscode: 415,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 415,
+                    "detail": "Unsupported Media Type",
+                    "instance": "string"
+                }
+            };
             res.send(result);
-        })
+        }
+        else {
+            self.RNIserviceInstance.RabEstSubscription_subscriptionsPOST(req, function (err, result) {
+                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                    res.send(result);
+                }
+                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                    res.send(result);
+                }
+                else {
+                    var result = {
+                        statuscode: 406,
+                        ProblemDetails: {
+                            "type": "string",
+                            "title": "string",
+                            "status": 406,
+                            "detail": "request.headers.accept is different",
+                            "instance": "string"
+                        }
+                    };
+                    res.send(result);
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res,next) {
@@ -866,7 +1354,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.params);
 
         self.RNIserviceInstance.RabEstSubscription_subscriptionsGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -876,7 +1382,25 @@ UIRoutes.prototype.init = function() {
         console.log('PUT Method', req.body);
 
         self.RNIserviceInstance.RabEstSubscription_subscriptionsPUT(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -894,7 +1418,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_rm_GET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -902,9 +1444,46 @@ UIRoutes.prototype.init = function() {
 
         console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.RabModSubscription_subscriptionsPOST(req, function (err, result) {
+        var content_Type = req.headers['content-type'];
+
+        if (content_Type != 'application/json'){
+
+            var result = {
+                statuscode: 415,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 415,
+                    "detail": "Unsupported Media Type",
+                    "instance": "string"
+                }
+            };
             res.send(result);
-        })
+        }
+        else {
+
+            self.RNIserviceInstance.RabModSubscription_subscriptionsPOST(req, function (err, result) {
+                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                    res.send(result);
+                }
+                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                    res.send(result);
+                }
+                else {
+                    var result = {
+                        statuscode: 406,
+                        ProblemDetails: {
+                            "type": "string",
+                            "title": "string",
+                            "status": 406,
+                            "detail": "request.headers.accept is different",
+                            "instance": "string"
+                        }
+                    };
+                    res.send(result);
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res,next) {
@@ -913,7 +1492,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.params);
 
         self.RNIserviceInstance.RabModSubscription_subscriptionsGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -923,7 +1520,25 @@ UIRoutes.prototype.init = function() {
         console.log('PUT Method', req.body);
 
         self.RNIserviceInstance.RabModSubscription_subscriptionsPUT(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -941,7 +1556,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_rr_GET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -949,9 +1582,46 @@ UIRoutes.prototype.init = function() {
 
         console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.RabRelSubscription_subscriptionsPOST(req, function (err, result) {
+        var content_Type = req.headers['content-type'];
+
+        if (content_Type != 'application/json'){
+
+            var result = {
+                statuscode: 415,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 415,
+                    "detail": "Unsupported Media Type",
+                    "instance": "string"
+                }
+            };
             res.send(result);
-        })
+        }
+        else {
+
+            self.RNIserviceInstance.RabRelSubscription_subscriptionsPOST(req, function (err, result) {
+                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                    res.send(result);
+                }
+                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                    res.send(result);
+                }
+                else {
+                    var result = {
+                        statuscode: 406,
+                        ProblemDetails: {
+                            "type": "string",
+                            "title": "string",
+                            "status": 406,
+                            "detail": "request.headers.accept is different",
+                            "instance": "string"
+                        }
+                    };
+                    res.send(result);
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res,next) {
@@ -960,7 +1630,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.params);
 
         self.RNIserviceInstance.RabRelSubscription_subscriptionsGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -970,7 +1658,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.body);
 
         self.RNIserviceInstance.RabRelSubscription_subscriptionsPUT(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -988,7 +1694,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cr_GET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -996,9 +1720,46 @@ UIRoutes.prototype.init = function() {
 
         console.log('POST Method', req.body);
 
-        self.RNIserviceInstance.CaReConfSubscription_subscriptionsPOST(req, function (err, result) {
+        var content_Type = req.headers['content-type'];
+
+        if (content_Type != 'application/json'){
+
+            var result = {
+                statuscode: 415,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 415,
+                    "detail": "Unsupported Media Type",
+                    "instance": "string"
+                }
+            };
             res.send(result);
-        })
+        }
+        else {
+
+            self.RNIserviceInstance.CaReConfSubscription_subscriptionsPOST(req, function (err, result) {
+                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                    res.send(result);
+                }
+                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                    res.send(result);
+                }
+                else {
+                    var result = {
+                        statuscode: 406,
+                        ProblemDetails: {
+                            "type": "string",
+                            "title": "string",
+                            "status": 406,
+                            "detail": "request.headers.accept is different",
+                            "instance": "string"
+                        }
+                    };
+                    res.send(result);
+                }
+            })
+        }
     });
 
     app.get("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res,next) {
@@ -1007,7 +1768,25 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method', req.params);
 
         self.RNIserviceInstance.CaReConfSubscription_subscriptionsGET(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
@@ -1017,7 +1796,25 @@ UIRoutes.prototype.init = function() {
         console.log('PUT Method', req.body);
 
         self.RNIserviceInstance.CaReConfSubscription_subscriptionsPUT(req, function (err, result) {
-            res.send(result);
+            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+                res.send(result);
+            }
+            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+                res.send(result);
+            }
+            else{
+                var result = {
+                    statuscode: 406,
+                    ProblemDetails: {
+                        "type": "string",
+                        "title": "string",
+                        "status": 406,
+                        "detail": "request.headers.accept is different",
+                        "instance": "string"
+                    }
+                };
+                res.send(result);
+            }
         })
     });
 
