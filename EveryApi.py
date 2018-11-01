@@ -14,7 +14,7 @@ import spliting_testCase_basedOn_EnumValues
 
 def Yaml2Json(yaml_file):
 
-	print("FileName : ",yaml_file)
+	print "FileName : "+yaml_file
 
 
 	"""
@@ -43,7 +43,7 @@ def Yaml2Json(yaml_file):
 	elif '/' in yaml_file:
 		in_file = "./outputFiles/"+yaml_file.split('/')[-1]
 
-	print(in_file)
+	# print(in_file)
 
 	yaml_edit.addRequest(in_file)
 
@@ -121,7 +121,7 @@ def Yaml2Json(yaml_file):
 	else:
 		validation_file = yaml_file.split('/')[-1].strip(".yaml")
 
-	print(validation_file)
+	print(validation_file+".json file is created Successfully")
 	postman_validation.readExcel(validation_file)
 	
 def swagger2postman(out_file):

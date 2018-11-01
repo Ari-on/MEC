@@ -52,7 +52,8 @@ def addRequest(fileName):
 															pass	
 
 											elif type(data["definitions"][datainfo][k][element][element2]) == list:
-												print(element2)	
+												#print(element2)
+												pass
 								elif type(data["definitions"][datainfo][k][element]) == list:
 									for element5 in data["definitions"][datainfo][k][element]:
 										if type(element5) == dict:
