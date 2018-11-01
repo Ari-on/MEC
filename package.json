@@ -20,6 +20,7 @@
     "js-yaml": "^3.3.0",
     "jsonwebtoken": "^8.3.0",
     "mongodb": "^2.2.33",
+    "node-xlsx": "^0.12.1",
     "nodemon": "^1.17.5",
     "reload": "^2.3.0",
     "sleep": "^5.1.1",

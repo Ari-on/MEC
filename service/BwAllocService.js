@@ -1706,21 +1706,21 @@ DefaultService.prototype.bw_allocationsGET = function (req, callback) {
                     else {
                         for (var i = 0; item.length > i; i++) {
                             sessionFilter = {
-                                sourceIP: item[i]['sessionFiltedInfo']['sourceIP'],
-                                sourcePort: [],
-                                destAddress: item[i]['sessionFiltedInfo']['destAddress'],
-                                dstPort: [],
-                                protocol: item[i]['sessionFiltedInfo']['protocol']
+                                SourceIp: item[i]['sessionFiltedInfo']['sourceIP'],
+                                SourcePort: [],
+                                DstAddress: item[i]['sessionFiltedInfo']['destAddress'],
+                                DstPort: [],
+                                Protocol: item[i]['sessionFiltedInfo']['protocol']
                             }
                             if (item[i]['sessionFiltedInfo']['session_Id'] == item[i]['ports']['session_Id']) {
-                                sessionFilter['sourcePort'].push(item[i]['ports']['srcPort'])
-                                sessionFilter['dstPort'].push(item[i]['ports']['dstPort'])
+                                sessionFilter['SourcePort'].push(item[i]['ports']['srcPort'])
+                                sessionFilter['DstPort'].push(item[i]['ports']['dstPort'])
                             }
 
                             finalItemArrObj.push({
                                 bwInfo: {
                                     'timeStamp': item[i]['timeStamp'],
-                                    'appIns_Id': item[i]['appInfo']['appIns_Id'],
+                                    'appInsId': item[i]['appInfo']['appIns_Id'],
                                     'requestType': item[i].requestType['reqstTypeDescription'],
                                     'sessionFilter': [sessionFilter],
                                     'fixedBWPriority': item[i]['appInfo']['fixedBWPriority'],
@@ -1731,9 +1731,9 @@ DefaultService.prototype.bw_allocationsGET = function (req, callback) {
                         }
                         for (var j = 0; finalItemArrObj.length > j; j++) {
                             for (var k = j + 1; finalItemArrObj.length > k; k++) {
-                                if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
-                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['sourcePort'])
-                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['dstPort'])
+                                if (finalItemArrObj[j].bwInfo['appInsId'] == finalItemArrObj[k].bwInfo['appInsId']) {
+                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['SourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['SourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['SourcePort'])
+                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['DstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['DstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['DstPort'])
                                     finalItemArrObj.splice(k, 1);
                                     j = 0;
                                 }
@@ -1885,21 +1885,21 @@ DefaultService.prototype.bw_allocationsGET = function (req, callback) {
                     else {
                         for (var i = 0; item.length > i; i++) {
                             sessionFilter = {
-                                sourceIP: item[i]['sessionFiltedInfo']['sourceIP'],
+                                SourceIp: item[i]['sessionFiltedInfo']['sourceIP'],
                                 sourcePort: [],
-                                destAddress: item[i]['sessionFiltedInfo']['destAddress'],
-                                dstPort: [],
-                                protocol: item[i]['sessionFiltedInfo']['protocol']
+                                DstAddress: item[i]['sessionFiltedInfo']['destAddress'],
+                                DstPort: [],
+                                Protocol: item[i]['sessionFiltedInfo']['protocol']
                             }
                             if (item[i]['sessionFiltedInfo']['session_Id'] == item[i]['ports']['session_Id']) {
-                                sessionFilter['sourcePort'].push(item[i]['ports']['srcPort'])
-                                sessionFilter['dstPort'].push(item[i]['ports']['dstPort'])
+                                sessionFilter['SourcePort'].push(item[i]['ports']['srcPort'])
+                                sessionFilter['DstPort'].push(item[i]['ports']['dstPort'])
                             }
 
                             finalItemArrObj.push({
                                 bwInfo: {
                                     'timeStamp': item[i]['timeStamp'],
-                                    'appIns_Id': item[i]['appInfo']['appIns_Id'],
+                                    'appInsId': item[i]['appInfo']['appIns_Id'],
                                     'requestType': item[i].requestType['reqstTypeDescription'],
                                     'sessionFilter': [sessionFilter],
                                     'fixedBWPriority': item[i]['appInfo']['fixedBWPriority'],
@@ -1910,9 +1910,9 @@ DefaultService.prototype.bw_allocationsGET = function (req, callback) {
                         }
                         for (var j = 0; finalItemArrObj.length > j; j++) {
                             for (var k = j + 1; finalItemArrObj.length > k; k++) {
-                                if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
-                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['sourcePort'])
-                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['dstPort'])
+                                if (finalItemArrObj[j].bwInfo['appInsId'] == finalItemArrObj[k].bwInfo['appInsId']) {
+                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['SourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['SourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['SourcePort'])
+                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['DstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['DstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['DstPort'])
                                     finalItemArrObj.splice(k, 1);
                                     j = 0;
                                 }
@@ -2030,21 +2030,21 @@ DefaultService.prototype.bw_allocationsGET = function (req, callback) {
                     else {
                         for (var i = 0; item.length > i; i++) {
                             sessionFilter = {
-                                sourceIP: item[i]['sessionFiltedInfo']['sourceIP'],
-                                sourcePort: [],
-                                destAddress: item[i]['sessionFiltedInfo']['destAddress'],
-                                dstPort: [],
-                                protocol: item[i]['sessionFiltedInfo']['protocol']
+                                SourceIp: item[i]['sessionFiltedInfo']['sourceIP'],
+                                SourcePort: [],
+                                DstAddress: item[i]['sessionFiltedInfo']['destAddress'],
+                                DstPort: [],
+                                Protocol: item[i]['sessionFiltedInfo']['protocol']
                             };
                             if (item[i]['sessionFiltedInfo']['session_Id'] == item[i]['ports']['session_Id']) {
-                                sessionFilter['sourcePort'].push(item[i]['ports']['srcPort'])
-                                sessionFilter['dstPort'].push(item[i]['ports']['dstPort'])
+                                sessionFilter['SourcePort'].push(item[i]['ports']['srcPort'])
+                                sessionFilter['DstPort'].push(item[i]['ports']['dstPort'])
                             }
 
                             finalItemArrObj.push({
                                 bwInfo: {
                                     'timeStamp': item[i]['timeStamp'],
-                                    'appIns_Id': item[i]['appIns_Id'],
+                                    'appInsId': item[i]['appIns_Id'],
                                     'requestType': item[i].requestType['reqstTypeDescription'],
                                     'sessionFilter': [sessionFilter],
                                     'fixedBWPriority': item[i]['fixedBWPriority'],
@@ -2055,9 +2055,9 @@ DefaultService.prototype.bw_allocationsGET = function (req, callback) {
                         }
                         for (var j = 0; finalItemArrObj.length > j; j++) {
                             for (var k = j + 1; finalItemArrObj.length > k; k++) {
-                                if (finalItemArrObj[j].bwInfo['appIns_Id'] == finalItemArrObj[k].bwInfo['appIns_Id']) {
-                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['sourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['sourcePort'])
-                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['dstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['dstPort'])
+                                if (finalItemArrObj[j].bwInfo['appInsId'] == finalItemArrObj[k].bwInfo['appInsId']) {
+                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['SourcePort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['SourcePort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['SourcePort'])
+                                    finalItemArrObj[j].bwInfo['sessionFilter'][0]['DstPort'] = finalItemArrObj[j].bwInfo['sessionFilter'][0]['DstPort'].concat(finalItemArrObj[k].bwInfo['sessionFilter'][0]['DstPort'])
                                     finalItemArrObj.splice(k, 1);
                                     j = 0;
                                 }
