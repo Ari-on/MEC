@@ -33,7 +33,7 @@ def RequestBody_value(file):
 									info = info.replace(info1[-1],"\"")
 									info = info + ","
 							elif ": [" in info:
-								print info
+								#print info
 								if "]" in info[-1]:	
 									pass
 									info = info + ","

@@ -14,13 +14,13 @@ def readSwagger(yaml_file):
 	inFileName = yaml_file
 	fileExists = os.path.exists(inFileName)
 	outFileName = ntpath.basename(inFileName)
-	print("ntpath",outFileName)
+	#print("ntpath",outFileName)
 	outputFileName = outFileName.strip(".yaml")
 	outFileName = './outputFiles/'+outputFileName + ".csv"
 
 	if not fileExists:
 		flag = 0
-		print ("File not found! Check the file path")
+		#print ("File not found! Check the file path")
 	else:
 		flag = 1
 		# Opens the swagger.yaml file in read mode
@@ -29,7 +29,7 @@ def readSwagger(yaml_file):
 		# Loads the yaml file into a list
 		yamlContent = yaml.load(swaggerFile)
 		# print (yamlContent
-		print ("File read\n")
+		#print ("File read\n")
 
 		# Calls the function to add the tags to the text file
 		addTags(yamlContent)
@@ -106,13 +106,13 @@ def createDatabase(dictListKeys):
 
 	# This will read the excel file and insert it into the database
 	if collName not in db.collection_names():
-		print (collName, "is created")
+		# print (collName, "is created")
 		with open(outFileName, 'rb') as csvfile:
 			spamreader = csv.reader(csvfile)
 			for row in spamreader:
 		  # number_of_rows = sheet.nrows
 			  number_of_columns = len(row)
-			  print (number_of_columns)
+			  # print (number_of_columns)
 			  dictList = []
 			  dictListValue = []
 			  for column in range(number_of_columns):
@@ -120,15 +120,15 @@ def createDatabase(dictListKeys):
 				dictListValue.append(value)
 				dictList = dict(zip(dictListKeys, dictListValue))
 			  insertRecord = db[collName].insert_one(dictList)
-			  print ("Record inserted... Check the DB")
+			  # print ("Record inserted... Check the DB")
 	else:
-		print (collName, "is exists")
+		# print (collName, "is exists")
 		with open(outFileName, 'rb') as csvfile:
 			spamreader = csv.reader(csvfile)
 			for row in spamreader:
 		  # number_of_rows = sheet.nrows
 			  number_of_columns = len(row)
-			  print (number_of_columns)
+			  # print (number_of_columns)
 			  dictList = []
 			  dictListValue = []
 			  for column in range(number_of_columns):
@@ -136,7 +136,7 @@ def createDatabase(dictListKeys):
 				dictListValue.append(value)
 				dictList = dict(zip(dictListKeys, dictListValue))
 			  insertRecord = db[collName].insert_one(dictList)
-			  print ("Record inserted... Check the DB")
+			  # print ("Record inserted... Check the DB")
 
 
 # swagrToExcl = swaggerToExcel(sys.argv[1])

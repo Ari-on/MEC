@@ -21,7 +21,7 @@ def FindTags(fileName):
 					BodyInfo = v.split("/")
 					BodyInfo = BodyInfo[-1]
 					BodyInfoList.append(BodyInfo)
-		print("BodyInfoList",BodyInfoList)
+		#print("BodyInfoList",BodyInfoList)
 					
 		#This will check array type tags which has ref 
 		for k,v in data["definitions"].items():

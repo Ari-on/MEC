@@ -16,8 +16,8 @@ def split_testCases_using_Enum(yamalfile,jsonFile):
 					if "=" in enum:
 						enum = enum.split('=')[0]
 						enumList.append(enum)
-					else:
-						print enum
+					#else:
+						#print enum
 	JsonFile = open('./outputFiles/'+ jsonFile,'r+')
 	jsonContent = json.load(JsonFile)
 	alter = []
