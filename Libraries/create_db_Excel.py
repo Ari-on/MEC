@@ -86,6 +86,7 @@ def writeToExcel(dictListKeys):
 	with open(outFileName, 'wb') as csvfile:
 		spamwriter = csv.writer(csvfile)
 		spamwriter.writerow(dictListKeys)
+
 	dictListKeys2 = []
 	for key in dictListKeys:
 		if '.' in key:
@@ -93,7 +94,7 @@ def writeToExcel(dictListKeys):
 			dictListKeys2.append(new_key)
 		else:
 			dictListKeys2.append(key)
-	createDatabase(dictListKeys2)
+	# createDatabase(dictListKeys2)
 
 def createDatabase(dictListKeys):
 	

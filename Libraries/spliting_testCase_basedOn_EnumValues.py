@@ -51,3 +51,33 @@ def split_testCases_using_Enum(yamalfile,jsonFile):
 
 	with open('./outputFiles/'+jsonFile, 'w') as outfile:
 		json.dump(jsonContent, outfile,indent=4,ensure_ascii=False)
+
+	removing_TC(jsonFile)
+
+def removing_TC(jsonfile):
+
+	JsonFile = open('./outputFiles/'+jsonfile,'r+')
+	jsonContent = json.load(JsonFile)
+
+	nameList = []
+	correctList = []
+	orderId = []
+	for content in jsonContent['requests']:
+		name = content.get('name')
+
+		if name == None:
+			orderId.append(content['id'])
+			folderList = jsonContent['folders']
+			for folder in folderList:
+				if content['id'] in folder['order']:
+					folder['order'].remove(content['id'])
+			pass
+		else:
+			correctList.append(content)
+
+	jsonContent['requests'] = []
+	for element in correctList:
+		jsonContent['requests'].append(element)
+
+	with open('./outputFiles/'+jsonfile, 'w') as outfile:
+		json.dump(jsonContent, outfile,indent=4,ensure_ascii=False)		

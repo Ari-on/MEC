@@ -27,6 +27,7 @@ def addRequest(fileName):
 				if datainfo == item:
 					for k,v in data["definitions"][datainfo].items():
 						if k == "example":
+							print (data["definitions"][datainfo][k])
 							for element in data["definitions"][datainfo][k]:
 								if type(data["definitions"][datainfo][k][element]) == str or type(data["definitions"][datainfo][k][element]) == int:
 									data["definitions"][datainfo][k][element] = '{{'+element+'}}'
@@ -69,7 +70,9 @@ def addRequest(fileName):
 														element5[element6] = '{{'+element6+'}}'
 													else:
 														pass
-										elif type(data["definitions"][datainfo][k][element][element5]) == list:
+										# elif type(data["definitions"][datainfo][k][element][element5]) == list:
+										# 	pass
+										else:
 											pass
 
 		# finalFile = in_file.split('/')[-1]
