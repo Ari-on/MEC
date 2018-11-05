@@ -61,243 +61,244 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile):#This wil
 		if content['method'] == "DELETE":
 			pass
 		else :
-			content['method']
-			content['events'] = []
+			if '200' in content['name'] or '201' in content['name']:
+				content['method']
+				content['events'] = []
 
-			#This is for 'Tests' part
-			content['events'].append({ #Default Content for 'Tests'
-				"listen": "test",
-				"script": {"type": "text/javascript",
-				"exec":[]
-				}
-				})
+				#This is for 'Tests' part
+				content['events'].append({ #Default Content for 'Tests'
+					"listen": "test",
+					"script": {"type": "text/javascript",
+					"exec":[]
+					}
+					})
 
-			if content['method'] == "GET": #We don't need the following 'Tests' content for GET method
-				pass
-
-			else:
-				content['events'][0]['script']['exec'].append("var list = pm.environment.get(\"list\");")
-				content['events'][0]['script']['exec'].append('var request = pm.environment.get("request");')
-				content['events'][0]['script']['exec'].append("")
-				content['events'][0]['script']['exec'].append("if(list && list.length > 0){")
-
-				if content['method'] == "PATCH" or content['method'] == "PUT":#Both PUT and PATCH has differend code compared to POST
-					content['events'][0]['script']['exec'].append(space+'for(i = 0;i < list.length;i++){')
-					content['events'][0]['script']['exec'].append(space*2+'req = {')
-
-					content['events'][0]['script']['exec'].append(space*3+'"'+dataType[0]+'" : list[i].'+dataType[0])
-
-					for j in range (1,len(dataType)):
-						content['events'][0]['script']['exec'].append(space*3+',"'+dataType[j]+'" : list[i].'+dataType[j])
-
-					#To add the subDataTypes in postman Tests part request.body
-					elementCheck = ''
-					for element2 in subDataType:
-						contentCheck = 0
-						spliting = element2.split('.')[0]
-						if elementCheck == spliting:#Checks the repeating subDataType content
-							pass
-						elif spliting == 'timeStamp' and content['method'] == 'PATCH':#For PATCH we don't have timeStamp
-							pass
-
-						else:
-							content['events'][0]['script']['exec'].append(space*3+',"'+spliting+'" :{')
-							for element3 in subDataType:
-								if spliting in element3:
-									if contentCheck == 0:#To stop adding ',' for the first content in req.body of Tests part
-										content['events'][0]['script']['exec'].append(space*4+'"'+element3.split('.')[1]+'" : list[i]["'+element3+'"]')
-										contentCheck = 1
-									else:
-										content['events'][0]['script']['exec'].append(space*4+',"'+element3.split('.')[1]+'" : list[i]["'+element3+'"]')
-								else:
-									pass
-							content['events'][0]['script']['exec'].append(space*3+'}')	
-							elementCheck = spliting;
-
-					#Adding 'sendRequest' part in 'Tests'
-					content['events'][0]['script']['exec'].append(space*2+'};')
-					content['events'][0]['script']['exec'].append(space*2+'pm.sendRequest({')
-					content['events'][0]['script']['exec'].append(space*3+'url: request,')
-					content['events'][0]['script']['exec'].append(space*3+"method: '"+content['method']+"',")
-					content['events'][0]['script']['exec'].append(space*3+'header: {')
-					content['events'][0]['script']['exec'].append(space*4+'"Content-Type": "application/json",')
-					content['events'][0]['script']['exec'].append(space*4+'"accept": "application/json"')
-					content['events'][0]['script']['exec'].append(space*3+'},')
-					content['events'][0]['script']['exec'].append(space*3+'body: {')
-					content['events'][0]['script']['exec'].append(space*4+"mode: 'raw',")
-					content['events'][0]['script']['exec'].append(space*4+'raw: JSON.stringify(req)')
-					content['events'][0]['script']['exec'].append(space*3+'}')
-					content['events'][0]['script']['exec'].append(space*2+'},function (err, res) {')
-					content['events'][0]['script']['exec'].append(space*3+'var response_json = res.json();')
-					content['events'][0]['script']['exec'].append(space*3+'var jsonData = response_json;')
-					content['events'][0]['script']['exec'].append(space*3+'pm.test("Status code is -  "'+"+ jsonData['statuscode'] , function() {")
-					content['events'][0]['script']['exec'].append(space*3+'});')
-					content['events'][0]['script']['exec'].append('')
-
-					content['events'][0]['script']['exec'].append(space*3+'pm.test("Body matches string", function () {')
-
-					for x in Tag: #Adding the TAG values for validation
-						content['events'][0]['script']['exec'].append(space*4+"pm.expect(pm.response.text()).to.include(\""+ x +"\""");")
-					content['events'][0]['script']['exec'].append(space*3+"});")
-					content['events'][0]['script']['exec'].append("")
-					content['events'][0]['script']['exec'].append(space*3+"pm.test(\"isString\" ,function() {")
-					content['events'][0]['script']['exec'].append(space*4+"var jsonData = response_json;")
-					content['events'][0]['script']['exec'].append(space*4+"for (i = 0; i < jsonData.length; i++) {")
-
-					for DT in dataType:#Adding DataTypes for validation 
-						DT2 = DT[0].upper()+DT[1:]
-						dataVal = yamlContent['definitions'][DT2]['type']
-
-						if dataVal == 'string':
-							content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.not.be.a('number');")
-						elif dataVal == 'integer':
-							content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.be.a('number');")
-
-					innerSDT = []
-					for SDT in subDataType:#For SubDataTypes
-						SDT = SDT.split('.')
-						if SDT[0] not in innerSDT:
-							innerSDT.append(SDT[0])
-
-					for element in innerSDT:
-
-						DT1 = element[0].upper()+element[1:]
-						try:
-							mainVal = yamlContent['definitions'][DT1]['type']
-
-							if mainVal == 'object':
-								for SDT in subDataType:#For SubDataTypes
-									SDT = SDT.split('.')
-									if element == SDT[0]:						
-										mainContent = ''
-										for data in SDT:
-											mainContent = mainContent+"['"+data+"']"
-
-										DT2 = SDT[1][0].upper()+SDT[1][1:]
-										dataVal = yamlContent['definitions'][DT2]['type']
-
-										if dataVal == 'string':
-											content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.not.be.a('number');")	
-										elif dataVal == 'integer':
-											content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.be.a('number');")	
-										elif dataVal == 'array':
-											innerVal = yamlContent['definitions'][DT2]['items']['type']
-											content['events'][0]['script']['exec'].append(space*5+"for (k = 0; k < jsonData[i]['bwInfo']"+ mainContent +".length; k++) {")
-											content['events'][0]['script']['exec'].append(space*6+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +"[k]).to.be.a('"+innerVal+"');")
-											content['events'][0]['script']['exec'].append(space*6+"}")
-											
-							elif mainVal == 'array':
-								content['events'][0]['script']['exec'].append(space*5+"for (j = 0; j < jsonData[i]['bwInfo']['"+element+"'].length; j++) {")
-								for SDT in subDataType:#For SubDataTypes
-									SDT = SDT.split('.')
-									if element == SDT[0]:
-										DT2 = SDT[1][0].upper()+SDT[1][1:]
-										dataVal = yamlContent['definitions'][DT2]['type']
-
-										if dataVal == 'string':
-											content['events'][0]['script']['exec'].append(space*6+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.not.be.a('number');")
-										elif dataVal == 'integer':
-											content['events'][0]['script']['exec'].append(space*6+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.be.a('number');")
-										elif dataVal == 'array':
-											content['events'][0]['script']['exec'].append(space*6+"for (k = 0; k < jsonData[i]['bwInfo']['"+SDT[0]+"'][j]['"+SDT[1]+"'].length; k++) {")
-											innerVal = yamlContent['definitions'][DT2]['items']['type']
-											content['events'][0]['script']['exec'].append(space*7+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"'][k]).to.be.a('"+innerVal+"');")
-											content['events'][0]['script']['exec'].append(space*6+"}")
-								content['events'][0]['script']['exec'].append(space*5+"}")
-						except:
-							pass
-					content['events'][0]['script']['exec'].append(space*4+"}")
-					content['events'][0]['script']['exec'].append(space*3+"});")
-					content['events'][0]['script']['exec'].append(space*2+"});")
-					content['events'][0]['script']['exec'].append(space+"}")
-					content['events'][0]['script']['exec'].append("}")
-
-				else:	
-					content['events'][0]['script']['exec'].append(space+"postman.setNextRequest(request)")	
-					content['events'][0]['script']['exec'].append("}")
-				
-				content['events'][0]['script']['exec'].append("else{")
-				content['events'][0]['script']['exec'].append(space+"postman.setNextRequest();")
-				content['events'][0]['script']['exec'].append("}")
-				content['events'][0]['script']['exec'].append("")
-
-			#Default content for 'Tests'
-			content['events'][0]['script']['exec'].append("var jsonData = pm.response.json();")
-			content['events'][0]['script']['exec'].append("pm.test(\"Status code is -  \"+ jsonData['statuscode'] , function() {")
-			content['events'][0]['script']['exec'].append("});",)
-			content['events'][0]['script']['exec'].append("")
-			content['events'][0]['script']['exec'].append("pm.test(\"Body matches string\", function () {")
-
-			for x in Tag: #Adding the TAG values
-				content['events'][0]['script']['exec'].append(space+"pm.expect(pm.response.text()).to.include(\""+ x +"\""");")
-			content['events'][0]['script']['exec'].append("});")
-			content['events'][0]['script']['exec'].append("")
-			content['events'][0]['script']['exec'].append("pm.test(\"isString\" ,function() {")
-			content['events'][0]['script']['exec'].append(space+"var jsonData = pm.response.json();")
-			content['events'][0]['script']['exec'].append(space+"for (i = 0; i < jsonData.length; i++) {")
-
-			for DT in dataType:#Adding DataTypes for validation 
-				DT2 = DT[0].upper()+DT[1:]
-				dataVal = yamlContent['definitions'][DT2]['type']
-
-				if dataVal == 'string':
-					content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.not.be.a('number');")
-				elif dataVal == 'integer':
-					content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.be.a('number');")
-
-			innerSDT = []
-			for SDT in subDataType:#For SubDataTypes
-				SDT = SDT.split('.')
-				if SDT[0] not in innerSDT:
-					innerSDT.append(SDT[0])
-
-			for element in innerSDT:
-
-				DT1 = element[0].upper()+element[1:]
-				try:
-					mainVal = yamlContent['definitions'][DT1]['type']
-					if mainVal == 'object':
-						for SDT in subDataType:#For SubDataTypes
-							SDT = SDT.split('.')
-							if element == SDT[0]:						
-								mainContent = ''
-								for data in SDT:
-									mainContent = mainContent+"['"+data+"']"
-
-								DT2 = SDT[1][0].upper()+SDT[1][1:]
-								dataVal = yamlContent['definitions'][DT2]['type']
-
-								if dataVal == 'string':
-									content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.not.be.a('number');")	
-								elif dataVal == 'integer':
-									content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.be.a('number');")	
-								elif dataVal == 'array':
-									innerVal = yamlContent['definitions'][DT2]['items']['type']
-									content['events'][0]['script']['exec'].append(space*2+"for (k = 0; k < jsonData[i]['bwInfo']"+ mainContent +".length; k++) {")
-									content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +"[k]).to.be.a('"+innerVal+"');")
-									content['events'][0]['script']['exec'].append(space*2+"}")
-					elif mainVal == 'array':
-						content['events'][0]['script']['exec'].append(space*2+"for (j = 0; j < jsonData[i]['bwInfo']['"+element+"'].length; j++) {")
-						for SDT in subDataType:#For SubDataTypes
-							SDT = SDT.split('.')
-							if element == SDT[0]:
-								DT2 = SDT[1][0].upper()+SDT[1][1:]
-								dataVal = yamlContent['definitions'][DT2]['type']
-
-								if dataVal == 'string':
-									content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.not.be.a('number');")
-								elif dataVal == 'integer':
-									content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.be.a('number');")
-								elif dataVal == 'array':
-									content['events'][0]['script']['exec'].append(space*3+"for (k = 0; k < jsonData[i]['bwInfo']['"+SDT[0]+"'][j]['"+SDT[1]+"'].length; k++) {")
-									innerVal = yamlContent['definitions'][DT2]['items']['type']
-									content['events'][0]['script']['exec'].append(space*4+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"'][k]).to.be.a('"+innerVal+"');")
-									content['events'][0]['script']['exec'].append(space*3+"}")
-						content['events'][0]['script']['exec'].append(space*2+"}")
-				except:
+				if content['method'] == "GET": #We don't need the following 'Tests' content for GET method
 					pass
-			content['events'][0]['script']['exec'].append(space+"}")
-			content['events'][0]['script']['exec'].append("});")
+
+				else:
+					content['events'][0]['script']['exec'].append("var list = pm.environment.get(\"list\");")
+					content['events'][0]['script']['exec'].append('var request = pm.environment.get("request");')
+					content['events'][0]['script']['exec'].append("")
+					content['events'][0]['script']['exec'].append("if(list && list.length > 0){")
+
+					if content['method'] == "PATCH" or content['method'] == "PUT":#Both PUT and PATCH has differend code compared to POST
+						content['events'][0]['script']['exec'].append(space+'for(i = 0;i < list.length;i++){')
+						content['events'][0]['script']['exec'].append(space*2+'req = {')
+
+						content['events'][0]['script']['exec'].append(space*3+'"'+dataType[0]+'" : list[i].'+dataType[0])
+
+						for j in range (1,len(dataType)):
+							content['events'][0]['script']['exec'].append(space*3+',"'+dataType[j]+'" : list[i].'+dataType[j])
+
+						#To add the subDataTypes in postman Tests part request.body
+						elementCheck = ''
+						for element2 in subDataType:
+							contentCheck = 0
+							spliting = element2.split('.')[0]
+							if elementCheck == spliting:#Checks the repeating subDataType content
+								pass
+							elif spliting == 'timeStamp' and content['method'] == 'PATCH':#For PATCH we don't have timeStamp
+								pass
+
+							else:
+								content['events'][0]['script']['exec'].append(space*3+',"'+spliting+'" :{')
+								for element3 in subDataType:
+									if spliting in element3:
+										if contentCheck == 0:#To stop adding ',' for the first content in req.body of Tests part
+											content['events'][0]['script']['exec'].append(space*4+'"'+element3.split('.')[1]+'" : list[i]["'+element3+'"]')
+											contentCheck = 1
+										else:
+											content['events'][0]['script']['exec'].append(space*4+',"'+element3.split('.')[1]+'" : list[i]["'+element3+'"]')
+									else:
+										pass
+								content['events'][0]['script']['exec'].append(space*3+'}')	
+								elementCheck = spliting;
+
+						#Adding 'sendRequest' part in 'Tests'
+						content['events'][0]['script']['exec'].append(space*2+'};')
+						content['events'][0]['script']['exec'].append(space*2+'pm.sendRequest({')
+						content['events'][0]['script']['exec'].append(space*3+'url: request,')
+						content['events'][0]['script']['exec'].append(space*3+"method: '"+content['method']+"',")
+						content['events'][0]['script']['exec'].append(space*3+'header: {')
+						content['events'][0]['script']['exec'].append(space*4+'"Content-Type": "application/json",')
+						content['events'][0]['script']['exec'].append(space*4+'"accept": "application/json"')
+						content['events'][0]['script']['exec'].append(space*3+'},')
+						content['events'][0]['script']['exec'].append(space*3+'body: {')
+						content['events'][0]['script']['exec'].append(space*4+"mode: 'raw',")
+						content['events'][0]['script']['exec'].append(space*4+'raw: JSON.stringify(req)')
+						content['events'][0]['script']['exec'].append(space*3+'}')
+						content['events'][0]['script']['exec'].append(space*2+'},function (err, res) {')
+						content['events'][0]['script']['exec'].append(space*3+'var response_json = res.json();')
+						content['events'][0]['script']['exec'].append(space*3+'var jsonData = response_json;')
+						content['events'][0]['script']['exec'].append(space*3+'pm.test("Status code is -  "'+"+ jsonData['statuscode'] , function() {")
+						content['events'][0]['script']['exec'].append(space*3+'});')
+						content['events'][0]['script']['exec'].append('')
+
+						content['events'][0]['script']['exec'].append(space*3+'pm.test("Body matches string", function () {')
+
+						for x in Tag: #Adding the TAG values for validation
+							content['events'][0]['script']['exec'].append(space*4+"pm.expect(pm.response.text()).to.include(\""+ x +"\""");")
+						content['events'][0]['script']['exec'].append(space*3+"});")
+						content['events'][0]['script']['exec'].append("")
+						content['events'][0]['script']['exec'].append(space*3+"pm.test(\"isString\" ,function() {")
+						content['events'][0]['script']['exec'].append(space*4+"var jsonData = response_json;")
+						content['events'][0]['script']['exec'].append(space*4+"for (i = 0; i < jsonData.length; i++) {")
+
+						for DT in dataType:#Adding DataTypes for validation 
+							DT2 = DT[0].upper()+DT[1:]
+							dataVal = yamlContent['definitions'][DT2]['type']
+
+							if dataVal == 'string':
+								content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.not.be.a('number');")
+							elif dataVal == 'integer':
+								content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.be.a('number');")
+
+						innerSDT = []
+						for SDT in subDataType:#For SubDataTypes
+							SDT = SDT.split('.')
+							if SDT[0] not in innerSDT:
+								innerSDT.append(SDT[0])
+
+						for element in innerSDT:
+
+							DT1 = element[0].upper()+element[1:]
+							try:
+								mainVal = yamlContent['definitions'][DT1]['type']
+
+								if mainVal == 'object':
+									for SDT in subDataType:#For SubDataTypes
+										SDT = SDT.split('.')
+										if element == SDT[0]:						
+											mainContent = ''
+											for data in SDT:
+												mainContent = mainContent+"['"+data+"']"
+
+											DT2 = SDT[1][0].upper()+SDT[1][1:]
+											dataVal = yamlContent['definitions'][DT2]['type']
+
+											if dataVal == 'string':
+												content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.not.be.a('number');")	
+											elif dataVal == 'integer':
+												content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.be.a('number');")	
+											elif dataVal == 'array':
+												innerVal = yamlContent['definitions'][DT2]['items']['type']
+												content['events'][0]['script']['exec'].append(space*5+"for (k = 0; k < jsonData[i]['bwInfo']"+ mainContent +".length; k++) {")
+												content['events'][0]['script']['exec'].append(space*6+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +"[k]).to.be.a('"+innerVal+"');")
+												content['events'][0]['script']['exec'].append(space*6+"}")
+												
+								elif mainVal == 'array':
+									content['events'][0]['script']['exec'].append(space*5+"for (j = 0; j < jsonData[i]['bwInfo']['"+element+"'].length; j++) {")
+									for SDT in subDataType:#For SubDataTypes
+										SDT = SDT.split('.')
+										if element == SDT[0]:
+											DT2 = SDT[1][0].upper()+SDT[1][1:]
+											dataVal = yamlContent['definitions'][DT2]['type']
+
+											if dataVal == 'string':
+												content['events'][0]['script']['exec'].append(space*6+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.not.be.a('number');")
+											elif dataVal == 'integer':
+												content['events'][0]['script']['exec'].append(space*6+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.be.a('number');")
+											elif dataVal == 'array':
+												content['events'][0]['script']['exec'].append(space*6+"for (k = 0; k < jsonData[i]['bwInfo']['"+SDT[0]+"'][j]['"+SDT[1]+"'].length; k++) {")
+												innerVal = yamlContent['definitions'][DT2]['items']['type']
+												content['events'][0]['script']['exec'].append(space*7+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"'][k]).to.be.a('"+innerVal+"');")
+												content['events'][0]['script']['exec'].append(space*6+"}")
+									content['events'][0]['script']['exec'].append(space*5+"}")
+							except:
+								pass
+						content['events'][0]['script']['exec'].append(space*4+"}")
+						content['events'][0]['script']['exec'].append(space*3+"});")
+						content['events'][0]['script']['exec'].append(space*2+"});")
+						content['events'][0]['script']['exec'].append(space+"}")
+						content['events'][0]['script']['exec'].append("}")
+
+					else:	
+						content['events'][0]['script']['exec'].append(space+"postman.setNextRequest(request)")	
+						content['events'][0]['script']['exec'].append("}")
+					
+					content['events'][0]['script']['exec'].append("else{")
+					content['events'][0]['script']['exec'].append(space+"postman.setNextRequest();")
+					content['events'][0]['script']['exec'].append("}")
+					content['events'][0]['script']['exec'].append("")
+
+				#Default content for 'Tests'
+				content['events'][0]['script']['exec'].append("var jsonData = pm.response.json();")
+				content['events'][0]['script']['exec'].append("pm.test(\"Status code is -  \"+ jsonData['statuscode'] , function() {")
+				content['events'][0]['script']['exec'].append("});",)
+				content['events'][0]['script']['exec'].append("")
+				content['events'][0]['script']['exec'].append("pm.test(\"Body matches string\", function () {")
+
+				for x in Tag: #Adding the TAG values
+					content['events'][0]['script']['exec'].append(space+"pm.expect(pm.response.text()).to.include(\""+ x +"\""");")
+				content['events'][0]['script']['exec'].append("});")
+				content['events'][0]['script']['exec'].append("")
+				content['events'][0]['script']['exec'].append("pm.test(\"isString\" ,function() {")
+				content['events'][0]['script']['exec'].append(space+"var jsonData = pm.response.json();")
+				content['events'][0]['script']['exec'].append(space+"for (i = 0; i < jsonData.length; i++) {")
+
+				for DT in dataType:#Adding DataTypes for validation 
+					DT2 = DT[0].upper()+DT[1:]
+					dataVal = yamlContent['definitions'][DT2]['type']
+
+					if dataVal == 'string':
+						content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.not.be.a('number');")
+					elif dataVal == 'integer':
+						content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.be.a('number');")
+
+				innerSDT = []
+				for SDT in subDataType:#For SubDataTypes
+					SDT = SDT.split('.')
+					if SDT[0] not in innerSDT:
+						innerSDT.append(SDT[0])
+
+				for element in innerSDT:
+
+					DT1 = element[0].upper()+element[1:]
+					try:
+						mainVal = yamlContent['definitions'][DT1]['type']
+						if mainVal == 'object':
+							for SDT in subDataType:#For SubDataTypes
+								SDT = SDT.split('.')
+								if element == SDT[0]:						
+									mainContent = ''
+									for data in SDT:
+										mainContent = mainContent+"['"+data+"']"
+
+									DT2 = SDT[1][0].upper()+SDT[1][1:]
+									dataVal = yamlContent['definitions'][DT2]['type']
+
+									if dataVal == 'string':
+										content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.not.be.a('number');")	
+									elif dataVal == 'integer':
+										content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.be.a('number');")	
+									elif dataVal == 'array':
+										innerVal = yamlContent['definitions'][DT2]['items']['type']
+										content['events'][0]['script']['exec'].append(space*2+"for (k = 0; k < jsonData[i]['bwInfo']"+ mainContent +".length; k++) {")
+										content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +"[k]).to.be.a('"+innerVal+"');")
+										content['events'][0]['script']['exec'].append(space*2+"}")
+						elif mainVal == 'array':
+							content['events'][0]['script']['exec'].append(space*2+"for (j = 0; j < jsonData[i]['bwInfo']['"+element+"'].length; j++) {")
+							for SDT in subDataType:#For SubDataTypes
+								SDT = SDT.split('.')
+								if element == SDT[0]:
+									DT2 = SDT[1][0].upper()+SDT[1][1:]
+									dataVal = yamlContent['definitions'][DT2]['type']
+
+									if dataVal == 'string':
+										content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.not.be.a('number');")
+									elif dataVal == 'integer':
+										content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.be.a('number');")
+									elif dataVal == 'array':
+										content['events'][0]['script']['exec'].append(space*3+"for (k = 0; k < jsonData[i]['bwInfo']['"+SDT[0]+"'][j]['"+SDT[1]+"'].length; k++) {")
+										innerVal = yamlContent['definitions'][DT2]['items']['type']
+										content['events'][0]['script']['exec'].append(space*4+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"'][k]).to.be.a('"+innerVal+"');")
+										content['events'][0]['script']['exec'].append(space*3+"}")
+							content['events'][0]['script']['exec'].append(space*2+"}")
+					except:
+						pass
+				content['events'][0]['script']['exec'].append(space+"}")
+				content['events'][0]['script']['exec'].append("});")
 
 		#This is for 'Pre-Request' Part	
 		#We don't need 'Pre-Request' for GET..
