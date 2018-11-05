@@ -1,6 +1,7 @@
 var jwt = require('jsonwebtoken');
 var xlsx = require('node-xlsx');
 var fs = require('fs');
+var csv = require("fast-csv");
 
 var service  = require ('../service/BwAllocService.js');
 var Idservice  = require ('../service/UEIdentityService.js');
@@ -108,24 +109,29 @@ UIRoutes.prototype.init = function() {
         res.status(200).send(result)
     });
 
-    app.get("/read_Excel",function (req,res) {
+    app.get("/read_Excel/:rowno",function (req,res) {
 
-        var obj = xlsx.parse('/home/w5rtc/Downloads/BWM_POST_Body.xlsx'); // parses a file
+        var rowNo = parseInt(req.params.rowno, 10)+1;
+        var list = [];
 
-        var obj = xlsx.parse(fs.readFileSync('/home/w5rtc/Downloads/BWM_POST_Body.xlsx')); // parses a buffer
-        var file_Content = obj[0].data;
-        // console.log(obj)
-        // console.log(file_Content)
-        var result = {}
-        for (i = 1;i < file_Content.length;i++){
-            result['req'+i.toString()] = {}
-            for (j = 0;j < file_Content[i].length;j++){
-                // console.log(file_Content[0][j],file_Content[i][j])
-                result['req'+i.toString()][file_Content[0][j]] = file_Content[i][j]
-            }
-        }
-        // console.log(result)
-        res.send(result);
+        var stream = fs.createReadStream("/home/w5rtc/Downloads/BWM_API_swagger1.csv");
+
+        var csvStream = csv()
+            .on("data", function(data){
+                list.push(data)
+            })
+            .on("end", function(){
+                req = {};
+                headings = list[0];
+                data = list[rowNo];
+                for (i = 0;i<headings.length;i++)
+                {
+                    req[headings[i]] = data[i]
+                }
+                res.send([req]);
+            });
+
+        stream.pipe(csvStream);
     });
 
 
@@ -155,9 +161,12 @@ UIRoutes.prototype.init = function() {
 
     app.patch("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        self.seviceInstance.bw_allocationsAllocationIdPATCH(req, function (err, result) {
-            res.send(result);
-        })
+        console.log(req.params)
+        console.log(req.body)
+        res.send(req.body)
+        // self.seviceInstance.bw_allocationsAllocationIdPATCH(req, function (err, result) {
+        //     res.send(result);
+        // })
     });
 
     app.put("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
