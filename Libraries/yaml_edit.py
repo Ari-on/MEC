@@ -27,7 +27,7 @@ def addRequest(fileName):
 				if datainfo == item:
 					for k,v in data["definitions"][datainfo].items():
 						if k == "example":
-							print (data["definitions"][datainfo][k])
+							#print (data["definitions"][datainfo][k])
 							for element in data["definitions"][datainfo][k]:
 								if type(data["definitions"][datainfo][k][element]) == str or type(data["definitions"][datainfo][k][element]) == int:
 									data["definitions"][datainfo][k][element] = '{{'+element+'}}'
