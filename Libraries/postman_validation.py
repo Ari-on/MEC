@@ -73,6 +73,7 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile):#This wil
 					}
 					})
 
+				statuscode = content['name'].split('_')[1]
 				if content['method'] == "GET": #We don't need the following 'Tests' content for GET method
 					pass
 
@@ -132,6 +133,7 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile):#This wil
 						content['events'][0]['script']['exec'].append(space*3+'var response_json = res.json();')
 						content['events'][0]['script']['exec'].append(space*3+'var jsonData = response_json;')
 						content['events'][0]['script']['exec'].append(space*3+'pm.test("Status code is -  "'+"+ jsonData['statuscode'] , function() {")
+						content['events'][0]['script']['exec'].append(space*4+ "pm.expect(jsonData['statuscode']).to.be.eql(" + statuscode + ")")
 						content['events'][0]['script']['exec'].append(space*3+'});')
 						content['events'][0]['script']['exec'].append('')
 
@@ -225,6 +227,7 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile):#This wil
 				#Default content for 'Tests'
 				content['events'][0]['script']['exec'].append("var jsonData = pm.response.json();")
 				content['events'][0]['script']['exec'].append("pm.test(\"Status code is -  \"+ jsonData['statuscode'] , function() {")
+				content['events'][0]['script']['exec'].append(space + "pm.expect(jsonData['statuscode']).to.be.eql(" + statuscode + ")")
 				content['events'][0]['script']['exec'].append("});",)
 				content['events'][0]['script']['exec'].append("")
 				content['events'][0]['script']['exec'].append("pm.test(\"Body matches string\", function () {")
