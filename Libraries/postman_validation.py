@@ -5,10 +5,14 @@ import yaml
 
 global space
 space = "    "
+yamlFile = ''
+find_List = []
 
 # class excel():
 
 def readExcel(csv_File): #This method will read the Excel file and take the TAG values in list
+	
+	global yamlFile
 	jsonfile = './outputFiles/'+csv_File +".json"
 	Tag = []
 	dataType = []
@@ -16,38 +20,53 @@ def readExcel(csv_File): #This method will read the Excel file and take the TAG 
 	#yamlFile = csv_File.strip(".csv")+'.yaml'
 	yamlFile = './outputFiles/'+csv_File+'.yaml'
 
-	with open('./outputFiles/'+csv_File+'.csv', 'rb') as csvfile:
-		spamreader = csv.reader(csvfile)
-		for row in spamreader:
-			number_of_columns = len(row)
-	
-			for value1 in row:
-				# value1  = (sheet.cell(row,col).value)
-				if '.' in value1:
-					if value1 in subDataType:
-						pass
+	swaggerFile = open(yamlFile,'r')
+	yamlContent = yaml.load(swaggerFile)
+
+	response_list = []
+	for api in yamlContent['paths']:
+		for method in yamlContent['paths'][api]:
+			res_body = {}
+			res_body['api'] = api
+			res_body['method'] = method
+			for response in yamlContent['paths'][api][method]['responses']:
+				if response == 200 or response == 201 or response == 204 and res_body['method'] != 'delete':
+					if 'examples' in yamlContent['paths'][api][method]['responses'][response]:
+						res_body['main_Key'] = yamlContent['paths'][api][method]['responses'][response]['examples']['application/json'].keys()[0]
+						res_body['response'] = yamlContent['paths'][api][method]['responses'][response]['examples']['application/json']
+						response_list.append(res_body)
+								
 					else:
-						subDataType.append(value1)
+						if 'schema' in yamlContent['paths'][api][method]['responses'][response]:
+							if 'items' in yamlContent['paths'][api][method]['responses'][response]['schema']:
+								next_ref = yamlContent['paths'][api][method]['responses'][response]['schema']['items']['$ref']
+							else:
+								next_ref = yamlContent['paths'][api][method]['responses'][response]['schema']['$ref']
+							schema = next_ref
+							schema = schema.split('/')[-1]
+							ress = yamlContent['definitions'][schema]['properties'].keys()[0]
+							schema2 = yamlContent['definitions'][schema]['properties'][ress]['$ref']
+							schema2 = schema2.split('/')[-1]
+							res_body['main_Key'] = ress
+							if 'example' in yamlContent['definitions'][schema2]:
+								res_body['response'] = yamlContent['definitions'][schema2]['example']
+								if res_body not in response_list:
+									response_list.append(res_body)
 
-				elif value1 not in dataType:
-					dataType.append(value1)
+							else:
+								pass	
+						else:
+							pass
 
-	for element in subDataType:
-		element = element.split('.')
-		for item in element:
-			if item not in Tag:
-				Tag.append(item)
-
-	Tag = Tag+dataType
 
 	#Passing the list to next Method to change the Postman file
-	writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile)
+	writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile,response_list)
 	# excelLoad.writePostmanCollection(Tag,dataType,subDataType)
 
-def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile):#This will add the 'Tests' and 'Pre-Request' part in postman file
+def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile,response_list):#This will add the 'Tests' and 'Pre-Request' part in postman file
 
+	global find_List
 	rowNo = 0
-
 	swaggerFile = open(yamlFile,'r')
 	yamlContent = yaml.load(swaggerFile)
 	JsonFile = open(jsonfile,'r+')
@@ -61,8 +80,8 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile):#This wil
 		if content['method'] == "DELETE":
 			pass
 		else :
+
 			if '200' in content['name'] or '201' in content['name']:
-				content['method']
 				content['events'] = []
 
 				#This is for 'Tests' part
@@ -74,234 +93,179 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile):#This wil
 					})
 
 				statuscode = content['name'].split('_')[1]
-				if content['method'] == "GET": #We don't need the following 'Tests' content for GET method
-					pass
 
-				else:
-					content['events'][0]['script']['exec'].append("var list = pm.environment.get(\"list\");")
-					content['events'][0]['script']['exec'].append('var request = pm.environment.get("request");')
-					content['events'][0]['script']['exec'].append("")
-					content['events'][0]['script']['exec'].append("if(list && list.length > 0){")
-
-					if content['method'] == "PATCH" or content['method'] == "PUT":#Both PUT and PATCH has differend code compared to POST
-						content['events'][0]['script']['exec'].append(space+'for(i = 0;i < list.length;i++){')
-						content['events'][0]['script']['exec'].append(space*2+'req = {')
-
-						content['events'][0]['script']['exec'].append(space*3+'"'+dataType[0]+'" : list[i].'+dataType[0])
-
-						for j in range (1,len(dataType)):
-							content['events'][0]['script']['exec'].append(space*3+',"'+dataType[j]+'" : list[i].'+dataType[j])
-
-						#To add the subDataTypes in postman Tests part request.body
-						elementCheck = ''
-						for element2 in subDataType:
-							contentCheck = 0
-							spliting = element2.split('.')[0]
-							if elementCheck == spliting:#Checks the repeating subDataType content
-								pass
-							elif spliting == 'timeStamp' and content['method'] == 'PATCH':#For PATCH we don't have timeStamp
-								pass
-
-							else:
-								content['events'][0]['script']['exec'].append(space*3+',"'+spliting+'" :{')
-								for element3 in subDataType:
-									if spliting in element3:
-										if contentCheck == 0:#To stop adding ',' for the first content in req.body of Tests part
-											content['events'][0]['script']['exec'].append(space*4+'"'+element3.split('.')[1]+'" : list[i]["'+element3+'"]')
-											contentCheck = 1
-										else:
-											content['events'][0]['script']['exec'].append(space*4+',"'+element3.split('.')[1]+'" : list[i]["'+element3+'"]')
-									else:
-										pass
-								content['events'][0]['script']['exec'].append(space*3+'}')	
-								elementCheck = spliting;
-
-						#Adding 'sendRequest' part in 'Tests'
-						content['events'][0]['script']['exec'].append(space*2+'};')
-						content['events'][0]['script']['exec'].append(space*2+'pm.sendRequest({')
-						content['events'][0]['script']['exec'].append(space*3+'url: request,')
-						content['events'][0]['script']['exec'].append(space*3+"method: '"+content['method']+"',")
-						content['events'][0]['script']['exec'].append(space*3+'header: {')
-						content['events'][0]['script']['exec'].append(space*4+'"Content-Type": "application/json",')
-						content['events'][0]['script']['exec'].append(space*4+'"accept": "application/json"')
-						content['events'][0]['script']['exec'].append(space*3+'},')
-						content['events'][0]['script']['exec'].append(space*3+'body: {')
-						content['events'][0]['script']['exec'].append(space*4+"mode: 'raw',")
-						content['events'][0]['script']['exec'].append(space*4+'raw: JSON.stringify(req)')
-						content['events'][0]['script']['exec'].append(space*3+'}')
-						content['events'][0]['script']['exec'].append(space*2+'},function (err, res) {')
-						content['events'][0]['script']['exec'].append(space*3+'var response_json = res.json();')
-						content['events'][0]['script']['exec'].append(space*3+'var jsonData = response_json;')
-						content['events'][0]['script']['exec'].append(space*3+'pm.test("Status code is -  "'+"+ jsonData['statuscode'] , function() {")
-						content['events'][0]['script']['exec'].append(space*4+ "pm.expect(jsonData['statuscode']).to.be.eql(" + statuscode + ")")
-						content['events'][0]['script']['exec'].append(space*3+'});')
-						content['events'][0]['script']['exec'].append('')
-
-						content['events'][0]['script']['exec'].append(space*3+'pm.test("Body matches string", function () {')
-
-						for x in Tag: #Adding the TAG values for validation
-							content['events'][0]['script']['exec'].append(space*4+"pm.expect(pm.response.text()).to.include(\""+ x +"\""");")
-						content['events'][0]['script']['exec'].append(space*3+"});")
-						content['events'][0]['script']['exec'].append("")
-						content['events'][0]['script']['exec'].append(space*3+"pm.test(\"isString\" ,function() {")
-						content['events'][0]['script']['exec'].append(space*4+"var jsonData = response_json;")
-						content['events'][0]['script']['exec'].append(space*4+"for (i = 0; i < jsonData.length; i++) {")
-
-						for DT in dataType:#Adding DataTypes for validation 
-							DT2 = DT[0].upper()+DT[1:]
-							dataVal = yamlContent['definitions'][DT2]['type']
-
-							if dataVal == 'string':
-								content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.not.be.a('number');")
-							elif dataVal == 'integer':
-								content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.be.a('number');")
-
-						innerSDT = []
-						for SDT in subDataType:#For SubDataTypes
-							SDT = SDT.split('.')
-							if SDT[0] not in innerSDT:
-								innerSDT.append(SDT[0])
-
-						for element in innerSDT:
-
-							DT1 = element[0].upper()+element[1:]
-							try:
-								mainVal = yamlContent['definitions'][DT1]['type']
-
-								if mainVal == 'object':
-									for SDT in subDataType:#For SubDataTypes
-										SDT = SDT.split('.')
-										if element == SDT[0]:						
-											mainContent = ''
-											for data in SDT:
-												mainContent = mainContent+"['"+data+"']"
-
-											DT2 = SDT[1][0].upper()+SDT[1][1:]
-											dataVal = yamlContent['definitions'][DT2]['type']
-
-											if dataVal == 'string':
-												content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.not.be.a('number');")	
-											elif dataVal == 'integer':
-												content['events'][0]['script']['exec'].append(space*5+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.be.a('number');")	
-											elif dataVal == 'array':
-												innerVal = yamlContent['definitions'][DT2]['items']['type']
-												content['events'][0]['script']['exec'].append(space*5+"for (k = 0; k < jsonData[i]['bwInfo']"+ mainContent +".length; k++) {")
-												content['events'][0]['script']['exec'].append(space*6+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +"[k]).to.be.a('"+innerVal+"');")
-												content['events'][0]['script']['exec'].append(space*6+"}")
-												
-								elif mainVal == 'array':
-									content['events'][0]['script']['exec'].append(space*5+"for (j = 0; j < jsonData[i]['bwInfo']['"+element+"'].length; j++) {")
-									for SDT in subDataType:#For SubDataTypes
-										SDT = SDT.split('.')
-										if element == SDT[0]:
-											DT2 = SDT[1][0].upper()+SDT[1][1:]
-											dataVal = yamlContent['definitions'][DT2]['type']
-
-											if dataVal == 'string':
-												content['events'][0]['script']['exec'].append(space*6+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.not.be.a('number');")
-											elif dataVal == 'integer':
-												content['events'][0]['script']['exec'].append(space*6+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.be.a('number');")
-											elif dataVal == 'array':
-												content['events'][0]['script']['exec'].append(space*6+"for (k = 0; k < jsonData[i]['bwInfo']['"+SDT[0]+"'][j]['"+SDT[1]+"'].length; k++) {")
-												innerVal = yamlContent['definitions'][DT2]['items']['type']
-												content['events'][0]['script']['exec'].append(space*7+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"'][k]).to.be.a('"+innerVal+"');")
-												content['events'][0]['script']['exec'].append(space*6+"}")
-									content['events'][0]['script']['exec'].append(space*5+"}")
-							except:
-								pass
-						content['events'][0]['script']['exec'].append(space*4+"}")
-						content['events'][0]['script']['exec'].append(space*3+"});")
-						content['events'][0]['script']['exec'].append(space*2+"});")
-						content['events'][0]['script']['exec'].append(space+"}")
-						content['events'][0]['script']['exec'].append("}")
-
-					else:	
-						content['events'][0]['script']['exec'].append(space+"postman.setNextRequest(request)")	
-						content['events'][0]['script']['exec'].append("}")
-					
-					content['events'][0]['script']['exec'].append("else{")
-					content['events'][0]['script']['exec'].append(space+"postman.setNextRequest();")
-					content['events'][0]['script']['exec'].append("}")
-					content['events'][0]['script']['exec'].append("")
-
-				#Default content for 'Tests'
 				content['events'][0]['script']['exec'].append("var jsonData = pm.response.json();")
 				content['events'][0]['script']['exec'].append("pm.test(\"Status code is -  \"+ jsonData['statuscode'] , function() {")
 				content['events'][0]['script']['exec'].append(space + "pm.expect(jsonData['statuscode']).to.be.eql(" + statuscode + ")")
 				content['events'][0]['script']['exec'].append("});",)
 				content['events'][0]['script']['exec'].append("")
+				
+				value_List = []
+				dict_List  = []
+				for element in response_list:
+					data_value_list = []
+					if element['main_Key'] not in value_List:
+						value_List.append(element['main_Key'])
+					if '{' not in element['api'] and '/:' not in url:
+						if '?' in url:
+							url1 = url.split('?')[0]
+						else:
+							url1 = url
+						if element['api'] in url1 and element['method'].upper() == content['method']:
+							main_list = data_value(content,element['response'],element['main_Key'],data_value_list)
+							for key,value in element['response'].items():
+								if value == '':
+									find_List = []
+									list3 = find_value(key,element['main_Key'])
+									for elem in list3:
+										if elem not in value_List:
+											value_List.append(elem)
+								else:
+									pass
+								if type(value) == str or type(value) == int or type(value) == unicode:
+									if key not in value_List:
+										value_List.append(key)
+								else:
+									if key not in value_List:
+										value_List.append(key)
+									list2 = req_body(key,value,dict_List,element['main_Key'])
+									for elem in list2:
+										if '.' in elem:
+											elem = elem.split('.')
+											for i in elem:
+												if i not in value_List:
+													value_List.append(i)
+										else:
+											pass
+						# print(value_List)
+
+					elif '{' in element['api'] and '/:' in url:
+						api = element['api'].replace('{',':')
+						api = api.replace('}','')
+						if '/' in api[-1]:
+							api = api[:-1]
+						if '?' in url:
+							url1 = url.split('?')[0]
+						else:
+							url1 = url
+						if api in url1 and element['method'].upper() == content['method']:
+							main_list = data_value(content,element['response'],element['main_Key'],data_value_list)
+							for key,value in element['response'].items():
+								if value == '':
+									find_List = []
+									list3 = find_value(key,element['main_Key'])
+									for elem in list3:
+										if elem not in value_List:
+											value_List.append(elem)
+								else:
+									pass
+								if type(value) == str or type(value) == int or type(value) == unicode:
+									if key not in value_List:
+										value_List.append(key)
+								else:
+									if key not in value_List:
+										value_List.append(key)
+									list2 = req_body(key,value,dict_List,element['main_Key'])
+									# print(list2)
+									for elem in list2:
+										if '.' in elem:
+											elem = elem.split('.')
+											for i in elem:
+												if i not in value_List:
+													value_List.append(i)
+										else:
+											if elem not in value_List:
+												value_List.append(elem)
+							
+							# print(value_List)
+				# Default content for 'Tests'
 				content['events'][0]['script']['exec'].append("pm.test(\"Body matches string\", function () {")
 
-				for x in Tag: #Adding the TAG values
+				for x in value_List: #Adding the TAG values
 					content['events'][0]['script']['exec'].append(space+"pm.expect(pm.response.text()).to.include(\""+ x +"\""");")
 				content['events'][0]['script']['exec'].append("});")
 				content['events'][0]['script']['exec'].append("")
-				content['events'][0]['script']['exec'].append("pm.test(\"isString\" ,function() {")
-				content['events'][0]['script']['exec'].append(space+"var jsonData = pm.response.json();")
-				content['events'][0]['script']['exec'].append(space+"for (i = 0; i < jsonData.length; i++) {")
 
-				for DT in dataType:#Adding DataTypes for validation 
-					DT2 = DT[0].upper()+DT[1:]
-					dataVal = yamlContent['definitions'][DT2]['type']
+				# content['events'][0]['script']['exec'].append("pm.test(\"isString\" ,function() {")
+				# content['events'][0]['script']['exec'].append(space+"var jsonData = pm.response.json();")
+				# content['events'][0]['script']['exec'].append(space+"for (i = 0; i < jsonData.length; i++) {")
 
-					if dataVal == 'string':
-						content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.not.be.a('number');")
-					elif dataVal == 'integer':
-						content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.be.a('number');")
+					# elif '{' in element['api'] and '/:' in url:
+					# 	api = element['api'].replace('{',':')
+					# 	api = api.replace('}','')
+					# 	if '/' in api[-1]:
+					# 		api = api[:-1]
+					# 	if '?' in url:
+					# 		url1 = url.split('?')[0]
+					# 	else:
+					# 		url1 = url
+					# 	if api in url1 and element['method'].upper() == content['method']:
+				# content['events'][0]['script']['exec'].append("pm.test(\"isString\" ,function() {")
+				# content['events'][0]['script']['exec'].append(space+"var jsonData = pm.response.json();")
+				# content['events'][0]['script']['exec'].append(space+"for (i = 0; i < jsonData.length; i++) {")
 
-				innerSDT = []
-				for SDT in subDataType:#For SubDataTypes
-					SDT = SDT.split('.')
-					if SDT[0] not in innerSDT:
-						innerSDT.append(SDT[0])
+				# for DT in dataType:#Adding DataTypes for validation 
+				# 	DT2 = DT[0].upper()+DT[1:]
+				# 	dataVal = yamlContent['definitions'][DT2]['type']
 
-				for element in innerSDT:
+				# 	if dataVal == 'string':
+				# 		content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.not.be.a('number');")
+				# 	elif dataVal == 'integer':
+				# 		content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']['" + DT + "']).to.be.a('number');")
 
-					DT1 = element[0].upper()+element[1:]
-					try:
-						mainVal = yamlContent['definitions'][DT1]['type']
-						if mainVal == 'object':
-							for SDT in subDataType:#For SubDataTypes
-								SDT = SDT.split('.')
-								if element == SDT[0]:						
-									mainContent = ''
-									for data in SDT:
-										mainContent = mainContent+"['"+data+"']"
+				# innerSDT = []
+				# for SDT in subDataType:#For SubDataTypes
+				# 	SDT = SDT.split('.')
+				# 	if SDT[0] not in innerSDT:
+				# 		innerSDT.append(SDT[0])
 
-									DT2 = SDT[1][0].upper()+SDT[1][1:]
-									dataVal = yamlContent['definitions'][DT2]['type']
+				# for element in innerSDT:
 
-									if dataVal == 'string':
-										content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.not.be.a('number');")	
-									elif dataVal == 'integer':
-										content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.be.a('number');")	
-									elif dataVal == 'array':
-										innerVal = yamlContent['definitions'][DT2]['items']['type']
-										content['events'][0]['script']['exec'].append(space*2+"for (k = 0; k < jsonData[i]['bwInfo']"+ mainContent +".length; k++) {")
-										content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +"[k]).to.be.a('"+innerVal+"');")
-										content['events'][0]['script']['exec'].append(space*2+"}")
-						elif mainVal == 'array':
-							content['events'][0]['script']['exec'].append(space*2+"for (j = 0; j < jsonData[i]['bwInfo']['"+element+"'].length; j++) {")
-							for SDT in subDataType:#For SubDataTypes
-								SDT = SDT.split('.')
-								if element == SDT[0]:
-									DT2 = SDT[1][0].upper()+SDT[1][1:]
-									dataVal = yamlContent['definitions'][DT2]['type']
+				# 	DT1 = element[0].upper()+element[1:]
+				# 	try:
+				# 		mainVal = yamlContent['definitions'][DT1]['type']
+				# 		if mainVal == 'object':
+				# 			for SDT in subDataType:#For SubDataTypes
+				# 				SDT = SDT.split('.')
+				# 				if element == SDT[0]:						
+				# 					mainContent = ''
+				# 					for data in SDT:
+				# 						mainContent = mainContent+"['"+data+"']"
 
-									if dataVal == 'string':
-										content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.not.be.a('number');")
-									elif dataVal == 'integer':
-										content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.be.a('number');")
-									elif dataVal == 'array':
-										content['events'][0]['script']['exec'].append(space*3+"for (k = 0; k < jsonData[i]['bwInfo']['"+SDT[0]+"'][j]['"+SDT[1]+"'].length; k++) {")
-										innerVal = yamlContent['definitions'][DT2]['items']['type']
-										content['events'][0]['script']['exec'].append(space*4+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"'][k]).to.be.a('"+innerVal+"');")
-										content['events'][0]['script']['exec'].append(space*3+"}")
-							content['events'][0]['script']['exec'].append(space*2+"}")
-					except:
-						pass
-				content['events'][0]['script']['exec'].append(space+"}")
-				content['events'][0]['script']['exec'].append("});")
+				# 					DT2 = SDT[1][0].upper()+SDT[1][1:]
+				# 					dataVal = yamlContent['definitions'][DT2]['type']
+
+				# 					if dataVal == 'string':
+				# 						content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.not.be.a('number');")	
+				# 					elif dataVal == 'integer':
+				# 						content['events'][0]['script']['exec'].append(space*2+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +").to.be.a('number');")	
+				# 					elif dataVal == 'array':
+				# 						innerVal = yamlContent['definitions'][DT2]['items']['type']
+				# 						content['events'][0]['script']['exec'].append(space*2+"for (k = 0; k < jsonData[i]['bwInfo']"+ mainContent +".length; k++) {")
+				# 						content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']"+ mainContent +"[k]).to.be.a('"+innerVal+"');")
+				# 						content['events'][0]['script']['exec'].append(space*2+"}")
+				# 		elif mainVal == 'array':
+				# 			content['events'][0]['script']['exec'].append(space*2+"for (j = 0; j < jsonData[i]['bwInfo']['"+element+"'].length; j++) {")
+				# 			for SDT in subDataType:#For SubDataTypes
+				# 				SDT = SDT.split('.')
+				# 				if element == SDT[0]:
+				# 					DT2 = SDT[1][0].upper()+SDT[1][1:]
+				# 					dataVal = yamlContent['definitions'][DT2]['type']
+
+				# 					if dataVal == 'string':
+				# 						content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.not.be.a('number');")
+				# 					elif dataVal == 'integer':
+				# 						content['events'][0]['script']['exec'].append(space*3+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"']).to.be.a('number');")
+				# 					elif dataVal == 'array':
+				# 						content['events'][0]['script']['exec'].append(space*3+"for (k = 0; k < jsonData[i]['bwInfo']['"+SDT[0]+"'][j]['"+SDT[1]+"'].length; k++) {")
+				# 						innerVal = yamlContent['definitions'][DT2]['items']['type']
+				# 						content['events'][0]['script']['exec'].append(space*4+"pm.expect(jsonData[i]['bwInfo']['" + SDT[0]+"'][j]['"+SDT[1]+"'][k]).to.be.a('"+innerVal+"');")
+				# 						content['events'][0]['script']['exec'].append(space*3+"}")
+				# 			content['events'][0]['script']['exec'].append(space*2+"}")
+				# 	except:
+				# 		pass
+				# content['events'][0]['script']['exec'].append(space+"}")
+				# content['events'][0]['script']['exec'].append("});")
 
 		#This is for 'Pre-Request' Part	
 		#We don't need 'Pre-Request' for GET..
@@ -345,7 +309,7 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile):#This wil
 					value = value.replace('}}','')
 					raw_List.append(value)
 				else:
-					list1 = req_body(key,value,final_List)
+					list1 = req_body(key,value,final_List,'')
 					for element in list1:
 						if element not in raw_List:
 							raw_List.append(element)
@@ -489,25 +453,141 @@ def write_req_body(jsonContent,dataType,subDataType,jsonfile):
 	with open(jsonfile, 'w') as outfile:
 		json.dump(jsonContent, outfile,indent=4,ensure_ascii=False)
 
-def req_body(main_Key,dict_value,final_List):
+def req_body(main_Key,dict_value,final_List,Header_key):
 
 	if type(dict_value) == dict:
 		for key,value in dict_value.items():
-			if type(value) == unicode:
-				value = value.replace('{{','')
-				value = value.replace('}}','')
-				final_List.append(main_Key +'.'+ value)
+			if type(value) == unicode or type(value) == str or type(value) == int:
+				if value == '':
+					list3 = find_value(main_Key +'.'+ key,Header_key)
+					for elem in list3:
+						final_List.append(elem)
+				else:
+					pass
+				final_List.append(main_Key +'.'+ key)
 			else:
-				req_body(main_Key+'.'+key,value,final_List)
+				req_body(main_Key+'.'+key,value,final_List,Header_key)
 
 	if type(dict_value) == list:
 		for element in dict_value:
-			if type(element) == unicode:
+			if type(element) == unicode or type(element) == str or type(element) == int:
+				if element == '':
+					list3 = find_value(main_Key,Header_key)
+					for elem in list3:
+						final_List.append(elem)
+				else:
+					pass
 				final_List.append(main_Key)
 
 			else:
-				req_body(main_Key,element,final_List)
+				req_body(main_Key,element,final_List,Header_key)
 
 	return final_List
+
+def find_value(key,Header_key):
+
+	swaggerFile = open(yamlFile,'r')
+	yamlContent = yaml.load(swaggerFile)
+
+	if Header_key in yamlContent['definitions']:
+		if '.' in key:
+			key = key.split('.')
+			if key[0] in yamlContent['definitions'][Header_key]['properties']:
+				next1 = yamlContent['definitions'][Header_key]['properties'][key[0]]['$ref'].split('/')[-1]
+				key.remove(key[0])
+				find_value(key,next1)
+
+		elif key == '':
+			if Header_key in yamlContent['definitions']:
+				if 'type' in yamlContent['definitions'][Header_key]:
+					if yamlContent['definitions'][Header_key]['type'] == 'string' or yamlContent['definitions'][Header_key]['type'] == 'integer':
+						pass
+						# print(Header_key,yamlContent['definitions'][Header_key]['type'])
+				
+					elif 'items' in yamlContent['definitions'][Header_key]:
+						if '$ref' in yamlContent['definitions'][Header_key]['items']:
+							next3 = yamlContent['definitions'][Header_key]['items']['$ref'].split('/')[-1]
+							find_value('',next3)
+						elif 'type' in yamlContent['definitions'][Header_key]['items']:
+							pass
+							# print(Header_key,yamlContent['definitions'][Header_key]['items']['type'])
+				if 'properties' in yamlContent['definitions'][Header_key]:
+					for elem in yamlContent['definitions'][Header_key]['properties']:
+						next4 = yamlContent['definitions'][Header_key]['properties'][elem]['$ref'].split('/')[-1]
+						find_List.append(elem)
+						find_value('',next4)
+							
+		else:
+			if type(key) == list and len(key) == 1:
+				key = key[0]
+			else:
+				pass
+
+			if Header_key in yamlContent['definitions']:
+				next2 = yamlContent['definitions'][Header_key]['properties'][key]['$ref'].split('/')[-1]
+				find_value('',next2)
+			
+	else:
+		if '.' in key:
+			key = key.split('.')
+			i = 0
+			for element in key:
+				i = i+1
+				if element in yamlContent['definitions']:
+					Header_key = element
+					key = key[i:]
+					body_value = ''
+					if len(key) > 1:
+						for elem in key:
+							body_value = body_value+elem+'.'
+						if body_value[-1] == '.':
+							body_value = body_value[0:-1]
+					elif len(key) == 0:
+						body_value = key[0]
+					else:
+						pass
+					find_value(body_value,Header_key)
+
+				elif element[0].upper()+element[1:] in yamlContent['definitions']:
+					Header_key = element[0].upper()+element[1:]
+					key = key[i:]
+					body_value = ''
+					if len(key) > 1:
+						for elem in key:
+							body_value = body_value+elem+'.'
+						if body_value[-1] == '.':
+							body_value = body_value[0:-1]
+					elif len(key) == 0:
+						body_value = ''
+					else:
+						pass
+					find_value(body_value,Header_key)
+
+
+		else:
+			pass
+
+	return find_List
+
+def data_value(content,response,main_Key,data_value_List):
+	if type(response) == int or type(response) == str or type(response) == unicode:
+		if main_Key not in data_value_List:
+			data_value_List.append(main_Key)
+		# pass
+		# find_value(main_Key,'')
+	elif type(response) == dict:
+		for key,value in response.items():
+			if key == main_Key:
+				data_value(content,value,key,data_value_List)
+			else:
+				data_value(content,value,main_Key +'.'+ key,data_value_List)
+	elif type(response) == list:
+		for elem in response:
+			if type(elem) == str or type(elem) == int:
+				if main_Key not in data_value_List:
+					data_value_List.append(main_Key)
+			else:
+				data_value(content,elem,main_Key,data_value_List)
+	return data_value_List
 
 
