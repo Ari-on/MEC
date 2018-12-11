@@ -1,5 +1,5 @@
 import sys , yaml
-import os
+import os 
 
 # class creating_Request_Body:
 def DescriptionEditing(fileName):
@@ -8,25 +8,28 @@ def DescriptionEditing(fileName):
 		for path in Alldata["paths"]:
 			APIText = Alldata["paths"][path]
 			for Api in APIText:
-				if Api == "put" :
+				if Api == "put" : 
 					InfoText = Alldata["paths"][path][Api]
 					for info in InfoText:
 						if info == "parameters":
 							parameterText = Alldata["paths"][path][Api][info]
-							# print parameterText1
+							# print parameterText
 							for parameters in parameterText:
 								for k,v in parameters.items():
 									if v == "body":
 										#print parameters["description"]
 										schema = parameters["schema"]
 										for k,v in schema.items():
-											refTagvalue = v.split("\\")
+											refTagvalue = v.split("/")
 											refTagvalue = refTagvalue[-1]
 											# print refTagvalue
 											for definitions in Alldata["definitions"]:
 												# print definitions
 												if definitions == refTagvalue:
+													# print definitions
 													propertiesText = Alldata["definitions"][refTagvalue]["example"]
+													# print propertiesText
+												
 													with open(fileName, 'w') as outfile:
 														Alldata["paths"][path][Api][info][-1]["description"] = str(propertiesText)
 														# print Alldata["paths"][path][Api][info][-1]["description"]
@@ -47,7 +50,7 @@ def DescriptionEditing(fileName):
 										#print parameters["description"]
 										schema = parameters["schema"]
 										for k,v in schema.items():
-											refTagvalue = v.split("\\")
+											refTagvalue = v.split("/")
 											refTagvalue = refTagvalue[-1]
 											# print refTagvalue
 											for definitions in Alldata["definitions"]:
@@ -71,7 +74,7 @@ def DescriptionEditing(fileName):
 										#print parameters["description"]
 										schema = parameters["schema"]
 										for k,v in schema.items():
-											refTagvalue = v.split("\\")
+											refTagvalue = v.split("/")
 											refTagvalue = refTagvalue[-1]
 											# print refTagvalue
 											for definitions in Alldata["definitions"]:
@@ -89,11 +92,12 @@ def replaceTag(fileName):
 	if os.path.isfile(fileName):
 		with open(fileName, 'r') as infile:
 			for line in infile:
-				List.append(line)
-				
+				List.append(line)			
 	
 		with open(fileName, 'w') as outfile:
 			for x in List:
+				if "''\"" in x:
+					x = x.replace("''\"","\"")
 				if "''" in x:
 					x = x.replace("''","\"")
 				if (x != "\n"):

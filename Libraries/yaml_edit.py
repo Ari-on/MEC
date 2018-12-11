@@ -1,6 +1,6 @@
 import sys , yaml
 import os
-
+import Request_Body_creation
 # class EditingFile:
 def addRequest(fileName):
 	global in_file,BodyInfoList,data,subtags
@@ -28,7 +28,7 @@ def addRequest(fileName):
 					for k,v in data["definitions"][datainfo].items():
 						if k == "example":
 							#print (data["definitions"][datainfo][k])
-							for element in data["definitions"][datainfo][k]:
+							for element,key in data["definitions"][datainfo][k].items():
 								if type(data["definitions"][datainfo][k][element]) == str or type(data["definitions"][datainfo][k][element]) == int:
 									data["definitions"][datainfo][k][element] = '{{'+element+'}}'
 								elif type(data["definitions"][datainfo][k][element]) == dict:
@@ -47,14 +47,17 @@ def addRequest(fileName):
 														if type(data["definitions"][datainfo][k][element][element2][element3]) == str or type(data["definitions"][datainfo][k][element][element2][element3]) == int:
 															data["definitions"][datainfo][k][element][element2][element3] = '{{'+element3+'}}'
 														elif type(data["definitions"][datainfo][k][element][element2][element3]) == dict:
-															for element4 in data["definitions"][datainfo][k][element][element2][element3]:
-																data["definitions"][datainfo][k][element][element2][element3][element4] = '{{'+element4+'}}'
+															if len(data["definitions"][datainfo][k][element][element2][element3]) == 0:
+																data["definitions"][datainfo][k][element][element2][element3] = '{{' + element3 + '}}'
+															else:
+																for element4 in data["definitions"][datainfo][k][element][element2][element3]:
+																	data["definitions"][datainfo][k][element][element2][element3][element4] = '{{'+element4+'}}'
 														else:
 															pass	
 
 											elif type(data["definitions"][datainfo][k][element][element2]) == list:
-												#print(element2)
-												pass
+												data["definitions"][datainfo][k][element][element2] = ['{{'+element2+'}}']
+												
 								elif type(data["definitions"][datainfo][k][element]) == list:
 									for element5 in data["definitions"][datainfo][k][element]:
 										if type(element5) == dict:
@@ -65,20 +68,23 @@ def addRequest(fileName):
 													if len(element5[element6]) == 0:
 														element5[element6].append('{{'+element6+'}}')
 													else:
-														pass
+														for elem in element5[element6]:
+															if type(elem) == str or type(element5[element6]) == int:
+																element5[element6].append('{{'+element6+'}}')
 												elif type(element5[element6]) == dict:
 													if len(element5[element6]) == 0:
 														element5[element6] = '{{'+element6+'}}'
 													else:
 														pass
-										# elif type(data["definitions"][datainfo][k][element][element5]) == list:
-										# 	pass
 										else:
-											pass
+											data["definitions"][datainfo][k][element] = ['{{' + element + '}}']
 
 		# finalFile = in_file.split('/')[-1]
 		with open(in_file, 'w') as outfile:
 			yaml.dump(data, outfile, default_flow_style=False)
-
+	for tags in BodyInfoList:
+		if "." in tags:
+			Request_Body_creation.DescriptionEditing(fileName)
+			Request_Body_creation.replaceTag(fileName)
 # edit = EditingFile()
 # edit.FindTags(sys.argv[1])

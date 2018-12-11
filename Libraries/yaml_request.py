@@ -1,6 +1,6 @@
 import sys , yaml
 import os
-import Request_Body_creation
+# import Request_Body_creation
 
 # class EditingFile:
 def FindTags(fileName):
@@ -20,15 +20,16 @@ def FindTags(fileName):
 				for k,v in Ptxt.items():
 					BodyInfo = v.split("/")
 					BodyInfo = BodyInfo[-1]
+					# print BodyInfo
 					BodyInfoList.append(BodyInfo)
-		#print("BodyInfoList",BodyInfoList)
+		# print("BodyInfoList",BodyInfoList)
 					
 		#This will check array type tags which has ref 
-		for k,v in data["definitions"].items():
-			if data["definitions"][k].has_key("type"):
-				type = data["definitions"][k]["type"]
+		for k1,v1 in data["definitions"].items():
+			if data["definitions"][k1].has_key("type"):
+				type = data["definitions"][k1]["type"]
 				if type == "array":
-					txt = data["definitions"][k]["items"]
+					txt = data["definitions"][k1]["items"]
 					for k,v in txt.items():
 						if k == "$ref":
 							value = v.split("/")
@@ -57,15 +58,19 @@ def FindTags(fileName):
 												
 						else:
 							pass
-											
+				else:
+					pass
+			else:
+				pass								
 	WriteTags(fileName)
 	
 def WriteTags(fileName):	
 	global firstObject
-	# This will write the tag  
+	# This will write the tag in yaml file 
 	for item in BodyInfoList:
 		for datainfo in data["definitions"]:
 			if datainfo == item:
+				# print datainfo
 				for k,v in data["definitions"][datainfo].items():
 					if k == "example":
 						firstObject = data["definitions"][datainfo]["example"]
@@ -76,10 +81,14 @@ def WriteTags(fileName):
 									finalFile = in_file.split('\\')[-1]
 								elif '/' in in_file:
 									finalFile = in_file.split('/')[-1]
+								if subtags == "":
+									with open('./outputFiles/'+finalFile, 'w') as outfile:
+										yaml.dump(data, outfile, default_flow_style=False)
+								else:
+									with open('./outputFiles/'+finalFile, 'w') as outfile:
+										data["definitions"][item]["example"][key] = [subtags]
+										yaml.dump(data, outfile, default_flow_style=False)
 
-								with open('./outputFiles/'+finalFile, 'w') as outfile:
-									data["definitions"][item]["example"][key] = [subtags]
-									yaml.dump(data, outfile, default_flow_style=False)
 				
 					else:
 						if '\\' in in_file:
@@ -111,10 +120,3 @@ def readyamlFile(fileName):
 				if (x != "\n"):
 					outfile.write(x)
 			outfile.close()
-	else:
-		Request_Body_creation.DescriptionEditing('./outputFiles/'+fileName)
-		Request_Body_creation.replaceTag('./outputFiles/'+fileName)	
-
-	
-# yfile = EditingFile()
-# yfile.FindTags(sys.argv[1])

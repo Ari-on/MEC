@@ -9,7 +9,7 @@ import removing_value_from_requestBody
 import yaml_edit
 import spliting_testCase_basedOn_statusCode
 import spliting_testCase_basedOn_EnumValues
-
+import format_reqBody
 
 
 def Yaml2Json(yaml_file):
@@ -88,6 +88,7 @@ def Yaml2Json(yaml_file):
 				creates a (postman collection .json v1 file)
 				
 	"""
+	# format_reqBody.reqBody(out_file)
 	TC_split.splitCollection(out_file)
 	spliting_testCase_basedOn_statusCode.split_testCases_using_status(in_file,out_file)
 	spliting_testCase_basedOn_EnumValues.split_testCases_using_Enum(in_file,out_file)
