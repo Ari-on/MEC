@@ -4,22 +4,22 @@ var fs = require('fs');
 var csv = require("fast-csv");
 
 var service  = require ('../service/BwAllocService.js');
-var Idservice  = require ('../service/UEIdentityService.js');
-var Appservice  = require ('../service/UEAppService.js');
-var Mp1service  = require ('../service/Mp1Service.js');
-var LocationService  = require ('../service/LocationService.js');
-var RNIservice  = require ('../service/RNIservice.js');
+// var Idservice  = require ('../service/UEIdentityService.js');
+// var Appservice  = require ('../service/UEAppService.js');
+// var Mp1service  = require ('../service/Mp1Service.js');
+// var LocationService  = require ('../service/LocationService.js');
+// var RNIservice  = require ('../service/RNIservice.js');
 
 
 var UIRoutes = function(app) {
 
     this.app = app;
     this.seviceInstance = new service(app);//for BWM
-    this.IdserviceInstance = new Idservice(app);//for UE Identity
-    this.AppserviceInstance = new Appservice(app);//for  UE Application
-    this.Mp1serviceInstance = new Mp1service(app);//for  Mp1
-    this.LocationServiceInstance = new LocationService(app);//for Location
-    this.RNIserviceInstance = new RNIservice(app);//for RNI
+    // this.IdserviceInstance = new Idservice(app);//for UE Identity
+    // this.AppserviceInstance = new Appservice(app);//for  UE Application
+    // this.Mp1serviceInstance = new Mp1service(app);//for  Mp1
+    // this.LocationServiceInstance = new LocationService(app);//for Location
+    // this.RNIserviceInstance = new RNIservice(app);//for RNI
 };
 
 module.exports    = UIRoutes;
