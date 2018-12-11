@@ -1229,7 +1229,6 @@ DefaultService.prototype.bw_allocationsPOST = function (req, callback) {
 
             collection.insert(myobj,function(err,resp) {
                 if(resp){
-                    console.log(resp['ops']);
                     callback(err,resp['ops']);
                 }
                 else{
@@ -1256,4 +1255,61 @@ DefaultService.prototype.read_dbGET = function (req, callback) {
             callback(err,'inserterror');
         }
     })
-}
+};
+
+DefaultService.prototype.commanPOST = function (req, callback) {
+    console.log("This is bw_allocationsPOST method!!!");
+    var self = this;
+    var db = self.app.db;
+
+    var url = req.originalUrl;
+    if (url.includes('/bwm/v1')){
+        var collectionName = "BWM_API_swagger"
+    }
+    else if (url.includes('/mx2/v1')){
+        var collectionName = "UE_Application_Interface_API_swagger"
+    }
+    else if (url.includes('/exampleAPI/mp1')){
+        var collectionName = "Mp1_API_swagger"
+    }
+    else if (url.includes('/exampleAPI/location')){
+        var collectionName = "Location_API_swagger"
+    }
+    else if (url.includes('/rni/v1')){
+        var collectionName = "RNI_API_swagger"
+    }
+    var myobj = req.body;
+    // if (myobj.sessionFilter === undefined || myobj.sessionFilter === '') {
+    //     console.log("No Body is passed")Location_API_swagger
+    //     var errorbody = {
+    //         "Problem Details": {
+    //             "type": "string",
+    //             "title": "string",
+    //             "status": 400,
+    //             "detail": "Please enter Request Body for the POST method",
+    //             "instance": "string"
+    //         }
+    //     };
+    //
+    //     var result = {
+    //         statuscode: 400,
+    //         res: errorbody
+    //     };
+    //     callback(null, result)
+    //
+    // }
+    // else{
+
+        // callback(null,myobj)
+    var collection = db.collection(collectionName);
+
+    collection.insert(myobj,function(err,resp) {
+        if(resp){
+            callback(err,resp['ops']);
+        }
+        else{
+            callback(err,'inserterror');
+        }
+    });
+    // }
+};

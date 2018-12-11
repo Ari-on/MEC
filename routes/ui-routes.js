@@ -111,27 +111,30 @@ UIRoutes.prototype.init = function() {
 
     app.get("/read_Excel/:rowno",function (req,res) {
 
-        var rowNo = parseInt(req.params.rowno, 10)+1;
-        var list = [];
-
-        var stream = fs.createReadStream("/home/w5rtc/Downloads/BWM_API_swagger1.csv");
-
-        var csvStream = csv()
-            .on("data", function(data){
-                list.push(data)
-            })
-            .on("end", function(){
-                req = {};
-                headings = list[0];
-                data = list[rowNo];
-                for (i = 0;i<headings.length;i++)
-                {
-                    req[headings[i]] = data[i]
-                }
-                res.send([req]);
-            });
-
-        stream.pipe(csvStream);
+        // var rowNo = parseInt(req.params.rowno, 10)+1;
+        // var list = [];
+        //
+        // var stream = fs.createReadStream("/home/w5rtc/Downloads/BWM_API_swagger1.csv");
+        //
+        // var csvStream = csv()
+        //     .on("data", function(data){
+        //         list.push(data)
+        //     })
+        //     .on("end", function(){
+        //         req = {};
+        //         headings = list[0];
+        //         data = list[rowNo];
+        //         for (i = 0;i<headings.length;i++)
+        //         {
+        //             req[headings[i]] = data[i]
+        //         }
+        //         res.send([req]);
+        //     });
+        //
+        // stream.pipe(csvStream);
+        self.seviceInstance.read_dbGET(req.params.rowno, function (err, result) {
+            res.send([result]);
+        })
     });
 
 
@@ -147,7 +150,8 @@ UIRoutes.prototype.init = function() {
 
     app.post("/bwm/v1/bw_allocations/",function (req,res) {
 
-        self.seviceInstance.bw_allocationsPOST(req, function (err, result) {
+        console.log(req.originalUrl)
+        self.seviceInstance.commanPOST(req, function (err, result) {
             res.send(result);
         })
     });
@@ -161,8 +165,6 @@ UIRoutes.prototype.init = function() {
 
     app.patch("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        console.log(req.params)
-        console.log(req.body)
         res.send(req.body)
         // self.seviceInstance.bw_allocationsAllocationIdPATCH(req, function (err, result) {
         //     res.send(result);
