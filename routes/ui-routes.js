@@ -4,22 +4,22 @@ var fs = require('fs');
 var csv = require("fast-csv");
 
 var service  = require ('../service/BwAllocService.js');
-// var Idservice  = require ('../service/UEIdentityService.js');
-// var Appservice  = require ('../service/UEAppService.js');
-// var Mp1service  = require ('../service/Mp1Service.js');
-// var LocationService  = require ('../service/LocationService.js');
-// var RNIservice  = require ('../service/RNIservice.js');
+var Idservice  = require ('../service/UEIdentityService.js');
+var Appservice  = require ('../service/UEAppService.js');
+var Mp1service  = require ('../service/Mp1Service.js');
+var LocationService  = require ('../service/LocationService.js');
+var RNIservice  = require ('../service/RNIservice.js');
 
 
 var UIRoutes = function(app) {
 
     this.app = app;
     this.seviceInstance = new service(app);//for BWM
-    // this.IdserviceInstance = new Idservice(app);//for UE Identity
-    // this.AppserviceInstance = new Appservice(app);//for  UE Application
-    // this.Mp1serviceInstance = new Mp1service(app);//for  Mp1
-    // this.LocationServiceInstance = new LocationService(app);//for Location
-    // this.RNIserviceInstance = new RNIservice(app);//for RNI
+    this.IdserviceInstance = new Idservice(app);//for UE Identity
+    this.AppserviceInstance = new Appservice(app);//for  UE Application
+    this.Mp1serviceInstance = new Mp1service(app);//for  Mp1
+    this.LocationServiceInstance = new LocationService(app);//for Location
+    this.RNIserviceInstance = new RNIservice(app);//for RNI
 };
 
 module.exports    = UIRoutes;
@@ -132,7 +132,7 @@ UIRoutes.prototype.init = function() {
         //     });
         //
         // stream.pipe(csvStream);
-        self.seviceInstance.read_dbGET(req.params.rowno, function (err, result) {
+        self.seviceInstance.read_dbGET(req, function (err, result) {
             res.send([result]);
         })
     });
@@ -144,44 +144,43 @@ UIRoutes.prototype.init = function() {
     app.get("/bwm/v1/bw_allocations/",function (req,res) {
 
         self.seviceInstance.bw_allocationsGET(req.query, function (err, result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.post("/bwm/v1/bw_allocations/",function (req,res) {
 
         console.log(req.originalUrl)
-        self.seviceInstance.commanPOST(req, function (err, result) {
-            res.send(result);
+        self.seviceInstance.bw_allocationsPOST(req, function (err, result) {
+            res.status(201).send(result);
         })
     });
 
     app.get("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
         self.seviceInstance.bw_allocationsAllocationIdGET(req.params.allocationID, function (err, result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.patch("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        res.send(req.body)
-        // self.seviceInstance.bw_allocationsAllocationIdPATCH(req, function (err, result) {
-        //     res.send(result);
-        // })
+        self.seviceInstance.bw_allocationsAllocationIdPATCH(req, function (err, result) {
+            res.status(200).send(result);
+        })
     });
 
     app.put("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
         self.seviceInstance.bw_allocationsAllocationIdPUT(req, function (err, result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.delete("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        self.seviceInstance.bw_allocationsAllocationIdDELETE(req.params.allocationID, function (err, result) {
-            res.send(result);
+        self.seviceInstance.bw_allocationsAllocationIdDELETE(req, function (err, result) {
+            res.status(204).send(result);
         })
     });
 
@@ -195,30 +194,29 @@ UIRoutes.prototype.init = function() {
 
     });
 
-    app.post("/mx2/v1/app_contexts",function (req,res,next) {
+    app.post("/mx2/v1/app_contexts",function (req,res) {
 
-            var appContext = req.body;
-            self.AppserviceInstance.app_contextsPOST(req, appContext, function (err, result) {
-                res.send(result)
-            })
+        self.AppserviceInstance.app_contextsPOST(req, function (err, result) {
+            res.status(201).send(result)
+        });
     });
 
-    app.put("/mx2/v1/app_contexts/:contextID",function (req,res,next) {
+    app.put("/mx2/v1/app_contexts/:contextID",function (req,res) {
 
-        var contextID = req.params.contextID;
-        var appContext = req.body;
-
-        self.AppserviceInstance.app_contextsContextIdPUT(req, contextID, appContext, function (err, result) {
-            res.send(result);
+        self.AppserviceInstance.app_contextsContextIdPUT(req, function (err, result) {
+            if (result) {
+                res.status(204).send('');
+            }
+            else{
+                res.send("Update Error")
+            }
         })
     });
 
-    app.delete("/mx2/v1/app_contexts/:contextID",function (req,res,next) {
+    app.delete("/mx2/v1/app_contexts/:contextID",function (req,res) {
 
-        var contextID = req.params.contextID;
-
-        self.AppserviceInstance.app_contextsContextIdDELETE(req, contextID, function (err, result) {
-            res.send(result);
+        self.AppserviceInstance.app_contextsContextIdDELETE(req, function (err, result) {
+            res.status(204).send(result);
         })
     });
 
@@ -226,21 +224,15 @@ UIRoutes.prototype.init = function() {
 
     app.get("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
 
-        console.log('GET Method', req.params);
-        console.log('GET Method', req.query);
-
         self.IdserviceInstance.appInstanceIdUe_identity_tag_infoGET(req, function (err, result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.put("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res,next) {
 
-        console.log('PUT Method', req.params);
-        console.log('PUT Method', req.body);
-
         self.IdserviceInstance.appInstanceIdUe_identity_tag_infoPUT(req, function (err, result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
@@ -289,7 +281,7 @@ UIRoutes.prototype.init = function() {
         console.log('POST Method',req.body);
 
         self.Mp1serviceInstance.ApplicationsSubscriptions_POST(req, function (err, result) {
-            res.send(result);
+            res.status(201).send(result);
         })
     });
 
@@ -479,92 +471,70 @@ UIRoutes.prototype.init = function() {
         console.log('GET Method',req.query);
 
         self.LocationServiceInstance.zonalTrafficSubGet(req, function (err,result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.post("/exampleAPI/location/v1/subscriptions/zonalTraffic",function (req,res) {
 
-        console.log('POST Method',req.body);
-
         self.LocationServiceInstance.zonalTrafficSubPost(req, function (err,result) {
-            res.send(result);
+            res.status(201).send(result);
         })
     });
 
     app.get("/exampleAPI/location/v1/subscriptions/zonalTraffic/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
-
         self.LocationServiceInstance.zonalTrafficSubGetById(req, function (err,result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.put("/exampleAPI/location/v1/subscriptions/zonalTraffic/:subscriptionId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
-
         self.LocationServiceInstance.zonalTrafficSubPutById(req, function (err,result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.delete("/exampleAPI/location/v1/subscriptions/zonalTraffic/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method',req.params);
-
         self.LocationServiceInstance.zonalTrafficSubDelById(req, function (err,result) {
-            res.send(result);
+            res.status(204).send(result);
         })
     });
 
     app.get("/exampleAPI/location/v1/subscriptions/userTracking",function (req,res) {
 
-        console.log('GET Method',req.query);
-
         self.LocationServiceInstance.userTrackingSubGet(req, function (err,result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.post("/exampleAPI/location/v1/subscriptions/userTracking",function (req,res) {
 
-        console.log('POST Method',req.body);
-
         self.LocationServiceInstance.userTrackingSubPost(req, function (err,result) {
-            res.send(result);
+            res.status(201).send(result);
         })
     });
 
     app.get("/exampleAPI/location/v1/subscriptions/userTracking/:subscriptionId",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
-
         self.LocationServiceInstance.userTrackingSubGetById(req, function (err,result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.put("/exampleAPI/location/v1/subscriptions/userTracking/:subscriptionId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
-
         self.LocationServiceInstance.userTrackingSubPutById(req, function (err,result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.delete("/exampleAPI/location/v1/subscriptions/userTracking/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method',req.params);
-
         self.LocationServiceInstance.userTrackingSubDelById(req, function (err,result) {
-            res.send(result);
+            res.status(204).send(result);
         })
     });
 
@@ -578,8 +548,6 @@ UIRoutes.prototype.init = function() {
     });
 
     app.post("/exampleAPI/location/v1/subscriptions/zonalStatus",function (req,res) {
-
-        console.log('POST Method',req.body);
 
         self.LocationServiceInstance.zoneStatusPost(req, function (err,result) {
             res.send(result);
