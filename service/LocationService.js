@@ -329,7 +329,7 @@ LocationService.prototype.userTrackingSubGetById = function (req,callback) {
     console.log("This is userTrackingSubGetById method!!!");
     var self = this;
     var db = self.app.db;
-    var subscriptionId = req.params.subscriptionId
+    var subscriptionId = req.params.subscriptionId;
     var collection = db.collection("Location_API_swagger");
     collection.find({"subscriptionId" : subscriptionId},{"userTrackingSubscription":1,"_id":0}).toArray(function (err,resp) {
         if (resp){
@@ -347,7 +347,7 @@ LocationService.prototype.userTrackingSubGetById = function (req,callback) {
 
 LocationService.prototype.userTrackingSubPutById = function (req,callback) {
 
-    console.log("This is zonalTrafficSubPutById method!!!");
+    console.log("This is userTrackingSubPutById method!!!");
     var self = this;
     var db = self.app.db;
     var subscriptionId = req.params.subscriptionId;
@@ -398,6 +398,26 @@ LocationService.prototype.userTrackingSubDelById = function (req,callback) {
 
 LocationService.prototype.zoneStatusGet = function (req,callback) {
 
+    console.log("This is zoneStatusGet method!!!");
+    var self = this;
+    var db = self.app.db;
+    var collection = db.collection("Location_API_swagger");
+    collection.find({},{"zoneStatusSubscription":1,"_id":0}).toArray(function (err,resp) {
+        if (resp){
+            var newArray = resp.filter(value => Object.keys(value).length !== 0);
+            var zoneStatusSubscription = newArray.map(function(obj){
+                return obj.zoneStatusSubscription;
+            });
+            var result = {
+                statuscode: 200,
+                notificationSubscriptionList:{zoneStatusSubscription: zoneStatusSubscription}
+            };
+            callback(err,result)
+        }
+        else{
+            callback(err,"can't find")
+        }
+    })
 };
 
 LocationService.prototype.zoneStatusPost = function (req,callback) {
@@ -447,7 +467,7 @@ LocationService.prototype.zoneStatusPost = function (req,callback) {
                     upsert:false
                 }
             };
-            collection1.update(criteria.condition,{$set:{"Location.zonalStatus":counter.userTracking + 1}},function(err,docs) {
+            collection1.update(criteria.condition,{$set:{"Location.zonalStatus":counter.zonalStatus + 1}},function(err,docs) {
                 if(docs){
                     console.log("counter updated")
                 }
@@ -485,18 +505,72 @@ LocationService.prototype.zoneStatusPost = function (req,callback) {
 
 LocationService.prototype.zoneStatusGetById = function (req,callback) {
 
-    console.log("LOCATION Method19");
-    callback(null,"DONE LOCATION zoneStatusGetById");
+    console.log("This is zoneStatusGetById method!!!");
+    var self = this;
+    var db = self.app.db;
+    var subscriptionId = req.params.subscriptionId
+    var collection = db.collection("Location_API_swagger");
+    collection.find({"subscriptionId" : subscriptionId},{"zoneStatusSubscription":1,"_id":0}).toArray(function (err,resp) {
+        if (resp){
+            var result = {
+                statuscode: 200,
+                zoneStatusSubscription: resp[0]['zoneStatusSubscription']
+            };
+            callback(err,result)
+        }
+        else{
+            callback(err,"can't find")
+        }
+    })
 };
 
 LocationService.prototype.zoneStatusPutById = function (req,callback) {
 
-    console.log("LOCATION Method20");
-    callback(null,"DONE LOCATION zoneStatusPutById");
+    console.log("This is zoneStatusPutById method!!!");
+    var self = this;
+    var db = self.app.db;
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body
+    var collection = db.collection("Location_API_swagger");
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "zoneStatusSubscription" : myobj
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+    collection.update(criteria.condition,{$set:criteria.value},function(err,resp) {
+        if(resp){
+            var result = {
+                statuscode:200,
+                zoneStatusSubscription: myobj
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+
+    });
 };
 
 LocationService.prototype.zoneStatusDelById = function (req,callback) {
 
-    console.log("LOCATION Method21");
-    callback(null,"DONE LOCATION zoneStatusDelById");
+    console.log("This is zoneStatusDelById method!!!");
+    var self = this;
+    var db = self.app.db;
+    var subscriptionId = req.params.subscriptionId
+    var collection = db.collection("Location_API_swagger");
+    collection.removeOne({"subscriptionId" : subscriptionId},function(err, resp) {
+        if (resp) {
+            callback(err, '')
+        } else {
+            callback(err, "Error while Deleting")
+        }
+    })
 };

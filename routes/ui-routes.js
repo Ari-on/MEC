@@ -1,7 +1,7 @@
 var jwt = require('jsonwebtoken');
-var xlsx = require('node-xlsx');
-var fs = require('fs');
-var csv = require("fast-csv");
+// var xlsx = require('node-xlsx');
+// var fs = require('fs');
+// var csv = require("fast-csv");
 
 var service  = require ('../service/BwAllocService.js');
 var Idservice  = require ('../service/UEIdentityService.js');
@@ -150,7 +150,6 @@ UIRoutes.prototype.init = function() {
 
     app.post("/bwm/v1/bw_allocations/",function (req,res) {
 
-        console.log(req.originalUrl)
         self.seviceInstance.bw_allocationsPOST(req, function (err, result) {
             res.status(201).send(result);
         })
@@ -186,7 +185,7 @@ UIRoutes.prototype.init = function() {
 
     /* UE Application API */
 
-    app.get("/mx2/v1/app_list",function (req,res,next) {
+    app.get("/mx2/v1/app_list",function (req,res) {
 
         self.AppserviceInstance.app_listGET(req, function (err, result) {
             res.send(result);
@@ -229,7 +228,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.put("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res,next) {
+    app.put("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
 
         self.IdserviceInstance.appInstanceIdUe_identity_tag_infoPUT(req, function (err, result) {
             res.status(200).send(result);
@@ -540,46 +539,36 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/zonalStatus",function (req,res) {
 
-        console.log('GET Method',req.query);
-
         self.LocationServiceInstance.zoneStatusGet(req, function (err,result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.post("/exampleAPI/location/v1/subscriptions/zonalStatus",function (req,res) {
 
         self.LocationServiceInstance.zoneStatusPost(req, function (err,result) {
-            res.send(result);
+            res.status(201).send(result);
         })
     });
 
-    app.get("/exampleAPI/location/v1/subscriptions/zonalStatus/:subscriptionId",function (req,res) {
-
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
+    app.get("/exampleAPI/location/v1/subscriptions/zoneStatus/:subscriptionId",function (req,res) {
 
         self.LocationServiceInstance.zoneStatusGetById(req, function (err,result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
-    app.put("/exampleAPI/location/v1/subscriptions/zonalStatus/:subscriptionId",function (req,res) {
-
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
+    app.put("/exampleAPI/location/v1/subscriptions/zoneStatus/:subscriptionId",function (req,res) {
 
         self.LocationServiceInstance.zoneStatusPutById(req, function (err,result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
-    app.delete("/exampleAPI/location/v1/subscriptions/zonalStatus/:subscriptionId",function (req,res) {
-
-        console.log('DELETE Method',req.params);
+    app.delete("/exampleAPI/location/v1/subscriptions/zoneStatus/:subscriptionId",function (req,res) {
 
         self.LocationServiceInstance.zoneStatusDelById(req, function (err,result) {
-            res.send(result);
+            res.status(204).send(result);
         })
     });
 
