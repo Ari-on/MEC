@@ -18,6 +18,7 @@ module.exports = DefaultService;
  * no response value expected for this operation
  **/
 DefaultService.prototype.bw_allocationsAllocationIdDELETE = function(req,callback) {
+
 	console.log("This is bw_allocationsAllocationIdDELETE method!!!");
 	var self = this;
 	var db = self.app.db;
@@ -44,6 +45,7 @@ DefaultService.prototype.bw_allocationsAllocationIdDELETE = function(req,callbac
  * returns inline_response_200
  **/
 DefaultService.prototype.bw_allocationsAllocationIdGET = function(req,callback) {
+
     console.log("This is bw_allocationsAllocationIdGET method!!!");
     var self = this;
     var db = self.app.db;
@@ -139,6 +141,7 @@ DefaultService.prototype.bw_allocationsAllocationIdPATCH = function(req,callback
  *
 **/
 DefaultService.prototype.bw_allocationsAllocationIdPUT = function(req,callback) {
+
     console.log("This is bw_allocationsAllocationIdPUT method!!!");
     var self = this;
     var db = self.app.db;
@@ -338,6 +341,7 @@ DefaultService.prototype.bw_allocationsGET = function (req, callback) {
      * returns inline_response_200
      **/
 DefaultService.prototype.bw_allocationsPOST = function (req, callback) {
+
         console.log("This is bw_allocationsPOST method!!!");
         var self = this;
         var db = self.app.db;
@@ -456,7 +460,7 @@ DefaultService.prototype.read_dbGET = function (req, callback) {
         var collectionName = "RNI_API_swagger"
     }
     var myobj = parseInt(req.params.rowno)-1;
-    var collection = db.collection("Location_API_swagger");
+    var collection = db.collection("RNI_API_swagger");
 
     collection.find().toArray(function(err,resp) {
         if(resp){

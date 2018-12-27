@@ -332,38 +332,29 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/services",function (req,res) {
 
-        console.log('GET Method', req.query);
-
-        self.Mp1serviceInstance.Services_GET(req, function (err, result) {
+        self.Mp1serviceInstance.Services_GET(req.query, function (err, result) {
             res.send(result);
         })
     });
 
-    app.put("/exampleAPI/mp1/v1/services",function (req,res) {
+    app.post("/exampleAPI/mp1/v1/services",function (req,res) {
 
-        console.log('PUT Method', req.body);
-
-        self.Mp1serviceInstance.Services_PUT(req, function (err, result) {
-            res.send(result);
+        self.Mp1serviceInstance.Services_POST(req, function (err, result) {
+            res.status(201).send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
 
-        console.log('GET Method', req.params);
-
         self.Mp1serviceInstance.ServicesServiceId_GET(req, function (err, result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
     app.put("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
 
-        console.log('PUT Method', req.params);
-        console.log('PUT Method', req.body);
-
         self.Mp1serviceInstance.ServicesServiceId_PUT(req, function (err, result) {
-            res.send(result);
+            res.status(200).send(result);
         })
     });
 
@@ -585,10 +576,10 @@ UIRoutes.prototype.init = function() {
 
         self.RNIserviceInstance.rab_infoGET(req, function (err, result) {
             if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+                res.status(200).send(result);
             }
             else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -601,20 +592,20 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
-    app.get("/rni/v1/queries/plmn_info",function (req,res,next) {
+    app.get("/rni/v1/queries/plmn_info",function (req,res) {
 
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
             if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+                res.status(200).send(result);
             }
             else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -627,21 +618,21 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.get("/rni/v1/queries/s1_bearer_info",function (req,res,next) {
+    app.get("/rni/v1/queries/s1_bearer_info",function (req,res) {
 
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.s1_bearer_infoGET(req, function (err, result) {
             if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+                res.status(200).send(result);
             }
             else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -654,7 +645,7 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
@@ -663,16 +654,16 @@ UIRoutes.prototype.init = function() {
 
 /////////subscriptions///////////
 
-    app.get("/rni/v1/subscriptions/",function (req,res,next) {
+    app.get("/rni/v1/subscriptions/",function (req,res) {
 
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptionsGET(req, function (err, result) {
             if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+                res.status(200).send(result);
             }
             else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -685,21 +676,21 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.get("/rni/v1/subscriptions/cell_change",function (req,res,next) {
+    app.get("/rni/v1/subscriptions/cell_change",function (req,res) {
 
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cc_GET(req, function (err, result) {
             if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+                res.status(200).send(result);
             }
             else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -717,9 +708,7 @@ UIRoutes.prototype.init = function() {
         })
     });
 
-    app.post("/rni/v1/subscriptions/cell_change",function (req,res,next) {
-
-        console.log('POST Method', req.body);
+    app.post("/rni/v1/subscriptions/cell_change",function (req,res) {
 
         var content_Type = req.headers['content-type'];
 
@@ -735,15 +724,17 @@ UIRoutes.prototype.init = function() {
                     "instance": "string"
                 }
             };
-            res.send(result);
+            res.status(415).send(result);
         }
         else {
             self.RNIserviceInstance.CellChange_subscriptionsPOST(req, function (err, result) {
-                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                    res.send(result);
+                console.log(typeof (result));
+                // res.send(result)
+                if ( req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                    res.status(201).send(result);
                 }
-                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                    res.send(result);
+                else if ( req.headers.accept.indexOf('text/plain') && typeof(result) == 'string') {
+                    res.status(201).send(result);
                 }
                 else {
                     var result = {
@@ -756,23 +747,20 @@ UIRoutes.prototype.init = function() {
                             "instance": "string"
                         }
                     };
-                    res.send(result);
+                    res.status(406).send(result);
                 }
             })
         }
     });
 
-    app.get("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res,next) {
-
-        console.log('GET Method', req.query);
-        console.log('GET Method', req.params);
+    app.get("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.CellChange_subscriptionsGET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -785,23 +773,19 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.put("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res,next) {
-
-        console.log('PUT Method', req.params);
-        console.log('PUT Method', req.body);
-
+    app.put("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.CellChange_subscriptionsPUT(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -814,31 +798,29 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
     app.delete("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method', req.params);
-
         self.RNIserviceInstance.CellChange_subscriptionsSubscrIdDELETE(req, function (err, result) {
-            res.send(result);
+            res.status(204).send(result);
         })
 
     });
 
-    app.get("/rni/v1/subscriptions/s1_bearer",function (req,res,next) {
+    app.get("/rni/v1/subscriptions/s1_bearer",function (req,res) {
 
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_s1_GET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -851,14 +833,12 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         });
     });
 
-    app.post("/rni/v1/subscriptions/s1_bearer",function (req,res,next) {
-
-        console.log('POST Method', req.body);
+    app.post("/rni/v1/subscriptions/s1_bearer",function (req,res) {
 
         var content_Type = req.headers['content-type'];
 
@@ -874,15 +854,16 @@ UIRoutes.prototype.init = function() {
                     "instance": "string"
                 }
             };
-            res.send(result);
+            res.status(415).send(result);
         }
         else {
             self.RNIserviceInstance.S1BearerSubscription_subscriptionsPOST(req, function (err, result) {
-                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                    res.send(result);
+                console.log(req.headers.accept,typeof(result));
+                if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                    res.status(201).send(result);
                 }
-                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                    res.send(result);
+                else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                    res.status(201).send(result);
                 }
                 else {
                     var result = {
@@ -895,7 +876,7 @@ UIRoutes.prototype.init = function() {
                             "instance": "string"
                         }
                     };
-                    res.send(result);
+                    res.status(406).send(result);
                 }
                 ;
             })
@@ -903,17 +884,14 @@ UIRoutes.prototype.init = function() {
     });
 
 
-    app.get("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res,next) {
-
-        console.log('GET Method', req.query);
-        console.log('GET Method', req.params);
+    app.get("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.S1BearerSubscription_subscriptionsGET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -926,22 +904,19 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.put("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res,next) {
-
-        console.log('PUT Method', req.params);
-        console.log('PUT Method', req.body);
+    app.put("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.S1BearerSubscription_subscriptionsPUT(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -954,30 +929,26 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
     app.delete("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method',req.params);
-
         self.RNIserviceInstance.S1Bearer_subscriptionsSubscrIdDELETE(req, function (err,result) {
-            res.send(result);
+            res.status(204).send(result);
         })
     });
 
-    app.get("/rni/v1/subscriptions/ta",function (req,res,next) {
-
-        console.log('GET Method', req.query);
+    app.get("/rni/v1/subscriptions/ta",function (req,res) {
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_ta_GET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -990,14 +961,12 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.post("/rni/v1/subscriptions/ta",function (req,res,next) {
-
-        console.log('POST Method', req.body);
+    app.post("/rni/v1/subscriptions/ta",function (req,res) {
 
         var content_Type = req.headers['content-type'];
 
@@ -1013,15 +982,15 @@ UIRoutes.prototype.init = function() {
                     "instance": "string"
                 }
             };
-            res.send(result);
+            res.status(415).send(result);
         }
         else {
             self.RNIserviceInstance.MeasTa_subscriptionsPOST(req, function (err, result) {
-                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                    res.send(result);
+                if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                    res.status(201).send(result);
                 }
-                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                    res.send(result);
+                else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                    res.status(201).send(result);
                 }
                 else {
                     var result = {
@@ -1034,23 +1003,20 @@ UIRoutes.prototype.init = function() {
                             "instance": "string"
                         }
                     };
-                    res.send(result);
+                    res.status(406).send(result);
                 }
             })
         }
     });
 
-    app.get("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res,next) {
-
-        console.log('GET Method', req.query);
-        console.log('GET Method', req.params);
+    app.get("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.MeasTa_subscriptionsGET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1063,22 +1029,19 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             };
         })
     });
 
-    app.put("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res,next) {
-
-        console.log('PUT Method', req.params);
-        console.log('PUT Method', req.body);
+    app.put("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.MeasTa_subscriptionsPUT(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1091,29 +1054,27 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
     app.delete("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method',req.params);
-
         self.RNIserviceInstance.MeasTa_subscriptionsSubscrIdDELETE(req, function (err,result) {
-            res.send(result);
+            res.status(204).send(result);
         })
     });
 
-    app.get("/rni/v1/subscriptions/meas_rep_ue",function (req,res,next) {
+    app.get("/rni/v1/subscriptions/meas_rep_ue",function (req,res) {
 
         console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_mr_GET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
                 res.send(result);
             }
             else{
@@ -1127,15 +1088,12 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.post("/rni/v1/subscriptions/meas_rep_ue",function (req,res,next) {
-
-        console.log('POST Method', req.params);
-        console.log('POST Method', req.body);
+    app.post("/rni/v1/subscriptions/meas_rep_ue",function (req,res) {
 
         var content_Type = req.headers['content-type'];
 
@@ -1151,15 +1109,15 @@ UIRoutes.prototype.init = function() {
                     "instance": "string"
                 }
             };
-            res.send(result);
+            res.status(415).send(result);
         }
         else {
             self.RNIserviceInstance.MeasRepUe_subscriptionsPOST(req, function (err, result) {
-                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                    res.send(result);
+                if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                    res.status(201).send(result);
                 }
-                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                    res.send(result);
+                else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                    res.status(201).send(result);
                 }
                 else {
                     var result = {
@@ -1172,23 +1130,20 @@ UIRoutes.prototype.init = function() {
                             "instance": "string"
                         }
                     };
-                    res.send(result);
+                    res.status(406).send(result);
                 }
             })
         }
     });
 
-    app.get("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res,next) {
-
-        console.log('GET Method', req.query);
-        console.log('GET Method', req.params);
+    app.get("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.MeasRepUe_subscriptionsGET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1201,22 +1156,19 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.put("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res,next) {
-
-        console.log('PUT Method', req.params);
-        console.log('PUT Method', req.body);
+    app.put("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.MeasRepUeReport_subscriptionsPUT(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1229,31 +1181,27 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
     app.delete("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method', req.params);
-
         self.RNIserviceInstance.MeasRepUe_subscriptionsSubscrIdDELETE(req, function (err, result) {
-            res.send(result);
+            res.status(204).send(result);
         })
 
     });
 
-    app.get("/rni/v1/subscriptions/rab_est",function (req,res,next) {
-
-        console.log('GET Method', req.query);
+    app.get("/rni/v1/subscriptions/rab_est",function (req,res) {
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_re_GET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1266,14 +1214,12 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.post("/rni/v1/subscriptions/rab_est",function (req,res,next) {
-
-        console.log('POST Method', req.body);
+    app.post("/rni/v1/subscriptions/rab_est",function (req,res) {
 
         var content_Type = req.headers['content-type'];
 
@@ -1289,15 +1235,15 @@ UIRoutes.prototype.init = function() {
                     "instance": "string"
                 }
             };
-            res.send(result);
+            res.status(415).send(result);
         }
         else {
             self.RNIserviceInstance.RabEstSubscription_subscriptionsPOST(req, function (err, result) {
-                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                    res.send(result);
+                if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                    res.status(201).send(result);
                 }
-                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                    res.send(result);
+                else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                    res.status(201).send(result);
                 }
                 else {
                     var result = {
@@ -1310,23 +1256,20 @@ UIRoutes.prototype.init = function() {
                             "instance": "string"
                         }
                     };
-                    res.send(result);
+                    res.status(406).send(result);
                 }
             })
         }
     });
 
-    app.get("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res,next) {
-
-        console.log('GET Method', req.query);
-        console.log('GET Method', req.params);
+    app.get("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.RabEstSubscription_subscriptionsGET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1339,22 +1282,19 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.put("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res,next) {
-
-        console.log('PUT Method', req.params);
-        console.log('PUT Method', req.body);
+    app.put("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.RabEstSubscription_subscriptionsPUT(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1367,30 +1307,26 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
     app.delete("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method',req.query);
-
         self.RNIserviceInstance.RabEst_subscriptionsSubscrIdDELETE(req, function (err,result) {
-            res.send(result);
+            res.status(204).send(result);
         })
     });
 
-    app.get("/rni/v1/subscriptions/rab_mod",function (req,res,next) {
-
-        console.log('GET Method', req.query);
+    app.get("/rni/v1/subscriptions/rab_mod",function (req,res) {
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_rm_GET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1403,14 +1339,12 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.post("/rni/v1/subscriptions/rab_mod",function (req,res,next) {
-
-        console.log('POST Method', req.body);
+    app.post("/rni/v1/subscriptions/rab_mod",function (req,res) {
 
         var content_Type = req.headers['content-type'];
 
@@ -1426,16 +1360,16 @@ UIRoutes.prototype.init = function() {
                     "instance": "string"
                 }
             };
-            res.send(result);
+            res.status(415).send(result);
         }
         else {
 
             self.RNIserviceInstance.RabModSubscription_subscriptionsPOST(req, function (err, result) {
-                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                    res.send(result);
+                if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                    res.status(201).send(result);
                 }
-                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                    res.send(result);
+                else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                    res.status(201).send(result);
                 }
                 else {
                     var result = {
@@ -1448,23 +1382,20 @@ UIRoutes.prototype.init = function() {
                             "instance": "string"
                         }
                     };
-                    res.send(result);
+                    res.status(406).send(result);
                 }
             })
         }
     });
 
-    app.get("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res,next) {
-
-        console.log('GET Method', req.query);
-        console.log('GET Method', req.params);
+    app.get("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.RabModSubscription_subscriptionsGET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1477,22 +1408,19 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.put("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res,next) {
-
-        console.log('PUT Method', req.params);
-        console.log('PUT Method', req.body);
+    app.put("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.RabModSubscription_subscriptionsPUT(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1505,30 +1433,26 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
     app.delete("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method',req.params);
-
         self.RNIserviceInstance.RabMod_subscriptionsSubscrIdDELETE(req, function (err,result) {
-            res.send(result);
+            res.status(204).send(result);
         })
     });
 
-    app.get("/rni/v1/subscriptions/rab_rel",function (req,res,next) {
-
-        console.log('GET Method', req.query);
+    app.get("/rni/v1/subscriptions/rab_rel",function (req,res) {
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_rr_GET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1541,14 +1465,12 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.post("/rni/v1/subscriptions/rab_rel",function (req,res,next) {
-
-        console.log('POST Method', req.body);
+    app.post("/rni/v1/subscriptions/rab_rel",function (req,res) {
 
         var content_Type = req.headers['content-type'];
 
@@ -1564,16 +1486,16 @@ UIRoutes.prototype.init = function() {
                     "instance": "string"
                 }
             };
-            res.send(result);
+            res.status(415).send(result);
         }
         else {
 
             self.RNIserviceInstance.RabRelSubscription_subscriptionsPOST(req, function (err, result) {
-                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                    res.send(result);
+                if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                    res.status(200).send(result);
                 }
-                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                    res.send(result);
+                else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                    res.status(200).send(result);
                 }
                 else {
                     var result = {
@@ -1586,23 +1508,20 @@ UIRoutes.prototype.init = function() {
                             "instance": "string"
                         }
                     };
-                    res.send(result);
+                    res.status(406).send(result);
                 }
             })
         }
     });
 
-    app.get("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res,next) {
-
-        console.log('GET Method', req.query);
-        console.log('GET Method', req.params);
+    app.get("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.RabRelSubscription_subscriptionsGET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1615,22 +1534,19 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.put("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res,next) {
-
-        console.log('GET Method', req.params);
-        console.log('GET Method', req.body);
+    app.put("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.RabRelSubscription_subscriptionsPUT(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1643,30 +1559,26 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
     app.delete("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method',req.params);
-
         self.RNIserviceInstance.RabRel_subscriptionsSubscrIdDELETE(req, function (err,result) {
-            res.send(result);
+            res.status(204).send(result);
         })
     });
 
-    app.get("/rni/v1/subscriptions/ca_reconf",function (req,res,next) {
-
-        console.log('GET Method', req.query);
+    app.get("/rni/v1/subscriptions/ca_reconf",function (req,res) {
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cr_GET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1679,14 +1591,12 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.post("/rni/v1/subscriptions/ca_reconf",function (req,res,next) {
-
-        console.log('POST Method', req.body);
+    app.post("/rni/v1/subscriptions/ca_reconf",function (req,res) {
 
         var content_Type = req.headers['content-type'];
 
@@ -1702,16 +1612,16 @@ UIRoutes.prototype.init = function() {
                     "instance": "string"
                 }
             };
-            res.send(result);
+            res.status(415).send(result);
         }
         else {
 
             self.RNIserviceInstance.CaReConfSubscription_subscriptionsPOST(req, function (err, result) {
-                if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                    res.send(result);
+                if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                    res.status(200).send(result);
                 }
-                else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                    res.send(result);
+                else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                    res.status(200).send(result);
                 }
                 else {
                     var result = {
@@ -1724,23 +1634,20 @@ UIRoutes.prototype.init = function() {
                             "instance": "string"
                         }
                     };
-                    res.send(result);
+                    res.status(406).send(result);
                 }
             })
         }
     });
 
-    app.get("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res,next) {
-
-        console.log('GET Method', req.query);
-        console.log('GET Method', req.params);
+    app.get("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.CaReConfSubscription_subscriptionsGET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1753,22 +1660,19 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
-    app.put("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res,next) {
-
-        console.log('PUT Method', req.params);
-        console.log('PUT Method', req.body);
+    app.put("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
 
         self.RNIserviceInstance.CaReConfSubscription_subscriptionsPUT(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
-                res.send(result);
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
+                res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.send(result);
+            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+                res.status(200).send(result);
             }
             else{
                 var result = {
@@ -1781,17 +1685,15 @@ UIRoutes.prototype.init = function() {
                         "instance": "string"
                     }
                 };
-                res.send(result);
+                res.status(406).send(result);
             }
         })
     });
 
     app.delete("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
 
-        console.log('DELETE Method',req.params);
-
         self.RNIserviceInstance.CaReConf_subscriptionsSubscrIdDELETE(req, function (err,result) {
-            res.send(result);
+            res.status(204).send(result);
         })
     });
 
