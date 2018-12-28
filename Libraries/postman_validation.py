@@ -204,7 +204,10 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile,response_l
 							content['events'][0]['script']['exec'].append("")
 
 				content['events'][0]['script']['exec'].append("pm.test(\"isString\" ,function() {")
-				content['events'][0]['script']['exec'].append(space+"var jsonData = pm.response.json();")
+				content['events'][0]['script']['exec'].append(space + "if  (pm.response.json().res){")
+				content['events'][0]['script']['exec'].append(2*space + "jsonData = pm.response.json().res; " +'\n' +space+"}")
+				content['events'][0]['script']['exec'].append(space + "else{")
+				content['events'][0]['script']['exec'].append(2*space + "var jsonData = [pm.response.json()];" +'\n'+space+ "}")
 				content['events'][0]['script']['exec'].append(space+"for (i = 0; i < jsonData.length; i++) {")
 
 				for element in response_list:
@@ -284,13 +287,14 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile,response_l
 		else:
 			pass
 
+		query = url.split('{{port}}')[1]
 		content['events'].append({   #Default content for 'Pre-Requests'
 			"listen": "prerequest",
 			"script": {"type": "text/javascript",
 			"exec":[
 			space*1+"var list = [];",
 			space*1+"pm.sendRequest({",
-			space*1+"url: 'localhost:8081/read_Excel/"+str(rowNo)+"',",
+			space*1+"url: 'localhost:8081/read_Excel/"+str(rowNo)+"?query="+query+"',",
 			space*1+"method: 'GET',",
 			space*1+"header: 'Content-Type:application/x-www-form-urlencoded',",
 			space*1+"}, function (err, res) {",
