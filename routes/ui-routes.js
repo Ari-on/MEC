@@ -111,30 +111,37 @@ UIRoutes.prototype.init = function() {
 
     app.get("/read_Excel/:rowno",function (req,res) {
 
-        // var rowNo = parseInt(req.params.rowno, 10)+1;
-        // var list = [];
-        //
-        // var stream = fs.createReadStream("/home/w5rtc/Downloads/BWM_API_swagger1.csv");
-        //
-        // var csvStream = csv()
-        //     .on("data", function(data){
-        //         list.push(data)
-        //     })
-        //     .on("end", function(){
-        //         req = {};
-        //         headings = list[0];
-        //         data = list[rowNo];
-        //         for (i = 0;i<headings.length;i++)
-        //         {
-        //             req[headings[i]] = data[i]
-        //         }
-        //         res.send([req]);
-        //     });
-        //
-        // stream.pipe(csvStream);
-        self.seviceInstance.read_dbGET(req, function (err, result) {
-            res.send([result]);
-        })
+        var url = req.query.query;
+        if (url.includes('/bwm/v1')){
+            self.seviceInstance.read_db(req, function (err, result) {
+                res.send([result]);
+            })
+        }
+        else if (url.includes('/ui/v1')){
+            self.IdserviceInstance.read_db(req, function (err, result) {
+                res.send([result]);
+            })
+        }
+        else if (url.includes('/mx2/v1')){
+            self.AppserviceInstance.read_db(req, function (err, result) {
+                res.send([result]);
+            })
+        }
+        else if (url.includes('/exampleAPI/mp1')){
+            self.Mp1serviceInstance.read_db(req, function (err, result) {
+                res.send([result]);
+            })
+        }
+        else if (url.includes('/exampleAPI/location')){
+            self.LocationServiceInstance.read_db(req, function (err, result) {
+                res.send([result]);
+            })
+        }
+        else if (url.includes('/rni/v1')){
+            self.RNIserviceInstance.read_db(req, function (err, result) {
+                res.send([result]);
+            })
+        }
     });
 
 
@@ -239,16 +246,12 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules",function (req,res) {
 
-        console.log('GET Method', req.params);
-
         self.Mp1serviceInstance.ApplicationsDnsRules_GET(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",function (req,res) {
-
-        console.log('GET Method',req.params);
 
         self.Mp1serviceInstance.ApplicationsDnsRule_GET(req, function (err, result) {
             res.send(result);
@@ -257,17 +260,12 @@ UIRoutes.prototype.init = function() {
 
     app.put("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",function (req,res) {
 
-        console.log('PUT Method',req.params);
-        console.log('PUT Method',req.body);
-
         self.Mp1serviceInstance.ApplicationsDnsRule_PUT(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
-
-        console.log('GET Method',req.params);
 
         self.Mp1serviceInstance.ApplicationsSubscriptions_GET(req, function (err, result) {
             res.send(result);
@@ -276,17 +274,12 @@ UIRoutes.prototype.init = function() {
 
     app.post("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
 
-        console.log('POST Method',req.params);
-        console.log('POST Method',req.body);
-
         self.Mp1serviceInstance.ApplicationsSubscriptions_POST(req, function (err, result) {
             res.status(201).send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",function (req,res) {
-
-        console.log('GET Method',req.params);
 
         self.Mp1serviceInstance.ApplicationsSubscription_GET(req, function (err, result) {
             res.send(result);
@@ -295,16 +288,12 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",function (req,res) {
 
-        console.log('DELETE Method',req.params);
-
         self.Mp1serviceInstance.ApplicationsSubscription_DELETE(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules",function (req,res) {
-
-        console.log('GET Method', req.params);
 
         self.Mp1serviceInstance.ApplicationsTrafficRules_GET(req, function (err, result) {
             res.send(result);
@@ -313,17 +302,12 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
 
-        console.log('GET Method', req.params);
-
         self.Mp1serviceInstance.ApplicationsTrafficRule_GET(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.put("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
-
-        console.log('PUT Method', req.params);
-        console.log('PUT Method', req.body);
 
         self.Mp1serviceInstance.ApplicationsTrafficRules_PUT(req, function (err, result) {
             res.send(result);
@@ -360,8 +344,6 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/timing/current_time",function (req,res) {
 
-        console.log('GET Method', req.query);
-
         self.Mp1serviceInstance.TimingCurrentTime_GET(req, function (err, result) {
             res.send(result);
         })
@@ -369,16 +351,12 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/timing/timing_caps",function (req,res) {
 
-        console.log('GET Method', req.query);
-
         self.Mp1serviceInstance.TimingCaps_GET(req, function (err, result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/mp1/v1/transports",function (req,res) {
-
-        console.log('GET Method', req.query);
 
         self.Mp1serviceInstance.Transports_GET(req, function (err, result) {
             res.send(result);
@@ -391,17 +369,12 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/zones",function (req,res) {
 
-        console.log("GET METHOD",req.query);
-
         self.LocationServiceInstance.zonesGet(req, function (err,result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/location/v1/zones/:zoneId",function (req,res) {
-
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
 
         self.LocationServiceInstance.zonesGetById(req, function (err,result) {
             res.send(result);
@@ -410,18 +383,12 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/zones/:zoneId/accessPoints",function (req,res) {
 
-        console.log('GET Method',req.query);
-        console.log('GET METHOD',req.params);
-
         self.LocationServiceInstance.zonesByIdGetAps(req, function (err,result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/location/v1/zones/:zoneId/accessPoints/:accessPointId",function (req,res) {
-
-        console.log('GET Method',req.query);
-        console.log('GET METHOD',req.params);
 
         self.LocationServiceInstance.zonesByIdGetApsById(req, function (err,result) {
             res.send(result);
@@ -435,17 +402,12 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/users",function (req,res) {
 
-        console.log('GET Method',req.query);
-
         self.LocationServiceInstance.usersGet(req, function (err,result) {
             res.send(result);
         })
     });
 
     app.get("/exampleAPI/location/v1/users/:userId",function (req,res) {
-
-        console.log('GET Method',req.query);
-        console.log('GET Method',req.params);
 
         self.LocationServiceInstance.usersGetById(req, function (err,result) {
             res.send(result);
@@ -457,8 +419,6 @@ UIRoutes.prototype.init = function() {
 //////////SUBSCRIPTIONS////////
 
     app.get("/exampleAPI/location/v1/subscriptions/zonalTraffic",function (req,res) {
-
-        console.log('GET Method',req.query);
 
         self.LocationServiceInstance.zonalTrafficSubGet(req, function (err,result) {
             res.status(200).send(result);
@@ -572,8 +532,6 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/queries/rab_info",function (req,res) {
 
-        console.log('GET Method', req.query);
-
         self.RNIserviceInstance.rab_infoGET(req, function (err, result) {
             if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
                 res.status(200).send(result);
@@ -597,8 +555,6 @@ UIRoutes.prototype.init = function() {
         })
     });
     app.get("/rni/v1/queries/plmn_info",function (req,res) {
-
-        console.log('GET Method', req.query);
 
         self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
             if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
@@ -624,8 +580,6 @@ UIRoutes.prototype.init = function() {
     });
 
     app.get("/rni/v1/queries/s1_bearer_info",function (req,res) {
-
-        console.log('GET Method', req.query);
 
         self.RNIserviceInstance.s1_bearer_infoGET(req, function (err, result) {
             if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
@@ -656,8 +610,6 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/",function (req,res) {
 
-        console.log('GET Method', req.query);
-
         self.RNIserviceInstance.SubscriptionLinkList_subscriptionsGET(req, function (err, result) {
             if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
                 res.status(200).send(result);
@@ -682,8 +634,6 @@ UIRoutes.prototype.init = function() {
     });
 
     app.get("/rni/v1/subscriptions/cell_change",function (req,res) {
-
-        console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_cc_GET(req, function (err, result) {
             if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
@@ -728,8 +678,6 @@ UIRoutes.prototype.init = function() {
         }
         else {
             self.RNIserviceInstance.CellChange_subscriptionsPOST(req, function (err, result) {
-                console.log(typeof (result));
-                // res.send(result)
                 if ( req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                     res.status(201).send(result);
                 }
@@ -813,8 +761,6 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/s1_bearer",function (req,res) {
 
-        console.log('GET Method', req.query);
-
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_s1_GET(req, function (err, result) {
             if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.status(200).send(result);
@@ -858,7 +804,6 @@ UIRoutes.prototype.init = function() {
         }
         else {
             self.RNIserviceInstance.S1BearerSubscription_subscriptionsPOST(req, function (err, result) {
-                console.log(req.headers.accept,typeof(result));
                 if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                     res.status(201).send(result);
                 }
@@ -1067,8 +1012,6 @@ UIRoutes.prototype.init = function() {
     });
 
     app.get("/rni/v1/subscriptions/meas_rep_ue",function (req,res) {
-
-        console.log('GET Method', req.query);
 
         self.RNIserviceInstance.SubscriptionLinkList_subscriptions_mr_GET(req, function (err, result) {
             if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {

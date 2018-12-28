@@ -4,6 +4,24 @@ var IdentitytService = function (app) {
 
 module.exports = IdentitytService;
 
+IdentitytService.prototype.read_db = function (req, callback) {
+    console.log("This is read_db method!!!");
+    var self = this;
+    var db = self.app.db;
+
+    var myobj = parseInt(req.params.rowno)-1;
+    var collection = db.collection("UE_Identity_API_swagger");
+
+    collection.find().toArray(function(err,resp) {
+        if(resp){
+            callback(err,resp[myobj]);
+        }
+        else{
+            callback(err,'finderror');
+        }
+    })
+};
+
 IdentitytService.prototype.appInstanceIdUe_identity_tag_infoGET = function (req,callback) {
     console.log("This is appInstanceIdUe_identity_tag_infoGET method!!!");
     var self = this;

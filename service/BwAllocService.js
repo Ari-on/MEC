@@ -17,6 +17,26 @@ module.exports = DefaultService;
  * allocationId String Represents a bandwidth allocation instance
  * no response value expected for this operation
  **/
+
+DefaultService.prototype.read_db = function (req, callback) {
+    console.log("This is read_dbGET method!!!");
+    var self = this;
+    var db = self.app.db;
+
+    var myobj = parseInt(req.params.rowno)-1;
+    var collection = db.collection("BWM_API_swagger");
+
+    collection.find().toArray(function(err,resp) {
+        if(resp){
+            callback(err,resp[myobj]);
+        }
+        else{
+            callback(err,'finderror');
+        }
+    })
+};
+
+
 DefaultService.prototype.bw_allocationsAllocationIdDELETE = function(req,callback) {
 
 	console.log("This is bw_allocationsAllocationIdDELETE method!!!");
@@ -438,39 +458,6 @@ DefaultService.prototype.bw_allocationsPOST = function (req, callback) {
     // }
     };
 
-DefaultService.prototype.read_dbGET = function (req, callback) {
-    console.log("This is read_dbGET method!!!");
-    var self = this;
-    var db = self.app.db;
-
-    var url = req.originalUrl;
-    if (url.includes('/bwm/v1')){
-        var collectionName = "BWM_API_swagger"
-    }
-    else if (url.includes('/mx2/v1')){
-        var collectionName = "UE_Application_Interface_API_swagger"
-    }
-    else if (url.includes('/exampleAPI/mp1')){
-        var collectionName = "Mp1_API_swagger"
-    }
-    else if (url.includes('/exampleAPI/location')){
-        var collectionName = "Location_API_swagger"
-    }
-    else if (url.includes('/rni/v1')){
-        var collectionName = "RNI_API_swagger"
-    }
-    var myobj = parseInt(req.params.rowno)-1;
-    var collection = db.collection("RNI_API_swagger");
-
-    collection.find().toArray(function(err,resp) {
-        if(resp){
-            callback(err,resp[myobj]);
-        }
-        else{
-            callback(err,'inserterror');
-        }
-    })
-};
 
 DefaultService.prototype.commanPOST = function (req, callback) {
     console.log("This is commonPOST method!!!");

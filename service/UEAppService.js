@@ -4,6 +4,24 @@ var AppService = function (app) {
 
 module.exports = AppService;
 
+AppService.prototype.read_db = function (req, callback) {
+    console.log("This is read_db method!!!");
+    var self = this;
+    var db = self.app.db;
+
+    var myobj = parseInt(req.params.rowno)-1;
+    var collection = db.collection("UE_Application_Interface_API_swagger");
+
+    collection.find().toArray(function(err,resp) {
+        if(resp){
+            callback(err,resp[myobj]);
+        }
+        else{
+            callback(err,'finderror');
+        }
+    })
+};
+
 AppService.prototype.app_listGET = function (req,callback) {
     callback(null,"app_listGET")
 };

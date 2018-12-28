@@ -4,6 +4,24 @@ var Mp1Service = function (app) {
 
 module.exports = Mp1Service;
 
+Mp1Service.prototype.read_db = function (req, callback) {
+    console.log("This is read_db method!!!");
+    var self = this;
+    var db = self.app.db;
+
+    var myobj = parseInt(req.params.rowno)-1;
+    var collection = db.collection("Mp1_API_swagger");
+
+    collection.find().toArray(function(err,resp) {
+        if(resp){
+            callback(err,resp[myobj]);
+        }
+        else{
+            callback(err,'finderror');
+        }
+    })
+};
+
 Mp1Service.prototype.ApplicationsDnsRules_GET = function (req,callback) {
 
     console.log("Mp1 Method1");
@@ -59,10 +77,10 @@ Mp1Service.prototype.ApplicationsSubscriptions_POST = function (req,callback) {
 
     // callback(null,myobj)
     var collection = db.collection("Mp1_API_swagger");
-    var bwInfo = {
+    var AppTerminationNotificationSubscription = {
         "AppTerminationNotificationSubscription" : myobj
     };
-    collection.insert(bwInfo,function(err,resp) {
+    collection.insert(AppTerminationNotificationSubscription,function(err,resp) {
         if(resp){
             var result = {
                 statuscode:201,

@@ -4,6 +4,24 @@ var RNIservice = function (app) {
 
 module.exports = RNIservice;
 
+RNIservice.prototype.read_db = function (req, callback) {
+    console.log("This is read_dbGET method!!!");
+    var self = this;
+    var db = self.app.db;
+
+    var myobj = parseInt(req.params.rowno)-1;
+    var collection = db.collection("RNI_API_swagger");
+
+    collection.find().toArray(function(err,resp) {
+        if(resp){
+            callback(err,resp[myobj]);
+        }
+        else{
+            callback(err,'finderror');
+        }
+    })
+};
+
 RNIservice.prototype.rab_infoGET = function (req,callback) {
 
     console.log("RNI Method1");
