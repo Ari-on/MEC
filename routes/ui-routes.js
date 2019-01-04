@@ -9,6 +9,7 @@ var Appservice  = require ('../service/UEAppService.js');
 var Mp1service  = require ('../service/Mp1Service.js');
 var LocationService  = require ('../service/LocationService.js');
 var RNIservice  = require ('../service/RNIservice.js');
+var commonservice  = require ('../service/commonservice.js');
 
 
 var UIRoutes = function(app) {
@@ -20,6 +21,7 @@ var UIRoutes = function(app) {
     this.Mp1serviceInstance = new Mp1service(app);//for  Mp1
     this.LocationServiceInstance = new LocationService(app);//for Location
     this.RNIserviceInstance = new RNIservice(app);//for RNI
+    this.commonInstance = new commonservice(app);//for RNI
 };
 
 module.exports    = UIRoutes;
@@ -150,9 +152,24 @@ UIRoutes.prototype.init = function() {
 
     app.get("/bwm/v1/bw_allocations/",function (req,res) {
 
-        self.seviceInstance.bw_allocationsGET(req.query, function (err, result) {
+        self.commonInstance.commonGET(req.query,"BWM_API_swagger", function (err, resp) {
+           var permittedValues = resp.map(function(value) {
+               if (value.hasOwnProperty('bwInfo')) {
+                   return {bwInfo: value.bwInfo};
+               }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                res : data
+            };
             res.status(200).send(result);
         })
+        // self.seviceInstance.bw_allocationsGET(req.query, function (err, result) {
+        //     res.status(200).send(result);
+        // })
     });
 
     app.post("/bwm/v1/bw_allocations/",function (req,res) {
@@ -164,9 +181,27 @@ UIRoutes.prototype.init = function() {
 
     app.get("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        self.seviceInstance.bw_allocationsAllocationIdGET(req.params.allocationID, function (err, result) {
+        var query = {
+            "allocationId" : req.params.allocationID
+        };
+        self.commonInstance.commonGET(query,"BWM_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('bwInfo')) {
+                    return {bwInfo: value.bwInfo};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                bwInfo : data[0]['bwInfo']
+            };
             res.status(200).send(result);
         })
+        // self.seviceInstance.bw_allocationsAllocationIdGET(req.params.allocationID, function (err, result) {
+        //     res.status(200).send(result);
+        // })
     });
 
     app.patch("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
@@ -194,9 +229,25 @@ UIRoutes.prototype.init = function() {
 
     app.get("/mx2/v1/app_list",function (req,res) {
 
-        self.AppserviceInstance.app_listGET(req, function (err, result) {
-            res.send(result);
+        self.commonInstance.commonGET(req.query,"UE_Application_Interface_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('ApplicationList')) {
+                    return {ApplicationList: value.ApplicationList};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                res : data
+            };
+            res.status(200).send(result);
         })
+
+        // self.AppserviceInstance.app_listGET(req, function (err, result) {
+        //     res.send(result);
+        // })
 
     });
 
@@ -211,7 +262,7 @@ UIRoutes.prototype.init = function() {
 
         self.AppserviceInstance.app_contextsContextIdPUT(req, function (err, result) {
             if (result) {
-                res.status(204).send('');
+                res.status(204).send(result);
             }
             else{
                 res.send("Update Error")
@@ -230,9 +281,24 @@ UIRoutes.prototype.init = function() {
 
     app.get("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
 
-        self.IdserviceInstance.appInstanceIdUe_identity_tag_infoGET(req, function (err, result) {
+        self.commonInstance.commonGET(req.query,"UE_Identity_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('UeIdentityTagInfo')) {
+                    return {UeIdentityTagInfo: value.UeIdentityTagInfo};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                res : data
+            };
             res.status(200).send(result);
         })
+        // self.IdserviceInstance.appInstanceIdUe_identity_tag_infoGET(req, function (err, result) {
+        //     res.status(200).send(result);
+        // })
     });
 
     app.put("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
