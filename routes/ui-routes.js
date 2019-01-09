@@ -1044,13 +1044,29 @@ UIRoutes.prototype.init = function() {
     });
     app.get("/rni/v1/queries/plmn_info",function (req,res) {
 
-        self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+        var query = {
+            "PlmnInfo.appInId" : req.query.app_ins_id
+        }
+        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+        // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
+            if (req.headers.accept.indexOf('application/json') >= 0  && typeof(resp) == 'object') {
+                var permittedValues = resp.map(function(value) {
+                    if (value.hasOwnProperty('PlmnInfo')) {
+                        return value.PlmnInfo;
+                    }
+                });
+                var data = permittedValues.filter(function( element ) {
+                    return element !== undefined;
+                });
+                var result = {
+                    statuscode : 200,
+                    PlmnInfo : data[0]
+                };
                 res.status(200).send(result);
             }
-            else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-                res.status(200).send(result);
-            }
+            // else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
+            //     res.status(200).send(result);
+            // }
             else{
                 var result = {
                     statuscode: 406,
@@ -1191,11 +1207,24 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.CellChange_subscriptionsGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
-                res.status(200).send(result);
-            }
-            else if (req.headers.accept.indexOf('text/plain') && typeof(result) == 'string') {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+                var permittedValues = resp.map(function(value) {
+                    if (value.hasOwnProperty('CellChangeSubscription')) {
+                        return value.CellChangeSubscription;
+                    }
+                });
+                var data = permittedValues.filter(function( element ) {
+                    return element !== undefined;
+                });
+                var result = {
+                    statuscode : 200,
+                    CellChangeSubscription : data[0]
+                };
                 res.status(200).send(result);
             }
             else{
@@ -1319,11 +1348,25 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.S1BearerSubscription_subscriptionsGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
-                res.status(200).send(result);
-            }
-            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+        // self.RNIserviceInstance.S1BearerSubscription_subscriptionsGET(req, function (err, result) {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+                var permittedValues = resp.map(function(value) {
+                    if (value.hasOwnProperty('S1BearerSubscription')) {
+                        return value.S1BearerSubscription;
+                    }
+                });
+                var data = permittedValues.filter(function( element ) {
+                    return element !== undefined;
+                });
+                var result = {
+                    statuscode : 200,
+                    S1BearerSubscription : data[0]
+                };
                 res.status(200).send(result);
             }
             else{
@@ -1444,11 +1487,25 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.MeasTa_subscriptionsGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
-                res.status(200).send(result);
-            }
-            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+        // self.RNIserviceInstance.MeasTa_subscriptionsGET(req, function (err, result) {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+                var permittedValues = resp.map(function(value) {
+                    if (value.hasOwnProperty('MeasTaSubscription')) {
+                        return value.MeasTaSubscription;
+                    }
+                });
+                var data = permittedValues.filter(function( element ) {
+                    return element !== undefined;
+                });
+                var result = {
+                    statuscode : 200,
+                    MeasTaSubscription : data[0]
+                };
                 res.status(200).send(result);
             }
             else{
@@ -1569,11 +1626,25 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.MeasRepUe_subscriptionsGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
-                res.status(200).send(result);
-            }
-            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+        // self.RNIserviceInstance.MeasRepUe_subscriptionsGET(req, function (err, result) {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+                var permittedValues = resp.map(function(value) {
+                    if (value.hasOwnProperty('MeasRepUeSubscription')) {
+                        return value.MeasRepUeSubscription;
+                    }
+                });
+                var data = permittedValues.filter(function( element ) {
+                    return element !== undefined;
+                });
+                var result = {
+                    statuscode : 200,
+                    MeasRepUeSubscription : data[0]
+                };
                 res.status(200).send(result);
             }
             else{
@@ -1695,11 +1766,25 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.RabEstSubscription_subscriptionsGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
-                res.status(200).send(result);
-            }
-            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+        // self.RNIserviceInstance.RabEstSubscription_subscriptionsGET(req, function (err, result) {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+                var permittedValues = resp.map(function(value) {
+                    if (value.hasOwnProperty('RabEstSubscription')) {
+                        return value.RabEstSubscription;
+                    }
+                });
+                var data = permittedValues.filter(function( element ) {
+                    return element !== undefined;
+                });
+                var result = {
+                    statuscode : 200,
+                    RabEstSubscription : data[0]
+                };
                 res.status(200).send(result);
             }
             else{
@@ -1821,11 +1906,25 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.RabModSubscription_subscriptionsGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
-                res.status(200).send(result);
-            }
-            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+        // self.RNIserviceInstance.RabModSubscription_subscriptionsGET(req, function (err, result) {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+                var permittedValues = resp.map(function(value) {
+                    if (value.hasOwnProperty('RabModSubscription')) {
+                        return value.RabModSubscription;
+                    }
+                });
+                var data = permittedValues.filter(function( element ) {
+                    return element !== undefined;
+                });
+                var result = {
+                    statuscode : 200,
+                    RabModSubscription : data[0]
+                };
                 res.status(200).send(result);
             }
             else{
@@ -1947,11 +2046,25 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.RabRelSubscription_subscriptionsGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
-                res.status(200).send(result);
-            }
-            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+        // self.RNIserviceInstance.RabRelSubscription_subscriptionsGET(req, function (err, result) {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+                var permittedValues = resp.map(function(value) {
+                    if (value.hasOwnProperty('RabRelSubscription')) {
+                        return value.RabRelSubscription;
+                    }
+                });
+                var data = permittedValues.filter(function( element ) {
+                    return element !== undefined;
+                });
+                var result = {
+                    statuscode : 200,
+                    RabRelSubscription : data[0]
+                };
                 res.status(200).send(result);
             }
             else{
@@ -2073,11 +2186,25 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.CaReConfSubscription_subscriptionsGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
-                res.status(200).send(result);
-            }
-            else if (req.headers.accept.indexOf('text/plain') >= 0 && typeof(result) == 'string') {
+        // self.RNIserviceInstance.CaReConfSubscription_subscriptionsGET(req, function (err, result) {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+                var permittedValues = resp.map(function(value) {
+                    if (value.hasOwnProperty('CaReConfSubscription')) {
+                        return value.CaReConfSubscription;
+                    }
+                });
+                var data = permittedValues.filter(function( element ) {
+                    return element !== undefined;
+                });
+                var result = {
+                    statuscode : 200,
+                    CaReConfSubscription : data[0]
+                };
                 res.status(200).send(result);
             }
             else{
