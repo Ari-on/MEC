@@ -312,16 +312,49 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules",function (req,res) {
 
-        self.Mp1serviceInstance.ApplicationsDnsRules_GET(req, function (err, result) {
-            res.send(result);
+        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('DnsRule')) {
+                    return {bwInfo: value.bwInfo};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                res : data
+            };
+            res.status(200).send(result);
         })
+        // self.Mp1serviceInstance.ApplicationsDnsRules_GET(req, function (err, result) {
+        //     res.send(result);
+        // })
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",function (req,res) {
 
-        self.Mp1serviceInstance.ApplicationsDnsRule_GET(req, function (err, result) {
-            res.send(result);
+        var query = {
+            "dnsRulesId" : req.params.dnsRulesId
+        };
+        self.commonInstance.commonGET(query,"Mp1_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('DnsRule')) {
+                    return {DnsRule: value.DnsRule};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                DnsRule : data[0]['DnsRule']
+            };
+            res.status(200).send(result);
         })
+        // self.Mp1serviceInstance.ApplicationsDnsRule_GET(req, function (err, result) {
+        //     res.send(result);
+        // })
     });
 
     app.put("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",function (req,res) {
@@ -333,9 +366,24 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
 
-        self.Mp1serviceInstance.ApplicationsSubscriptions_GET(req, function (err, result) {
-            res.send(result);
+        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('Mp1SubscriptionLinkList')) {
+                    return {Mp1SubscriptionLinkList: value.Mp1SubscriptionLinkList};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                res : data
+            };
+            res.status(200).send(result);
         })
+        // self.Mp1serviceInstance.ApplicationsSubscriptions_GET(req, function (err, result) {
+        //     res.send(result);
+        // })
     });
 
     app.post("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
@@ -346,6 +394,25 @@ UIRoutes.prototype.init = function() {
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",function (req,res) {
+
+        // var query = {
+        //     "dnsRulesId" : req.params.dnsRulesId
+        // };
+        // self.commonInstance.commonGET(query,"Mp1_API_swagger", function (err, resp) {
+        //     var permittedValues = resp.map(function(value) {
+        //         if (value.hasOwnProperty('DnsRule')) {
+        //             return {DnsRule: value.DnsRule};
+        //         }
+        //     });
+        //     var data = permittedValues.filter(function( element ) {
+        //         return element !== undefined;
+        //     });
+        //     var result = {
+        //         statuscode : 200,
+        //         DnsRule : data[0]['DnsRule']
+        //     };
+        //     res.status(200).send(result);
+        // })
 
         self.Mp1serviceInstance.ApplicationsSubscription_GET(req, function (err, result) {
             res.send(result);
@@ -361,16 +428,52 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules",function (req,res) {
 
-        self.Mp1serviceInstance.ApplicationsTrafficRules_GET(req, function (err, result) {
-            res.send(result);
+        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('TrafficRule')) {
+                    return {TrafficRule: value.TrafficRule};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                res : data
+            };
+            res.status(200).send(result);
         })
+        // self.Mp1serviceInstance.ApplicationsTrafficRules_GET(req, function (err, result) {
+        //     res.send(result);
+        // })
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
 
-        self.Mp1serviceInstance.ApplicationsTrafficRule_GET(req, function (err, result) {
-            res.send(result);
+        var query = {
+            "TrafficRule":
+                {
+                    "trafficRuleId" : req.params.trafficRuleId
+                }
+        };
+        self.commonInstance.commonGET(query,"Mp1_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('TrafficRule')) {
+                    return {DnsRule: value.DnsRule};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                TrafficRule : data[0]['TrafficRule']
+            };
+            res.status(200).send(result);
         })
+        // self.Mp1serviceInstance.ApplicationsTrafficRule_GET(req, function (err, result) {
+        //     res.send(result);
+        // })
     });
 
     app.put("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
@@ -382,9 +485,51 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/services",function (req,res) {
 
-        self.Mp1serviceInstance.Services_GET(req.query, function (err, result) {
-            res.send(result);
+        var query = {
+
+        };
+        var request = req.query;
+        if (request.ser_instance_id){
+            query = {
+                "ServiceInfo.serInstanceId" : request.ser_instance_id
+            }
+        }
+        if (request.ser_name){
+            query = {
+                "ServiceInfo.serName" : request.ser_name
+            }
+        }
+        if (request.ser_category_id){
+            query= {
+                "ServiceInfo.serCategory.id" : request.ser_category_id
+            }
+        }
+        self.commonInstance.commonGET(query,"Mp1_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('ServiceInfo')) {
+                    return {ServiceInfo: value.ServiceInfo};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            if (Object.keys(query).length <= 0) {
+                var result = {
+                    statuscode: 200,
+                    res: data
+                };
+            }
+            else{
+                var result = {
+                    statuscode: 200,
+                    ServiceInfo: data[0]['ServiceInfo']
+                };
+            }
+            res.status(200).send(result);
         })
+        // self.Mp1serviceInstance.Services_GET(req.query, function (err, result) {
+        //     res.send(result);
+        // })
     });
 
     app.post("/exampleAPI/mp1/v1/services",function (req,res) {
@@ -396,9 +541,27 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
 
-        self.Mp1serviceInstance.ServicesServiceId_GET(req, function (err, result) {
+        var query = {
+            "serviceId" : req.params.serviceId
+        };
+        self.commonInstance.commonGET(query,"Mp1_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('ServiceInfo')) {
+                    return {ServiceInfo: value.ServiceInfo};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                ServiceInfo : data[0]['ServiceInfo']
+            };
             res.status(200).send(result);
         })
+        // self.Mp1serviceInstance.ServicesServiceId_GET(req, function (err, result) {
+        //     res.status(200).send(result);
+        // })
     });
 
     app.put("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
@@ -410,23 +573,68 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/timing/current_time",function (req,res) {
 
-        self.Mp1serviceInstance.TimingCurrentTime_GET(req, function (err, result) {
-            res.send(result);
+        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('CurrentTime')) {
+                    return {CurrentTime: value.CurrentTime};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                res : data
+            };
+            res.status(200).send(result);
         })
+        // self.Mp1serviceInstance.TimingCurrentTime_GET(req, function (err, result) {
+        //     res.send(result);
+        // })
     });
 
     app.get("/exampleAPI/mp1/v1/timing/timing_caps",function (req,res) {
 
-        self.Mp1serviceInstance.TimingCaps_GET(req, function (err, result) {
-            res.send(result);
+        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('TimingCaps')) {
+                    return {TimingCaps: value.TimingCaps};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                res : data
+            };
+            res.status(200).send(result);
         })
+        // self.Mp1serviceInstance.TimingCaps_GET(req, function (err, result) {
+        //     res.send(result);
+        // })
     });
 
     app.get("/exampleAPI/mp1/v1/transports",function (req,res) {
 
-        self.Mp1serviceInstance.Transports_GET(req, function (err, result) {
-            res.send(result);
+        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('TransportInfo')) {
+                    return {TransportInfo: value.TransportInfo};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                res : data
+            };
+            res.status(200).send(result);
         })
+        // self.Mp1serviceInstance.Transports_GET(req, function (err, result) {
+        //     res.send(result);
+        // })
     });
 
     /* Location API*/
@@ -435,30 +643,104 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/zones",function (req,res) {
 
-        self.LocationServiceInstance.zonesGet(req, function (err,result) {
-            res.send(result);
+        self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('zoneInfo')) {
+                    return value.zoneInfo;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                zoneList: {
+                        "zone" : data
+                    }
+            };
+            res.status(200).send(result);
         })
+        // self.LocationServiceInstance.zonesGet(req, function (err,result) {
+        //     res.send(result);
+        // })
     });
 
     app.get("/exampleAPI/location/v1/zones/:zoneId",function (req,res) {
 
-        self.LocationServiceInstance.zonesGetById(req, function (err,result) {
-            res.send(result);
+        var query = {
+            "zoneInfo.zoneId" : req.params.zoneId
+        };
+        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('zoneInfo')) {
+                    return {zoneInfo: value.zoneInfo};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                zoneInfo : data[0]['zoneInfo']
+            };
+            res.status(200).send(result);
         })
+        // self.LocationServiceInstance.zonesGetById(req, function (err,result) {
+        //     res.send(result);
+        // })
     });
 
     app.get("/exampleAPI/location/v1/zones/:zoneId/accessPoints",function (req,res) {
 
-        self.LocationServiceInstance.zonesByIdGetAps(req, function (err,result) {
-            res.send(result);
+        var query = {
+            "zoneId" : req.params.zoneId
+        };
+
+        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('accessPointInfo')) {
+                    return  value.accessPointInfo;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                accessPointList: {
+                    "accessPoint" : data
+                }
+            };
+            res.status(200).send(result);
         })
+        // self.LocationServiceInstance.zonesByIdGetAps(req, function (err,result) {
+        //     res.send(result);
+        // })
     });
 
     app.get("/exampleAPI/location/v1/zones/:zoneId/accessPoints/:accessPointId",function (req,res) {
 
-        self.LocationServiceInstance.zonesByIdGetApsById(req, function (err,result) {
-            res.send(result);
+        var query = {
+            "accessPointInfo.zoneId" : req.params.accessPointId
+        };
+        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('accessPointInfo')) {
+                    return {accessPointInfo: value.accessPointInfo};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                accessPointInfo : data[0]['accessPointInfo']
+            };
+            res.status(200).send(result);
         })
+        // self.LocationServiceInstance.zonesByIdGetApsById(req, function (err,result) {
+        //     res.send(result);
+        // })
     });
 
 //////////////////////
@@ -468,16 +750,51 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/users",function (req,res) {
 
-        self.LocationServiceInstance.usersGet(req, function (err,result) {
-            res.send(result);
+        self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('userInfo')) {
+                    return value.zoneInfo;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                userList: {
+                    "user" : data
+                }
+            };
+            res.status(200).send(result);
         })
+        // self.LocationServiceInstance.usersGet(req, function (err,result) {
+        //     res.send(result);
+        // })
     });
 
     app.get("/exampleAPI/location/v1/users/:userId",function (req,res) {
 
-        self.LocationServiceInstance.usersGetById(req, function (err,result) {
-            res.send(result);
+        var query = {
+            "userId" : req.params.userId
+        };
+        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('userInfo')) {
+                    return {userInfo: value.userInfo};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                userInfo : data[0]['userInfo']
+            };
+            res.status(200).send(result);
         })
+        // self.LocationServiceInstance.usersGetById(req, function (err,result) {
+        //     res.send(result);
+        // })
     });
 
 ///////////////////////////////
@@ -486,9 +803,26 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/zonalTraffic",function (req,res) {
 
-        self.LocationServiceInstance.zonalTrafficSubGet(req, function (err,result) {
+        self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('zonalTrafficSubscription')) {
+                    return value.zonalTrafficSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                notificationSubscriptionList: {
+                    "zonalTrafficSubscription" : data
+                }
+            };
             res.status(200).send(result);
         })
+        // self.LocationServiceInstance.zonalTrafficSubGet(req, function (err,result) {
+        //     res.status(200).send(result);
+        // })
     });
 
     app.post("/exampleAPI/location/v1/subscriptions/zonalTraffic",function (req,res) {
@@ -500,9 +834,27 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/zonalTraffic/:subscriptionId",function (req,res) {
 
-        self.LocationServiceInstance.zonalTrafficSubGetById(req, function (err,result) {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('zonalTrafficSubscription')) {
+                    return {zonalTrafficSubscription: value.zonalTrafficSubscription};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                zonalTrafficSubscription : data[0]['zonalTrafficSubscription']
+            };
             res.status(200).send(result);
         })
+        // self.LocationServiceInstance.zonalTrafficSubGetById(req, function (err,result) {
+        //     res.status(200).send(result);
+        // })
     });
 
     app.put("/exampleAPI/location/v1/subscriptions/zonalTraffic/:subscriptionId",function (req,res) {
@@ -521,9 +873,26 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/userTracking",function (req,res) {
 
-        self.LocationServiceInstance.userTrackingSubGet(req, function (err,result) {
+        self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('userTrackingSubscription')) {
+                    return value.userTrackingSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                notificationSubscriptionList: {
+                    "userTrackingSubscription" : data
+                }
+            };
             res.status(200).send(result);
         })
+        // self.LocationServiceInstance.userTrackingSubGet(req, function (err,result) {
+        //     res.status(200).send(result);
+        // })
     });
 
     app.post("/exampleAPI/location/v1/subscriptions/userTracking",function (req,res) {
@@ -535,9 +904,27 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/userTracking/:subscriptionId",function (req,res) {
 
-        self.LocationServiceInstance.userTrackingSubGetById(req, function (err,result) {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('userTrackingSubscription')) {
+                    return {userTrackingSubscription: value.userTrackingSubscription};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                userTrackingSubscription : data[0]['userTrackingSubscription']
+            };
             res.status(200).send(result);
         })
+        // self.LocationServiceInstance.userTrackingSubGetById(req, function (err,result) {
+        //     res.status(200).send(result);
+        // })
     });
 
     app.put("/exampleAPI/location/v1/subscriptions/userTracking/:subscriptionId",function (req,res) {
@@ -556,9 +943,26 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/zonalStatus",function (req,res) {
 
-        self.LocationServiceInstance.zoneStatusGet(req, function (err,result) {
+        self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('zoneStatusSubscription')) {
+                    return value.zoneStatusSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                notificationSubscriptionList: {
+                    "zoneStatusSubscription" : data
+                }
+            };
             res.status(200).send(result);
         })
+        // self.LocationServiceInstance.zoneStatusGet(req, function (err,result) {
+        //     res.status(200).send(result);
+        // })
     });
 
     app.post("/exampleAPI/location/v1/subscriptions/zonalStatus",function (req,res) {
@@ -570,9 +974,27 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/zoneStatus/:subscriptionId",function (req,res) {
 
-        self.LocationServiceInstance.zoneStatusGetById(req, function (err,result) {
+        var query = {
+            "subscriptionId" : req.params.subscriptionId
+        };
+        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('zoneStatusSubscription')) {
+                    return {zoneStatusSubscription: value.zoneStatusSubscription};
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                zoneStatusSubscription : data[0]['zoneStatusSubscription']
+            };
             res.status(200).send(result);
         })
+        // self.LocationServiceInstance.zoneStatusGetById(req, function (err,result) {
+        //     res.status(200).send(result);
+        // })
     });
 
     app.put("/exampleAPI/location/v1/subscriptions/zoneStatus/:subscriptionId",function (req,res) {
