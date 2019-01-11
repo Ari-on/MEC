@@ -10,6 +10,7 @@ var Mp1service  = require ('../service/Mp1Service.js');
 var LocationService  = require ('../service/LocationService.js');
 var RNIservice  = require ('../service/RNIservice.js');
 var commonservice  = require ('../service/commonservice.js');
+var ApiAction = require('../actions/actions.js')
 
 
 var UIRoutes = function(app) {
@@ -22,6 +23,7 @@ var UIRoutes = function(app) {
     this.LocationServiceInstance = new LocationService(app);//for Location
     this.RNIserviceInstance = new RNIservice(app);//for RNI
     this.commonInstance = new commonservice(app);//for RNI
+    this.ActionInstance = new ApiAction(app);//for RNI
 };
 
 module.exports    = UIRoutes;
@@ -152,27 +154,13 @@ UIRoutes.prototype.init = function() {
 
     app.get("/bwm/v1/bw_allocations/",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"BWM_API_swagger", function (err, resp) {
-           var permittedValues = resp.map(function(value) {
-               if (value.hasOwnProperty('bwInfo')) {
-                   return {bwInfo: value.bwInfo};
-               }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                res : data
-            };
+        self.ActionInstance.bw_allocationsGET(req.query, function (err, result) {
             res.status(200).send(result);
         })
-        // self.seviceInstance.bw_allocationsGET(req.query, function (err, result) {
-        //     res.status(200).send(result);
-        // })
     });
 
     app.post("/bwm/v1/bw_allocations/",function (req,res) {
+
 
         self.seviceInstance.bw_allocationsPOST(req, function (err, result) {
             res.status(201).send(result);
@@ -181,27 +169,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        var query = {
-            "allocationId" : req.params.allocationID
-        };
-        self.commonInstance.commonGET(query,"BWM_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('bwInfo')) {
-                    return {bwInfo: value.bwInfo};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                bwInfo : data[0]['bwInfo']
-            };
+        self.ActionInstance.bw_allocationsAllocationIdGET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.seviceInstance.bw_allocationsAllocationIdGET(req.params.allocationID, function (err, result) {
-        //     res.status(200).send(result);
-        // })
     });
 
     app.patch("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
@@ -229,25 +199,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/mx2/v1/app_list",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"UE_Application_Interface_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('ApplicationList')) {
-                    return {ApplicationList: value.ApplicationList};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                res : data
-            };
+        self.ActionInstance.app_listGET(req, function (err, result) {
             res.status(200).send(result);
         })
-
-        // self.AppserviceInstance.app_listGET(req, function (err, result) {
-        //     res.send(result);
-        // })
 
     });
 
@@ -281,24 +235,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"UE_Identity_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('UeIdentityTagInfo')) {
-                    return {UeIdentityTagInfo: value.UeIdentityTagInfo};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                res : data
-            };
+        self.ActionInstance.appInstanceIdUe_identity_tag_infoGET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.IdserviceInstance.appInstanceIdUe_identity_tag_infoGET(req, function (err, result) {
-        //     res.status(200).send(result);
-        // })
     });
 
     app.put("/ui/v1/:appInstId/ue_identity_tag_info",function (req,res) {
@@ -312,49 +251,16 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('DnsRule')) {
-                    return {bwInfo: value.bwInfo};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                res : data
-            };
+        self.ActionInstance.ApplicationsDnsRules_GET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.Mp1serviceInstance.ApplicationsDnsRules_GET(req, function (err, result) {
-        //     res.send(result);
-        // })
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",function (req,res) {
 
-        var query = {
-            "dnsRulesId" : req.params.dnsRulesId
-        };
-        self.commonInstance.commonGET(query,"Mp1_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('DnsRule')) {
-                    return {DnsRule: value.DnsRule};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                DnsRule : data[0]['DnsRule']
-            };
+        self.ActionInstance.ApplicationsDnsRule_GET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.Mp1serviceInstance.ApplicationsDnsRule_GET(req, function (err, result) {
-        //     res.send(result);
-        // })
     });
 
     app.put("/exampleAPI/mp1/v1/applications/:appInstId/dns_rules/:dnsRulesId",function (req,res) {
@@ -366,24 +272,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('Mp1SubscriptionLinkList')) {
-                    return {Mp1SubscriptionLinkList: value.Mp1SubscriptionLinkList};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                res : data
-            };
+        self.ActionInstance.ApplicationsSubscriptions_GET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.Mp1serviceInstance.ApplicationsSubscriptions_GET(req, function (err, result) {
-        //     res.send(result);
-        // })
     });
 
     app.post("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
@@ -394,25 +285,6 @@ UIRoutes.prototype.init = function() {
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",function (req,res) {
-
-        // var query = {
-        //     "dnsRulesId" : req.params.dnsRulesId
-        // };
-        // self.commonInstance.commonGET(query,"Mp1_API_swagger", function (err, resp) {
-        //     var permittedValues = resp.map(function(value) {
-        //         if (value.hasOwnProperty('DnsRule')) {
-        //             return {DnsRule: value.DnsRule};
-        //         }
-        //     });
-        //     var data = permittedValues.filter(function( element ) {
-        //         return element !== undefined;
-        //     });
-        //     var result = {
-        //         statuscode : 200,
-        //         DnsRule : data[0]['DnsRule']
-        //     };
-        //     res.status(200).send(result);
-        // })
 
         self.Mp1serviceInstance.ApplicationsSubscription_GET(req, function (err, result) {
             res.send(result);
@@ -428,52 +300,16 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('TrafficRule')) {
-                    return {TrafficRule: value.TrafficRule};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                res : data
-            };
+        self.ActionInstance.ApplicationsTrafficRules_GET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.Mp1serviceInstance.ApplicationsTrafficRules_GET(req, function (err, result) {
-        //     res.send(result);
-        // })
     });
 
     app.get("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
 
-        var query = {
-            "TrafficRule":
-                {
-                    "trafficRuleId" : req.params.trafficRuleId
-                }
-        };
-        self.commonInstance.commonGET(query,"Mp1_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('TrafficRule')) {
-                    return {DnsRule: value.DnsRule};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                TrafficRule : data[0]['TrafficRule']
-            };
+        self.Mp1serviceInstance.ApplicationsTrafficRule_GET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.Mp1serviceInstance.ApplicationsTrafficRule_GET(req, function (err, result) {
-        //     res.send(result);
-        // })
     });
 
     app.put("/exampleAPI/mp1/v1/applications/:appInstId/traffic_rules/:trafficRuleId",function (req,res) {
@@ -485,51 +321,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/services",function (req,res) {
 
-        var query = {
-
-        };
-        var request = req.query;
-        if (request.ser_instance_id){
-            query = {
-                "ServiceInfo.serInstanceId" : request.ser_instance_id
-            }
-        }
-        if (request.ser_name){
-            query = {
-                "ServiceInfo.serName" : request.ser_name
-            }
-        }
-        if (request.ser_category_id){
-            query= {
-                "ServiceInfo.serCategory.id" : request.ser_category_id
-            }
-        }
-        self.commonInstance.commonGET(query,"Mp1_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('ServiceInfo')) {
-                    return {ServiceInfo: value.ServiceInfo};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            if (Object.keys(query).length <= 0) {
-                var result = {
-                    statuscode: 200,
-                    res: data
-                };
-            }
-            else{
-                var result = {
-                    statuscode: 200,
-                    ServiceInfo: data[0]['ServiceInfo']
-                };
-            }
+        self.ActionInstance.Services_GET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.Mp1serviceInstance.Services_GET(req.query, function (err, result) {
-        //     res.send(result);
-        // })
     });
 
     app.post("/exampleAPI/mp1/v1/services",function (req,res) {
@@ -541,27 +335,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
 
-        var query = {
-            "serviceId" : req.params.serviceId
-        };
-        self.commonInstance.commonGET(query,"Mp1_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('ServiceInfo')) {
-                    return {ServiceInfo: value.ServiceInfo};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                ServiceInfo : data[0]['ServiceInfo']
-            };
+        self.ActionInstance.ServicesServiceId_GET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.Mp1serviceInstance.ServicesServiceId_GET(req, function (err, result) {
-        //     res.status(200).send(result);
-        // })
     });
 
     app.put("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
@@ -573,68 +349,23 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/mp1/v1/timing/current_time",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('CurrentTime')) {
-                    return {CurrentTime: value.CurrentTime};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                res : data
-            };
+        self.ActionInstance.TimingCurrentTime_GET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.Mp1serviceInstance.TimingCurrentTime_GET(req, function (err, result) {
-        //     res.send(result);
-        // })
     });
 
     app.get("/exampleAPI/mp1/v1/timing/timing_caps",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('TimingCaps')) {
-                    return {TimingCaps: value.TimingCaps};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                res : data
-            };
+        self.ActionInstance.TimingCaps_GET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.Mp1serviceInstance.TimingCaps_GET(req, function (err, result) {
-        //     res.send(result);
-        // })
     });
 
     app.get("/exampleAPI/mp1/v1/transports",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Mp1_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('TransportInfo')) {
-                    return {TransportInfo: value.TransportInfo};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                res : data
-            };
+        self.ActionInstance.Transports_GET(req, function (err, result) {
             res.status(200).send(result);
         })
-        // self.Mp1serviceInstance.Transports_GET(req, function (err, result) {
-        //     res.send(result);
-        // })
     });
 
     /* Location API*/
