@@ -26,6 +26,7 @@
     "reload": "^2.3.0",
     "sleep": "^5.1.1",
     "swagger-merge": "^0.4.0",
-    "swagger-tools": "0.10.1"
+    "swagger-tools": "0.10.1",
+    "swagger2-postman-generator":"2.1.1",
   }
 }

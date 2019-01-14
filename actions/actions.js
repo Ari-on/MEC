@@ -411,3 +411,674 @@ ApiActions.prototype.Transports_GET = function (req, callback) {
 
 };
 
+ApiActions.prototype.zonesGet = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('zoneInfo')) {
+                return value.zoneInfo;
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            zoneList: {
+                "zone" : data
+            }
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.zonesGetById = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "zoneInfo.zoneId" : req.params.zoneId
+    };
+    self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('zoneInfo')) {
+                return {zoneInfo: value.zoneInfo};
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            zoneInfo : data[0]['zoneInfo']
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.zonesByIdGetAps = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "zoneId" : req.params.zoneId
+    };
+
+    self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('accessPointInfo')) {
+                return  value.accessPointInfo;
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            accessPointList: {
+                "accessPoint" : data
+            }
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.zonesByIdGetApsById = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    console.log("Actions");
+
+    var query = {
+        "accessPointInfo.zoneId" : req.params.accessPointId
+    };
+    console.log(query)
+    self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('accessPointInfo')) {
+                return {accessPointInfo: value.accessPointInfo};
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            accessPointInfo : data[0]['accessPointInfo']
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.usersGet = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('userInfo')) {
+                return value.zoneInfo;
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            userList: {
+                "user" : data
+            }
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.usersGetById = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "userId" : req.params.userId
+    };
+    self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('userInfo')) {
+                return {userInfo: value.userInfo};
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            userInfo : data[0]['userInfo']
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.zonalTrafficSubGet = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('zonalTrafficSubscription')) {
+                return value.zonalTrafficSubscription;
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            notificationSubscriptionList: {
+                "zonalTrafficSubscription" : data
+            }
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.zonalTrafficSubGetById = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('zonalTrafficSubscription')) {
+                return {zonalTrafficSubscription: value.zonalTrafficSubscription};
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            zonalTrafficSubscription : data[0]['zonalTrafficSubscription']
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.userTrackingSubGet = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('userTrackingSubscription')) {
+                return value.userTrackingSubscription;
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            notificationSubscriptionList: {
+                "userTrackingSubscription" : data
+            }
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.userTrackingSubGetById = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('userTrackingSubscription')) {
+                return {userTrackingSubscription: value.userTrackingSubscription};
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            userTrackingSubscription : data[0]['userTrackingSubscription']
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.zoneStatusGet = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('zoneStatusSubscription')) {
+                return value.zoneStatusSubscription;
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            notificationSubscriptionList: {
+                "zoneStatusSubscription" : data
+            }
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.zoneStatusGetById = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
+        var permittedValues = resp.map(function(value) {
+            if (value.hasOwnProperty('zoneStatusSubscription')) {
+                return {zoneStatusSubscription: value.zoneStatusSubscription};
+            }
+        });
+        var data = permittedValues.filter(function( element ) {
+            return element !== undefined;
+        });
+        var result = {
+            statuscode : 200,
+            zoneStatusSubscription : data[0]['zoneStatusSubscription']
+        };
+        callback(null,result)
+    });
+
+};
+
+ApiActions.prototype.plmn_infoGET = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "PlmnInfo.appInId" : req.query.app_ins_id
+    };
+    self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+        if (req.headers.accept.indexOf('application/json') >= 0  && typeof(resp) == 'object') {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('PlmnInfo')) {
+                    return value.PlmnInfo;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                PlmnInfo : data[0]
+            };
+            callback(null,result);
+        }
+
+        else{
+            var result = {
+                statuscode: 406,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 406,
+                    "detail": "request.headers.accept is different",
+                    "instance": "string"
+                }
+            };
+            callback(null,result)
+        }
+    });
+};
+
+ApiActions.prototype.cell_change_subscriptionsGET = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+        if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('CellChangeSubscription')) {
+                    return value.CellChangeSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                CellChangeSubscription : data[0]
+            };
+            callback(null,result);
+        }
+        else{
+            var result = {
+                statuscode: 406,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 406,
+                    "detail": "request.headers.accept is different",
+                    "instance": "string"
+                }
+            };
+            callback(null,result);
+        }
+    });
+};
+
+ApiActions.prototype.S1BearerSubscription_subscriptionsGET = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+        if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('S1BearerSubscription')) {
+                    return value.S1BearerSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                S1BearerSubscription : data[0]
+            };
+            callback(null,result);
+        }
+        else{
+            var result = {
+                statuscode: 406,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 406,
+                    "detail": "request.headers.accept is different",
+                    "instance": "string"
+                }
+            };
+            callback(null,result);
+        }
+    });
+};
+
+ApiActions.prototype.MeasTa_subscriptionsGET = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+        if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('MeasTaSubscription')) {
+                    return value.MeasTaSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                MeasTaSubscription : data[0]
+            };
+            callback(null,result);
+        }
+        else{
+            var result = {
+                statuscode: 406,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 406,
+                    "detail": "request.headers.accept is different",
+                    "instance": "string"
+                }
+            };
+            callback(null,result);
+        };
+    });
+};
+
+ApiActions.prototype.MeasRepUe_subscriptionsGET = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+        if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('MeasRepUeSubscription')) {
+                    return value.MeasRepUeSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                MeasRepUeSubscription : data[0]
+            };
+            callback(null,result);
+        }
+        else{
+            var result = {
+                statuscode: 406,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 406,
+                    "detail": "request.headers.accept is different",
+                    "instance": "string"
+                }
+            };
+            callback(null,result);
+        };
+    });
+};
+
+ApiActions.prototype.RabEstSubscription_subscriptionsGET = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+        if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('RabEstSubscription')) {
+                    return value.RabEstSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                RabEstSubscription : data[0]
+            };
+            callback(null,result);
+        }
+        else{
+            var result = {
+                statuscode: 406,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 406,
+                    "detail": "request.headers.accept is different",
+                    "instance": "string"
+                }
+            };
+            callback(null,result);
+        };
+    });
+};
+
+ApiActions.prototype.RabModSubscription_subscriptionsGET = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+        if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('RabModSubscription')) {
+                    return value.RabModSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                RabModSubscription : data[0]
+            };
+            callback(null,result);
+        }
+        else{
+            var result = {
+                statuscode: 406,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 406,
+                    "detail": "request.headers.accept is different",
+                    "instance": "string"
+                }
+            };
+            callback(null,result);
+        };
+    });
+};
+
+ApiActions.prototype.RabRelSubscription_subscriptionsGET = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+        if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('RabRelSubscription')) {
+                    return value.RabRelSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                RabRelSubscription : data[0]
+            };
+            callback(null,result);
+        }
+        else{
+            var result = {
+                statuscode: 406,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 406,
+                    "detail": "request.headers.accept is different",
+                    "instance": "string"
+                }
+            };
+            callback(null,result);
+        };
+    });
+};

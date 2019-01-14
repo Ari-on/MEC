@@ -374,104 +374,30 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/zones",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('zoneInfo')) {
-                    return value.zoneInfo;
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                zoneList: {
-                        "zone" : data
-                    }
-            };
+        self.ActionInstance.zonesGet(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.zonesGet(req, function (err,result) {
-        //     res.send(result);
-        // })
     });
 
     app.get("/exampleAPI/location/v1/zones/:zoneId",function (req,res) {
 
-        var query = {
-            "zoneInfo.zoneId" : req.params.zoneId
-        };
-        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('zoneInfo')) {
-                    return {zoneInfo: value.zoneInfo};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                zoneInfo : data[0]['zoneInfo']
-            };
+        self.ActionInstance.zonesGetById(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.zonesGetById(req, function (err,result) {
-        //     res.send(result);
-        // })
     });
 
     app.get("/exampleAPI/location/v1/zones/:zoneId/accessPoints",function (req,res) {
 
-        var query = {
-            "zoneId" : req.params.zoneId
-        };
-
-        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('accessPointInfo')) {
-                    return  value.accessPointInfo;
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                accessPointList: {
-                    "accessPoint" : data
-                }
-            };
+        self.ActionInstance.zonesByIdGetAps(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.zonesByIdGetAps(req, function (err,result) {
-        //     res.send(result);
-        // })
     });
 
     app.get("/exampleAPI/location/v1/zones/:zoneId/accessPoints/:accessPointId",function (req,res) {
 
-        var query = {
-            "accessPointInfo.zoneId" : req.params.accessPointId
-        };
-        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('accessPointInfo')) {
-                    return {accessPointInfo: value.accessPointInfo};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                accessPointInfo : data[0]['accessPointInfo']
-            };
+        self.ActionInstance.zonesByIdGetApsById(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.zonesByIdGetApsById(req, function (err,result) {
-        //     res.send(result);
-        // })
     });
 
 //////////////////////
@@ -481,51 +407,16 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/users",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('userInfo')) {
-                    return value.zoneInfo;
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                userList: {
-                    "user" : data
-                }
-            };
+        self.ActionInstance.usersGet(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.usersGet(req, function (err,result) {
-        //     res.send(result);
-        // })
     });
 
     app.get("/exampleAPI/location/v1/users/:userId",function (req,res) {
 
-        var query = {
-            "userId" : req.params.userId
-        };
-        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('userInfo')) {
-                    return {userInfo: value.userInfo};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                userInfo : data[0]['userInfo']
-            };
+        self.ActionInstance.usersGetById(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.usersGetById(req, function (err,result) {
-        //     res.send(result);
-        // })
     });
 
 ///////////////////////////////
@@ -534,26 +425,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/zonalTraffic",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('zonalTrafficSubscription')) {
-                    return value.zonalTrafficSubscription;
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                notificationSubscriptionList: {
-                    "zonalTrafficSubscription" : data
-                }
-            };
+        self.ActionInstance.zonalTrafficSubGet(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.zonalTrafficSubGet(req, function (err,result) {
-        //     res.status(200).send(result);
-        // })
     });
 
     app.post("/exampleAPI/location/v1/subscriptions/zonalTraffic",function (req,res) {
@@ -565,27 +439,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/zonalTraffic/:subscriptionId",function (req,res) {
 
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('zonalTrafficSubscription')) {
-                    return {zonalTrafficSubscription: value.zonalTrafficSubscription};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                zonalTrafficSubscription : data[0]['zonalTrafficSubscription']
-            };
+        self.ActionInstance.zonalTrafficSubGetById(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.zonalTrafficSubGetById(req, function (err,result) {
-        //     res.status(200).send(result);
-        // })
     });
 
     app.put("/exampleAPI/location/v1/subscriptions/zonalTraffic/:subscriptionId",function (req,res) {
@@ -604,26 +460,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/userTracking",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('userTrackingSubscription')) {
-                    return value.userTrackingSubscription;
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                notificationSubscriptionList: {
-                    "userTrackingSubscription" : data
-                }
-            };
+        self.ActionInstance.userTrackingSubGet(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.userTrackingSubGet(req, function (err,result) {
-        //     res.status(200).send(result);
-        // })
     });
 
     app.post("/exampleAPI/location/v1/subscriptions/userTracking",function (req,res) {
@@ -635,27 +474,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/userTracking/:subscriptionId",function (req,res) {
 
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('userTrackingSubscription')) {
-                    return {userTrackingSubscription: value.userTrackingSubscription};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                userTrackingSubscription : data[0]['userTrackingSubscription']
-            };
+        self.ActionInstance.userTrackingSubGetById(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.userTrackingSubGetById(req, function (err,result) {
-        //     res.status(200).send(result);
-        // })
     });
 
     app.put("/exampleAPI/location/v1/subscriptions/userTracking/:subscriptionId",function (req,res) {
@@ -674,26 +495,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/zonalStatus",function (req,res) {
 
-        self.commonInstance.commonGET(req.query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('zoneStatusSubscription')) {
-                    return value.zoneStatusSubscription;
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                notificationSubscriptionList: {
-                    "zoneStatusSubscription" : data
-                }
-            };
+        self.ActionInstance.zoneStatusGet(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.zoneStatusGet(req, function (err,result) {
-        //     res.status(200).send(result);
-        // })
     });
 
     app.post("/exampleAPI/location/v1/subscriptions/zonalStatus",function (req,res) {
@@ -705,27 +509,9 @@ UIRoutes.prototype.init = function() {
 
     app.get("/exampleAPI/location/v1/subscriptions/zoneStatus/:subscriptionId",function (req,res) {
 
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"Location_API_swagger", function (err, resp) {
-            var permittedValues = resp.map(function(value) {
-                if (value.hasOwnProperty('zoneStatusSubscription')) {
-                    return {zoneStatusSubscription: value.zoneStatusSubscription};
-                }
-            });
-            var data = permittedValues.filter(function( element ) {
-                return element !== undefined;
-            });
-            var result = {
-                statuscode : 200,
-                zoneStatusSubscription : data[0]['zoneStatusSubscription']
-            };
+        self.ActionInstance.zoneStatusGetById(req, function (err,result) {
             res.status(200).send(result);
         })
-        // self.LocationServiceInstance.zoneStatusGetById(req, function (err,result) {
-        //     res.status(200).send(result);
-        // })
     });
 
     app.put("/exampleAPI/location/v1/subscriptions/zoneStatus/:subscriptionId",function (req,res) {
@@ -752,7 +538,7 @@ UIRoutes.prototype.init = function() {
     app.get("/rni/v1/queries/rab_info",function (req,res) {
 
         self.RNIserviceInstance.rab_infoGET(req, function (err, result) {
-            if (request.headers.accept == 'application/json' && typeof(result) == 'object') {
+            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.status(200).send(result);
             }
             else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
@@ -775,43 +561,9 @@ UIRoutes.prototype.init = function() {
     });
     app.get("/rni/v1/queries/plmn_info",function (req,res) {
 
-        var query = {
-            "PlmnInfo.appInId" : req.query.app_ins_id
-        }
-        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
-        // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0  && typeof(resp) == 'object') {
-                var permittedValues = resp.map(function(value) {
-                    if (value.hasOwnProperty('PlmnInfo')) {
-                        return value.PlmnInfo;
-                    }
-                });
-                var data = permittedValues.filter(function( element ) {
-                    return element !== undefined;
-                });
-                var result = {
-                    statuscode : 200,
-                    PlmnInfo : data[0]
-                };
-                res.status(200).send(result);
-            }
-            // else if (request.headers.accept == 'text/plain' && typeof(result) == 'string') {
-            //     res.status(200).send(result);
-            // }
-            else{
-                var result = {
-                    statuscode: 406,
-                    ProblemDetails: {
-                        "type": "string",
-                        "title": "string",
-                        "status": 406,
-                        "detail": "request.headers.accept is different",
-                        "instance": "string"
-                    }
-                };
-                res.status(406).send(result);
-            }
-        })
+        self.ActionInstance.plmn_infoGET(req, function (err,resp) {
+            res.status(resp.statuscode).send(resp);
+        });
     });
 
     app.get("/rni/v1/queries/s1_bearer_info",function (req,res) {
@@ -938,39 +690,8 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
 
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
-            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
-                var permittedValues = resp.map(function(value) {
-                    if (value.hasOwnProperty('CellChangeSubscription')) {
-                        return value.CellChangeSubscription;
-                    }
-                });
-                var data = permittedValues.filter(function( element ) {
-                    return element !== undefined;
-                });
-                var result = {
-                    statuscode : 200,
-                    CellChangeSubscription : data[0]
-                };
-                res.status(200).send(result);
-            }
-            else{
-                var result = {
-                    statuscode: 406,
-                    ProblemDetails: {
-                        "type": "string",
-                        "title": "string",
-                        "status": 406,
-                        "detail": "request.headers.accept is different",
-                        "instance": "string"
-                    }
-                };
-                res.status(406).send(result);
-            }
+        self.ActionInstance.cell_change_subscriptionsGET(req, function (err, resp) {
+            res.status(resp.statuscode).send(resp);
         })
     });
 
@@ -1076,43 +797,10 @@ UIRoutes.prototype.init = function() {
         }
     });
 
-
     app.get("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
 
-        // self.RNIserviceInstance.S1BearerSubscription_subscriptionsGET(req, function (err, result) {
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
-            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
-                var permittedValues = resp.map(function(value) {
-                    if (value.hasOwnProperty('S1BearerSubscription')) {
-                        return value.S1BearerSubscription;
-                    }
-                });
-                var data = permittedValues.filter(function( element ) {
-                    return element !== undefined;
-                });
-                var result = {
-                    statuscode : 200,
-                    S1BearerSubscription : data[0]
-                };
-                res.status(200).send(result);
-            }
-            else{
-                var result = {
-                    statuscode: 406,
-                    ProblemDetails: {
-                        "type": "string",
-                        "title": "string",
-                        "status": 406,
-                        "detail": "request.headers.accept is different",
-                        "instance": "string"
-                    }
-                };
-                res.status(406).send(result);
-            }
+        self.ActionInstance.S1BearerSubscription_subscriptionsGET(req, function (err, resp) {
+            res.status(resp.statuscode).send(resp);
         })
     });
 
@@ -1218,40 +906,8 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
 
-        // self.RNIserviceInstance.MeasTa_subscriptionsGET(req, function (err, result) {
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
-            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
-                var permittedValues = resp.map(function(value) {
-                    if (value.hasOwnProperty('MeasTaSubscription')) {
-                        return value.MeasTaSubscription;
-                    }
-                });
-                var data = permittedValues.filter(function( element ) {
-                    return element !== undefined;
-                });
-                var result = {
-                    statuscode : 200,
-                    MeasTaSubscription : data[0]
-                };
-                res.status(200).send(result);
-            }
-            else{
-                var result = {
-                    statuscode: 406,
-                    ProblemDetails: {
-                        "type": "string",
-                        "title": "string",
-                        "status": 406,
-                        "detail": "request.headers.accept is different",
-                        "instance": "string"
-                    }
-                };
-                res.status(406).send(result);
-            };
+        self.ActionInstance.MeasTa_subscriptionsGET(req, function (err, resp) {
+            res.status(resp.statuscode).send(resp);
         })
     });
 
@@ -1357,40 +1013,8 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
 
-        // self.RNIserviceInstance.MeasRepUe_subscriptionsGET(req, function (err, result) {
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
-            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
-                var permittedValues = resp.map(function(value) {
-                    if (value.hasOwnProperty('MeasRepUeSubscription')) {
-                        return value.MeasRepUeSubscription;
-                    }
-                });
-                var data = permittedValues.filter(function( element ) {
-                    return element !== undefined;
-                });
-                var result = {
-                    statuscode : 200,
-                    MeasRepUeSubscription : data[0]
-                };
-                res.status(200).send(result);
-            }
-            else{
-                var result = {
-                    statuscode: 406,
-                    ProblemDetails: {
-                        "type": "string",
-                        "title": "string",
-                        "status": 406,
-                        "detail": "request.headers.accept is different",
-                        "instance": "string"
-                    }
-                };
-                res.status(406).send(result);
-            }
+        self.ActionInstance.MeasRepUe_subscriptionsGET(req, function (err, resp) {
+            res.status(resp.statuscode).send(resp)
         })
     });
 
@@ -1497,40 +1121,8 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
 
-        // self.RNIserviceInstance.RabEstSubscription_subscriptionsGET(req, function (err, result) {
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
-            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
-                var permittedValues = resp.map(function(value) {
-                    if (value.hasOwnProperty('RabEstSubscription')) {
-                        return value.RabEstSubscription;
-                    }
-                });
-                var data = permittedValues.filter(function( element ) {
-                    return element !== undefined;
-                });
-                var result = {
-                    statuscode : 200,
-                    RabEstSubscription : data[0]
-                };
-                res.status(200).send(result);
-            }
-            else{
-                var result = {
-                    statuscode: 406,
-                    ProblemDetails: {
-                        "type": "string",
-                        "title": "string",
-                        "status": 406,
-                        "detail": "request.headers.accept is different",
-                        "instance": "string"
-                    }
-                };
-                res.status(406).send(result);
-            }
+        self.ActionInstance.RabEstSubscription_subscriptionsGET(req, function (err, resp) {
+            res.status(resp.statuscode).send(resp)
         })
     });
 
@@ -1637,40 +1229,8 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
 
-        // self.RNIserviceInstance.RabModSubscription_subscriptionsGET(req, function (err, result) {
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
-            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
-                var permittedValues = resp.map(function(value) {
-                    if (value.hasOwnProperty('RabModSubscription')) {
-                        return value.RabModSubscription;
-                    }
-                });
-                var data = permittedValues.filter(function( element ) {
-                    return element !== undefined;
-                });
-                var result = {
-                    statuscode : 200,
-                    RabModSubscription : data[0]
-                };
-                res.status(200).send(result);
-            }
-            else{
-                var result = {
-                    statuscode: 406,
-                    ProblemDetails: {
-                        "type": "string",
-                        "title": "string",
-                        "status": 406,
-                        "detail": "request.headers.accept is different",
-                        "instance": "string"
-                    }
-                };
-                res.status(406).send(result);
-            }
+        self.ActionInstance.RabModSubscription_subscriptionsGET(req, function (err, resp) {
+            res.status(resp.statuscode).send(resp)
         })
     });
 
@@ -1777,40 +1337,8 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
 
-        // self.RNIserviceInstance.RabRelSubscription_subscriptionsGET(req, function (err, result) {
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
-            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
-                var permittedValues = resp.map(function(value) {
-                    if (value.hasOwnProperty('RabRelSubscription')) {
-                        return value.RabRelSubscription;
-                    }
-                });
-                var data = permittedValues.filter(function( element ) {
-                    return element !== undefined;
-                });
-                var result = {
-                    statuscode : 200,
-                    RabRelSubscription : data[0]
-                };
-                res.status(200).send(result);
-            }
-            else{
-                var result = {
-                    statuscode: 406,
-                    ProblemDetails: {
-                        "type": "string",
-                        "title": "string",
-                        "status": 406,
-                        "detail": "request.headers.accept is different",
-                        "instance": "string"
-                    }
-                };
-                res.status(406).send(result);
-            }
+        self.ActionInstance.RabRelSubscription_subscriptionsGET(req, function (err, resp) {
+            res.status(resp.statuscode).send(resp)
         })
     });
 
