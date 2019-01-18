@@ -1445,40 +1445,8 @@ UIRoutes.prototype.init = function() {
 
     app.get("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
 
-        // self.RNIserviceInstance.CaReConfSubscription_subscriptionsGET(req, function (err, result) {
-        var query = {
-            "subscriptionId" : req.params.subscriptionId
-        };
-        self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
-            // self.RNIserviceInstance.plmn_infoGET(req, function (err, result) {
-            if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
-                var permittedValues = resp.map(function(value) {
-                    if (value.hasOwnProperty('CaReConfSubscription')) {
-                        return value.CaReConfSubscription;
-                    }
-                });
-                var data = permittedValues.filter(function( element ) {
-                    return element !== undefined;
-                });
-                var result = {
-                    statuscode : 200,
-                    CaReConfSubscription : data[0]
-                };
-                res.status(200).send(result);
-            }
-            else{
-                var result = {
-                    statuscode: 406,
-                    ProblemDetails: {
-                        "type": "string",
-                        "title": "string",
-                        "status": 406,
-                        "detail": "request.headers.accept is different",
-                        "instance": "string"
-                    }
-                };
-                res.status(406).send(result);
-            }
+        self.ActionInstance.CaReConfSubscription_subscriptionsGET(req, function (err, resp) {
+            res.status(200).send(resp)
         })
     });
 

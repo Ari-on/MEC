@@ -1082,3 +1082,45 @@ ApiActions.prototype.RabRelSubscription_subscriptionsGET = function (req, callba
         };
     });
 };
+
+ApiActions.prototype.CaReConfSubscription_subscriptionsGET = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    // console.log("Actions");
+
+    var query = {
+        "subscriptionId" : req.params.subscriptionId
+    };
+    self.commonInstance.commonGET(query,"RNI_API_swagger", function (err, resp) {
+        if (req.headers.accept.indexOf('application/json') >= 0 && typeof(resp) == 'object') {
+            var permittedValues = resp.map(function(value) {
+                if (value.hasOwnProperty('CaReConfSubscription')) {
+                    return value.CaReConfSubscription;
+                }
+            });
+            var data = permittedValues.filter(function( element ) {
+                return element !== undefined;
+            });
+            var result = {
+                statuscode : 200,
+                CaReConfSubscription : data[0]
+            };
+            callback(null,result)
+        }
+        else{
+            var result = {
+                statuscode: 406,
+                ProblemDetails: {
+                    "type": "string",
+                    "title": "string",
+                    "status": 406,
+                    "detail": "request.headers.accept is different",
+                    "instance": "string"
+                }
+            };
+            callback(null,result)
+        };
+    });
+};
