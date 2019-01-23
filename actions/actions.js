@@ -47,6 +47,76 @@ ApiActions.prototype.bw_allocationsGET = function (req, callback) {
 
 };
 
+ApiActions.prototype.bw_allocationsPOST = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err) {
+            var counter = {
+                "app_instance_id": 0,
+                "app_name": 0,
+                "session_id": 0,
+                "allocationId": 0,
+            }
+        } else if (resp1.length > 0 && resp1[0].hasOwnProperty('BWM')) {
+            var counter = (resp1[0]["BWM"])
+            var criteria = {
+                condition: {},
+                value: {
+                    "app_instance_id": (counter.app_instance_id + 1),
+                    "app_name": (counter.app_name + 1),
+                    "session_id": (counter.session_id + 1),
+                    "allocationId": (counter.allocationId + 1),
+                },
+                options: {
+                    multi: false,
+                    upsert: false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set: {BWM: criteria.value}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else {
+            var counter = {
+            "app_instance_id": 0,
+            "app_name": 0,
+            "session_id": 0,
+            "allocationId": 0,
+            }
+        }
+        var bwInfo = {
+            "app_instance_id" : (counter.app_instance_id + 1).toString(),
+            "app_name" : (counter.app_name + 1).toString(),
+            "session_id" : (counter.session_id + 1).toString(),
+            "allocationId" : (counter.allocationId + 1).toString(),
+            "bwInfo" : myobj
+        };
+
+        self.commonInstance.commonPOST(bwInfo,"BWM_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    bwInfo: res[0]['bwInfo']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.bw_allocationsAllocationIdGET = function (req, callback) {
 
     var self = this;
@@ -57,6 +127,7 @@ ApiActions.prototype.bw_allocationsAllocationIdGET = function (req, callback) {
     var query = {
         "allocationId" : req.params.allocationID
     };
+    console.log(query);
     self.commonInstance.commonGET(query,"BWM_API_swagger", function (err, resp) {
         var permittedValues = resp.map(function(value) {
             if (value.hasOwnProperty('bwInfo')) {
@@ -68,7 +139,8 @@ ApiActions.prototype.bw_allocationsAllocationIdGET = function (req, callback) {
         });
         var result = {
             statuscode : 200,
-            bwInfo : data[0]['bwInfo']
+            bwInfo : data
+            // bwInfo : data[0]['bwInfo']
         };
         callback(null,result)
     })
@@ -98,6 +170,31 @@ ApiActions.prototype.app_listGET = function (req, callback) {
         callback(null,result)
     })
 
+};
+
+ApiActions.prototype.app_contextsPOST = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    var myobj = req.body;
+
+    var AppContext = {
+        "AppContext" : myobj
+    };
+
+    self.commonInstance.commonPOST(AppContext,"UE_Application_Interface_API_swagger", function (err, res) {
+        if(res){
+            var result = {
+                statuscode:201,
+                AppContext: res[0]['AppContext']
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'inserterror');
+        }
+    });
 };
 
 ApiActions.prototype.appInstanceIdUe_identity_tag_infoGET = function (req, callback) {
@@ -201,6 +298,90 @@ ApiActions.prototype.ApplicationsSubscriptions_GET = function (req, callback) {
         callback(null,result)
     })
 
+};
+
+ApiActions.prototype.ApplicationsSubscriptions_POST = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    var myobj = req.body;
+
+    var AppTerminationNotificationSubscription = {
+        "AppTerminationNotificationSubscription" : myobj
+    };
+
+    self.commonInstance.commonPOST(AppTerminationNotificationSubscription,"Mp1_API_swagger", function (err, res) {
+        if(res){
+            var result = {
+                statuscode:201,
+                AppTerminationNotificationSubscription: res[0]['AppTerminationNotificationSubscription']
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'inserterror');
+        }
+    });
+};
+
+ApiActions.prototype.Services_POST = function (req, callback) {
+
+    var self = this;
+    var app = this.app;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err) {
+            var counter = {
+                "serviceId": 0,
+            }
+        }
+        else if (resp1.length > 0 && resp1[0].hasOwnProperty('MP1')) {
+            var counter = (resp1[0]["MP1"]);
+            var criteria = {
+                condition: {},
+                value: {
+                    "serviceId": (counter.serviceId + 1)
+                },
+                options: {
+                    multi: false,
+                    upsert: false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set: {MP1: criteria.value}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else {
+            var counter = {
+                "serviceId": 0
+            }
+        }
+        var ServiceInfo = {
+            "serviceId": (counter.serviceId + 1).toString(),
+            "ServiceInfo": myobj
+        };
+
+        self.commonInstance.commonPOST(ServiceInfo,"Mp1_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    ServiceInfo: res[0]['ServiceInfo']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
 };
 
 ApiActions.prototype.ApplicationsTrafficRules_GET = function (req, callback) {

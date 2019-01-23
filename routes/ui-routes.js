@@ -154,7 +154,7 @@ UIRoutes.prototype.init = function() {
 
     app.get("/bwm/v1/bw_allocations/",function (req,res) {
 
-        self.ActionInstance.bw_allocationsGET(req.query, function (err, result) {
+        self.ActionInstance.bw_allocationsGET(req, function (err, result) {
             res.status(200).send(result);
         })
     });
@@ -162,7 +162,10 @@ UIRoutes.prototype.init = function() {
     app.post("/bwm/v1/bw_allocations/",function (req,res) {
 
 
-        self.seviceInstance.bw_allocationsPOST(req, function (err, result) {
+        // self.seviceInstance.bw_allocationsPOST(req, function (err, result) {
+        //     res.status(201).send(result);
+        // })
+        self.ActionInstance.bw_allocationsPOST(req, function (err, result) {
             res.status(201).send(result);
         })
     });
@@ -207,7 +210,11 @@ UIRoutes.prototype.init = function() {
 
     app.post("/mx2/v1/app_contexts",function (req,res) {
 
-        self.AppserviceInstance.app_contextsPOST(req, function (err, result) {
+        // self.AppserviceInstance.app_contextsPOST(req, function (err, result) {
+        //     res.status(201).send(result)
+        // });
+
+        self.ActionInstance.app_contextsPOST(req, function (err, result) {
             res.status(201).send(result)
         });
     });
@@ -279,7 +286,11 @@ UIRoutes.prototype.init = function() {
 
     app.post("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions",function (req,res) {
 
-        self.Mp1serviceInstance.ApplicationsSubscriptions_POST(req, function (err, result) {
+        // self.Mp1serviceInstance.ApplicationsSubscriptions_POST(req, function (err, result) {
+        //     res.status(201).send(result);
+        // })
+
+        self.ActionInstance.ApplicationsSubscriptions_POST(req, function (err, result) {
             res.status(201).send(result);
         })
     });
@@ -328,7 +339,10 @@ UIRoutes.prototype.init = function() {
 
     app.post("/exampleAPI/mp1/v1/services",function (req,res) {
 
-        self.Mp1serviceInstance.Services_POST(req, function (err, result) {
+        // self.Mp1serviceInstance.Services_POST(req, function (err, result) {
+        //     res.status(201).send(result);
+        // })
+        self.ActionInstance.Services_POST(req, function (err, result) {
             res.status(201).send(result);
         })
     });
