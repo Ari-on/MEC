@@ -186,7 +186,11 @@ UIRoutes.prototype.init = function() {
 
     app.put("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        self.seviceInstance.bw_allocationsAllocationIdPUT(req, function (err, result) {
+        // self.seviceInstance.bw_allocationsAllocationIdPUT(req, function (err, result) {
+        //     res.status(200).send(result);
+        // })
+
+        self.ActionInstance.bw_allocationsAllocationIdPUT(req, function (err, result) {
             res.status(200).send(result);
         })
     });
@@ -221,13 +225,12 @@ UIRoutes.prototype.init = function() {
 
     app.put("/mx2/v1/app_contexts/:contextID",function (req,res) {
 
-        self.AppserviceInstance.app_contextsContextIdPUT(req, function (err, result) {
-            if (result) {
-                res.status(204).send(result);
-            }
-            else{
-                res.send("Update Error")
-            }
+        // self.AppserviceInstance.app_contextsContextIdPUT(req, function (err, result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.app_contextsContextIdPUT(req, function (err, result) {
+            res.status(204).send(result);
         })
     });
 
@@ -356,7 +359,11 @@ UIRoutes.prototype.init = function() {
 
     app.put("/exampleAPI/mp1/v1/services/:serviceId",function (req,res) {
 
-        self.Mp1serviceInstance.ServicesServiceId_PUT(req, function (err, result) {
+        // self.Mp1serviceInstance.ServicesServiceId_PUT(req, function (err, result) {
+        //     res.status(200).send(result);
+        // })
+
+        self.ActionInstance.ServicesServiceId_PUT(req, function (err, result) {
             res.status(200).send(result);
         })
     });
@@ -446,7 +453,11 @@ UIRoutes.prototype.init = function() {
 
     app.post("/exampleAPI/location/v1/subscriptions/zonalTraffic",function (req,res) {
 
-        self.LocationServiceInstance.zonalTrafficSubPost(req, function (err,result) {
+        // self.LocationServiceInstance.zonalTrafficSubPost(req, function (err,result) {
+        //     res.status(201).send(result);
+        // })
+
+        self.ActionInstance.zonalTrafficSubPost(req, function (err,result) {
             res.status(201).send(result);
         })
     });
@@ -460,7 +471,7 @@ UIRoutes.prototype.init = function() {
 
     app.put("/exampleAPI/location/v1/subscriptions/zonalTraffic/:subscriptionId",function (req,res) {
 
-        self.LocationServiceInstance.zonalTrafficSubPutById(req, function (err,result) {
+        self.ActionInstance.zonalTrafficSubPutById(req, function (err,result) {
             res.status(200).send(result);
         })
     });
@@ -481,7 +492,11 @@ UIRoutes.prototype.init = function() {
 
     app.post("/exampleAPI/location/v1/subscriptions/userTracking",function (req,res) {
 
-        self.LocationServiceInstance.userTrackingSubPost(req, function (err,result) {
+        // self.LocationServiceInstance.userTrackingSubPost(req, function (err,result) {
+        //     res.status(201).send(result);
+        // })
+
+        self.ActionInstance.userTrackingSubPost(req, function (err,result) {
             res.status(201).send(result);
         })
     });
@@ -495,7 +510,11 @@ UIRoutes.prototype.init = function() {
 
     app.put("/exampleAPI/location/v1/subscriptions/userTracking/:subscriptionId",function (req,res) {
 
-        self.LocationServiceInstance.userTrackingSubPutById(req, function (err,result) {
+        // self.LocationServiceInstance.userTrackingSubPutById(req, function (err,result) {
+        //     res.status(200).send(result);
+        // })
+
+        self.ActionInstance.userTrackingSubPutById(req, function (err,result) {
             res.status(200).send(result);
         })
     });
@@ -516,7 +535,11 @@ UIRoutes.prototype.init = function() {
 
     app.post("/exampleAPI/location/v1/subscriptions/zonalStatus",function (req,res) {
 
-        self.LocationServiceInstance.zoneStatusPost(req, function (err,result) {
+        // self.LocationServiceInstance.zoneStatusPost(req, function (err,result) {
+        //     res.status(201).send(result);
+        // })
+
+        self.ActionInstance.zoneStatusPost(req, function (err,result) {
             res.status(201).send(result);
         })
     });
@@ -530,7 +553,11 @@ UIRoutes.prototype.init = function() {
 
     app.put("/exampleAPI/location/v1/subscriptions/zoneStatus/:subscriptionId",function (req,res) {
 
-        self.LocationServiceInstance.zoneStatusPutById(req, function (err,result) {
+        // self.LocationServiceInstance.zoneStatusPutById(req, function (err,result) {
+        //     res.status(200).send(result);
+        // })
+
+        self.ActionInstance.zoneStatusPutById(req, function (err,result) {
             res.status(200).send(result);
         })
     });
@@ -678,7 +705,7 @@ UIRoutes.prototype.init = function() {
             res.status(415).send(result);
         }
         else {
-            self.RNIserviceInstance.CellChange_subscriptionsPOST(req, function (err, result) {
+            self.ActionInstance.CellChange_subscriptionsPOST(req, function (err, result) {
                 if ( req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                     res.status(201).send(result);
                 }
@@ -711,7 +738,7 @@ UIRoutes.prototype.init = function() {
 
     app.put("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.CellChange_subscriptionsPUT(req, function (err, result) {
+        self.ActionInstance.CellChange_subscriptionsPUT(req, function (err, result) {
             if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.status(200).send(result);
             }
@@ -786,7 +813,7 @@ UIRoutes.prototype.init = function() {
             res.status(415).send(result);
         }
         else {
-            self.RNIserviceInstance.S1BearerSubscription_subscriptionsPOST(req, function (err, result) {
+            self.ActionInstance.S1BearerSubscription_subscriptionsPOST(req, function (err, result) {
                 if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                     res.status(201).send(result);
                 }
@@ -820,7 +847,7 @@ UIRoutes.prototype.init = function() {
 
     app.put("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.S1BearerSubscription_subscriptionsPUT(req, function (err, result) {
+        self.ActionInstance.S1BearerSubscription_subscriptionsPUT(req, function (err, result) {
             if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.status(200).send(result);
             }
@@ -894,7 +921,7 @@ UIRoutes.prototype.init = function() {
             res.status(415).send(result);
         }
         else {
-            self.RNIserviceInstance.MeasTa_subscriptionsPOST(req, function (err, result) {
+            self.ActionInstance.MeasTa_subscriptionsPOST(req, function (err, result) {
                 if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                     res.status(201).send(result);
                 }
@@ -927,7 +954,7 @@ UIRoutes.prototype.init = function() {
 
     app.put("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.MeasTa_subscriptionsPUT(req, function (err, result) {
+        self.ActionInstance.MeasTa_subscriptionsPUT(req, function (err, result) {
             if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.status(200).send(result);
             }
@@ -1001,7 +1028,7 @@ UIRoutes.prototype.init = function() {
             res.status(415).send(result);
         }
         else {
-            self.RNIserviceInstance.MeasRepUe_subscriptionsPOST(req, function (err, result) {
+            self.ActionInstance.MeasRepUe_subscriptionsPOST(req, function (err, result) {
                 if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                     res.status(201).send(result);
                 }
@@ -1034,7 +1061,7 @@ UIRoutes.prototype.init = function() {
 
     app.put("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.MeasRepUeReport_subscriptionsPUT(req, function (err, result) {
+        self.ActionInstance.MeasRepUeReport_subscriptionsPUT(req, function (err, result) {
             if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.status(200).send(result);
             }
@@ -1109,7 +1136,7 @@ UIRoutes.prototype.init = function() {
             res.status(415).send(result);
         }
         else {
-            self.RNIserviceInstance.RabEstSubscription_subscriptionsPOST(req, function (err, result) {
+            self.ActionInstance.RabEstSubscription_subscriptionsPOST(req, function (err, result) {
                 if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                     res.status(201).send(result);
                 }
@@ -1142,7 +1169,7 @@ UIRoutes.prototype.init = function() {
 
     app.put("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.RabEstSubscription_subscriptionsPUT(req, function (err, result) {
+        self.ActionInstance.RabEstSubscription_subscriptionsPUT(req, function (err, result) {
             if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.status(200).send(result);
             }
@@ -1217,7 +1244,7 @@ UIRoutes.prototype.init = function() {
         }
         else {
 
-            self.RNIserviceInstance.RabModSubscription_subscriptionsPOST(req, function (err, result) {
+            self.ActionInstance.RabModSubscription_subscriptionsPOST(req, function (err, result) {
                 if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                     res.status(201).send(result);
                 }
@@ -1250,7 +1277,7 @@ UIRoutes.prototype.init = function() {
 
     app.put("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.RabModSubscription_subscriptionsPUT(req, function (err, result) {
+        self.ActionInstance.RabModSubscription_subscriptionsPUT(req, function (err, result) {
             if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.status(200).send(result);
             }
@@ -1325,7 +1352,7 @@ UIRoutes.prototype.init = function() {
         }
         else {
 
-            self.RNIserviceInstance.RabRelSubscription_subscriptionsPOST(req, function (err, result) {
+            self.ActionInstance.RabRelSubscription_subscriptionsPOST(req, function (err, result) {
                 if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                     res.status(200).send(result);
                 }
@@ -1358,7 +1385,7 @@ UIRoutes.prototype.init = function() {
 
     app.put("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.RabRelSubscription_subscriptionsPUT(req, function (err, result) {
+        self.ActionInstance.RabRelSubscription_subscriptionsPUT(req, function (err, result) {
             if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.status(200).send(result);
             }
@@ -1433,7 +1460,7 @@ UIRoutes.prototype.init = function() {
         }
         else {
 
-            self.RNIserviceInstance.CaReConfSubscription_subscriptionsPOST(req, function (err, result) {
+            self.ActionInstance.CaReConfSubscription_subscriptionsPOST(req, function (err, result) {
                 if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                     res.status(200).send(result);
                 }
@@ -1466,7 +1493,7 @@ UIRoutes.prototype.init = function() {
 
     app.put("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.CaReConfSubscription_subscriptionsPUT(req, function (err, result) {
+        self.ActionInstance.CaReConfSubscription_subscriptionsPUT(req, function (err, result) {
             if (req.headers.accept.indexOf('application/json') >= 0 && typeof(result) == 'object') {
                 res.status(200).send(result);
             }

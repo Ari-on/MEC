@@ -59,10 +59,10 @@ commonService.prototype.commonUpdate = function(condition,updation,collectionNam
 
     collection.update(condition,updation,function(err,resp) {
         if(resp){
-            callback(err,resp);
+            callback(err,resp['result']);
         }
         else{
-            callback(err,'updateError');
+            callback('updateError',null);
         }
 
     });

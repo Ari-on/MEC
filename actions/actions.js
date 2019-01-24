@@ -1,23 +1,12 @@
 
-var service  = require ('../service/BwAllocService.js');
-var Idservice  = require ('../service/UEIdentityService.js');
-var Appservice  = require ('../service/UEAppService.js');
-var Mp1service  = require ('../service/Mp1Service.js');
-var LocationService  = require ('../service/LocationService.js');
-var RNIservice  = require ('../service/RNIservice.js');
+
 var commonservice  = require ('../service/commonservice.js');
 
 
 var ApiActions = function(app) {
 
     this.app = app;
-    // this.seviceInstance = new service(app);//for BWM
-    // this.IdserviceInstance = new Idservice(app);//for UE Identity
-    // this.AppserviceInstance = new Appservice(app);//for  UE Application
-    // this.Mp1serviceInstance = new Mp1service(app);//for  Mp1
-    // this.LocationServiceInstance = new LocationService(app);//for Location
-    // this.RNIserviceInstance = new RNIservice(app);//for RNI
-    this.commonInstance = new commonservice(app);//for RNI
+    this.commonInstance = new commonservice(app);
 };
 
 module.exports = ApiActions;
@@ -25,7 +14,6 @@ module.exports = ApiActions;
 ApiActions.prototype.bw_allocationsGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -50,7 +38,6 @@ ApiActions.prototype.bw_allocationsGET = function (req, callback) {
 ApiActions.prototype.bw_allocationsPOST = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     var myobj = req.body;
 
@@ -120,7 +107,6 @@ ApiActions.prototype.bw_allocationsPOST = function (req, callback) {
 ApiActions.prototype.bw_allocationsAllocationIdGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -147,10 +133,43 @@ ApiActions.prototype.bw_allocationsAllocationIdGET = function (req, callback) {
 
 };
 
+ApiActions.prototype.bw_allocationsAllocationIdPUT = function (req, callback) {
+
+    var self = this;
+
+    var allocationId = req.params.allocationID;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "allocationId" : allocationId
+        },
+        value:{
+            "bwInfo" : myobj
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "BWM_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                bwInfo: myobj
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
 ApiActions.prototype.app_listGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -175,7 +194,6 @@ ApiActions.prototype.app_listGET = function (req, callback) {
 ApiActions.prototype.app_contextsPOST = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     var myobj = req.body;
 
@@ -197,10 +215,42 @@ ApiActions.prototype.app_contextsPOST = function (req, callback) {
     });
 };
 
+ApiActions.prototype.app_contextsContextIdPUT = function (req, callback) {
+
+    var self = this;
+
+    var contextId = req.params.contextID;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "AppContext.contextId" : contextId
+        },
+        value:{
+            "AppContext" : myobj
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "UE_Application_Interface_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
 ApiActions.prototype.appInstanceIdUe_identity_tag_infoGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -225,7 +275,6 @@ ApiActions.prototype.appInstanceIdUe_identity_tag_infoGET = function (req, callb
 ApiActions.prototype.ApplicationsDnsRules_GET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -250,7 +299,6 @@ ApiActions.prototype.ApplicationsDnsRules_GET = function (req, callback) {
 ApiActions.prototype.ApplicationsDnsRule_GET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -278,7 +326,6 @@ ApiActions.prototype.ApplicationsDnsRule_GET = function (req, callback) {
 ApiActions.prototype.ApplicationsSubscriptions_GET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -303,7 +350,6 @@ ApiActions.prototype.ApplicationsSubscriptions_GET = function (req, callback) {
 ApiActions.prototype.ApplicationsSubscriptions_POST = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     var myobj = req.body;
 
@@ -328,7 +374,6 @@ ApiActions.prototype.ApplicationsSubscriptions_POST = function (req, callback) {
 ApiActions.prototype.Services_POST = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     var myobj = req.body;
 
@@ -384,10 +429,43 @@ ApiActions.prototype.Services_POST = function (req, callback) {
     });
 };
 
+ApiActions.prototype.ServicesServiceId_PUT = function (req, callback) {
+
+    var self = this;
+
+    var serviceId = req.params.serviceId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "serviceId" : serviceId
+        },
+        value:{
+            "ServiceInfo" : myobj
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "Mp1_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                ServiceInfo: myobj
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
 ApiActions.prototype.ApplicationsTrafficRules_GET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -412,7 +490,6 @@ ApiActions.prototype.ApplicationsTrafficRules_GET = function (req, callback) {
 ApiActions.prototype.ApplicationsTrafficRule_GET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -440,7 +517,6 @@ ApiActions.prototype.ApplicationsTrafficRule_GET = function (req, callback) {
 ApiActions.prototype.Services_GET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -492,7 +568,6 @@ ApiActions.prototype.Services_GET = function (req, callback) {
 ApiActions.prototype.ServicesServiceId_GET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -520,7 +595,6 @@ ApiActions.prototype.ServicesServiceId_GET = function (req, callback) {
 ApiActions.prototype.TimingCurrentTime_GET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -545,7 +619,6 @@ ApiActions.prototype.TimingCurrentTime_GET = function (req, callback) {
 ApiActions.prototype.TimingCaps_GET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -570,7 +643,6 @@ ApiActions.prototype.TimingCaps_GET = function (req, callback) {
 ApiActions.prototype.Transports_GET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -595,7 +667,6 @@ ApiActions.prototype.Transports_GET = function (req, callback) {
 ApiActions.prototype.zonesGet = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -622,7 +693,6 @@ ApiActions.prototype.zonesGet = function (req, callback) {
 ApiActions.prototype.zonesGetById = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -650,7 +720,6 @@ ApiActions.prototype.zonesGetById = function (req, callback) {
 ApiActions.prototype.zonesByIdGetAps = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -681,7 +750,6 @@ ApiActions.prototype.zonesByIdGetAps = function (req, callback) {
 ApiActions.prototype.zonesByIdGetApsById = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     console.log("Actions");
 
@@ -710,7 +778,6 @@ ApiActions.prototype.zonesByIdGetApsById = function (req, callback) {
 ApiActions.prototype.usersGet = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -737,7 +804,6 @@ ApiActions.prototype.usersGet = function (req, callback) {
 ApiActions.prototype.usersGetById = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -765,7 +831,6 @@ ApiActions.prototype.usersGetById = function (req, callback) {
 ApiActions.prototype.zonalTrafficSubGet = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -789,10 +854,64 @@ ApiActions.prototype.zonalTrafficSubGet = function (req, callback) {
 
 };
 
+ApiActions.prototype.zonalTrafficSubPost = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "zonalTraffic" : 0,
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('Location')){
+            var counter = (resp1[0]["Location"]);
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"Location.zonalTraffic":counter.zonalTraffic + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "zonalTraffic" : 0,
+            }
+        }
+        var zonalTrafficSubscription = {
+            "subscriptionId" : "zonalTraffic"+(counter.zonalTraffic + 1).toString(),
+            "zonalTrafficSubscription" : myobj
+        };
+
+        self.commonInstance.commonPOST(zonalTrafficSubscription,"Location_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    zonalTrafficSubscription: res[0]['zonalTrafficSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.zonalTrafficSubGetById = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -817,10 +936,43 @@ ApiActions.prototype.zonalTrafficSubGetById = function (req, callback) {
 
 };
 
+ApiActions.prototype.zonalTrafficSubPutById = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "zonalTrafficSubscription" : myobj
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "Location_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                zonalTrafficSubscription: myobj
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
 ApiActions.prototype.userTrackingSubGet = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -844,10 +996,64 @@ ApiActions.prototype.userTrackingSubGet = function (req, callback) {
 
 };
 
+ApiActions.prototype.userTrackingSubPost = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "userTracking" : 0,
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('Location')){
+            var counter = (resp1[0]["Location"]);
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"Location.userTracking":counter.userTracking + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "userTracking" : 0,
+            }
+        }
+        var userTrackingSubscription = {
+            "subscriptionId" : "userTracking"+(counter.userTracking + 1).toString(),
+            "userTrackingSubscription" : myobj
+        };
+
+        self.commonInstance.commonPOST(userTrackingSubscription,"Location_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    userTrackingSubscription: res[0]['userTrackingSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.userTrackingSubGetById = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -872,10 +1078,43 @@ ApiActions.prototype.userTrackingSubGetById = function (req, callback) {
 
 };
 
+ApiActions.prototype.userTrackingSubPutById = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "userTrackingSubscription" : myobj
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "Location_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                userTrackingSubscription: myobj
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
 ApiActions.prototype.zoneStatusGet = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -899,10 +1138,64 @@ ApiActions.prototype.zoneStatusGet = function (req, callback) {
 
 };
 
+ApiActions.prototype.zoneStatusPost = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "zonalStatus" : 0,
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('Location')){
+            var counter = (resp1[0]["Location"])
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"Location.zonalStatus":counter.zonalStatus + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "zonalStatus" : 0,
+            }
+        }
+        var zoneStatusSubscription = {
+            "subscriptionId" : "zonalStatus"+(counter.zonalStatus + 1).toString(),
+            "zoneStatusSubscription" : myobj
+        };
+
+        self.commonInstance.commonPOST(zoneStatusSubscription,"Location_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    zoneStatusSubscription: res[0]['zoneStatusSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.zoneStatusGetById = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -927,10 +1220,43 @@ ApiActions.prototype.zoneStatusGetById = function (req, callback) {
 
 };
 
+ApiActions.prototype.zoneStatusPutById = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "zoneStatusSubscription" : myobj
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "Location_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                zoneStatusSubscription: myobj
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
 ApiActions.prototype.plmn_infoGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -970,10 +1296,64 @@ ApiActions.prototype.plmn_infoGET = function (req, callback) {
     });
 };
 
+ApiActions.prototype.CellChange_subscriptionsPOST = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "cell_change_subscriptionId" : 0
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('RNI')){
+            var counter = (resp1[0]["RNI"]);
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"RNI.cell_change_subscriptionId": counter.cell_change_subscriptionId + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "cell_change_subscriptionId" : 0
+            }
+        }
+        var CellChangeSubscription = {
+            "subscriptionId" : "CellChangeSubscription"+(counter.cell_change_subscriptionId + 1).toString(),
+            "CellChangeSubscription" : myobj['CellChangeSubscription']
+        };
+
+        self.commonInstance.commonPOST(CellChangeSubscription,"RNI_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    CellChangeSubscription: res[0]['CellChangeSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.cell_change_subscriptionsGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     console.log("Actions");
 
@@ -1012,10 +1392,98 @@ ApiActions.prototype.cell_change_subscriptionsGET = function (req, callback) {
     });
 };
 
+ApiActions.prototype.CellChange_subscriptionsPUT = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "CellChangeSubscription" : myobj['CellChangeSubscription']
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "RNI_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                "CellChangeSubscription" : myobj['CellChangeSubscription']
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
+ApiActions.prototype.S1BearerSubscription_subscriptionsPOST = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "s1_bearer_subscriptionId" : 0
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('RNI')){
+            var counter = (resp1[0]["RNI"]);
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"RNI.s1_bearer_subscriptionId": counter.s1_bearer_subscriptionId + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "s1_bearer_subscriptionId" : 0
+            }
+        }
+        var S1BearerSubscription = {
+            "subscriptionId" : "S1BearerSubscription"+(counter.s1_bearer_subscriptionId + 1).toString(),
+            "S1BearerSubscription" : myobj['S1BearerSubscription']
+        };
+
+        self.commonInstance.commonPOST(S1BearerSubscription,"RNI_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    S1BearerSubscription: res[0]['S1BearerSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.S1BearerSubscription_subscriptionsGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -1054,10 +1522,97 @@ ApiActions.prototype.S1BearerSubscription_subscriptionsGET = function (req, call
     });
 };
 
+ApiActions.prototype.S1BearerSubscription_subscriptionsPUT = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "S1BearerSubscription" : myobj['S1BearerSubscription']
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "RNI_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                "S1BearerSubscription" : myobj['S1BearerSubscription']
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
+ApiActions.prototype.MeasTa_subscriptionsPOST = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "ta_subscriptionId" : 0
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('RNI')){
+            var counter = (resp1[0]["RNI"]);
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"RNI.ta_subscriptionId": counter.ta_subscriptionId + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "ta_subscriptionId" : 0
+            }
+        }
+        var MeasTaSubscription = {
+            "subscriptionId" : "MeasTaSubscription"+(counter.ta_subscriptionId + 1).toString(),
+            "MeasTaSubscription" : myobj['MeasTaSubscription']
+        };
+        self.commonInstance.commonPOST(MeasTaSubscription,"RNI_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    MeasTaSubscription: res[0]['MeasTaSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.MeasTa_subscriptionsGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -1096,10 +1651,97 @@ ApiActions.prototype.MeasTa_subscriptionsGET = function (req, callback) {
     });
 };
 
+ApiActions.prototype.MeasTa_subscriptionsPUT = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "MeasTaSubscription" : myobj['MeasTaSubscription']
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "RNI_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                "MeasTaSubscription" : myobj['MeasTaSubscription']
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
+ApiActions.prototype.MeasRepUe_subscriptionsPOST = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "meas_rep_ue_subscriptionId" : 0
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('RNI')){
+            var counter = (resp1[0]["RNI"]);
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"RNI.meas_rep_ue_subscriptionId": counter.meas_rep_ue_subscriptionId + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "meas_rep_ue_subscriptionId" : 0
+            }
+        }
+        var MeasRepUeSubscription = {
+            "subscriptionId" : "MeasRepUeSubscription"+(counter.meas_rep_ue_subscriptionId + 1).toString(),
+            "MeasRepUeSubscription" : myobj['MeasRepUeSubscription']
+        };
+        self.commonInstance.commonPOST(MeasRepUeSubscription,"RNI_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    MeasRepUeSubscription: res[0]['MeasRepUeSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.MeasRepUe_subscriptionsGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -1138,10 +1780,97 @@ ApiActions.prototype.MeasRepUe_subscriptionsGET = function (req, callback) {
     });
 };
 
+ApiActions.prototype.MeasRepUeReport_subscriptionsPUT = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "MeasRepUeSubscription" : myobj['MeasRepUeSubscription']
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "RNI_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                "MeasRepUeSubscription" : myobj['MeasRepUeSubscription']
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
+ApiActions.prototype.RabEstSubscription_subscriptionsPOST = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "rab_est_subscriptionId" : 0
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('RNI')){
+            var counter = (resp1[0]["RNI"]);
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"RNI.rab_est_subscriptionId": counter.rab_est_subscriptionId + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "rab_est_subscriptionId" : 0
+            }
+        }
+        var RabEstSubscription = {
+            "subscriptionId" : "RabEstSubscription"+(counter.rab_est_subscriptionId + 1).toString(),
+            "RabEstSubscription" : myobj['RabEstSubscription']
+        };
+        self.commonInstance.commonPOST(RabEstSubscription,"RNI_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    RabEstSubscription: res[0]['RabEstSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.RabEstSubscription_subscriptionsGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -1180,10 +1909,97 @@ ApiActions.prototype.RabEstSubscription_subscriptionsGET = function (req, callba
     });
 };
 
+ApiActions.prototype.RabEstSubscription_subscriptionsPUT = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "RabEstSubscription" : myobj['RabEstSubscription']
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "RNI_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                "RabEstSubscription" : myobj['RabEstSubscription']
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
+ApiActions.prototype.RabModSubscription_subscriptionsPOST = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "rab_mod_subscriptionId" : 0
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('RNI')){
+            var counter = (resp1[0]["RNI"]);
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"RNI.rab_mod_subscriptionId": counter.rab_mod_subscriptionId + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "rab_mod_subscriptionId" : 0
+            }
+        }
+        var RabModSubscription = {
+            "subscriptionId" : "RabModSubscription"+(counter.rab_mod_subscriptionId + 1).toString(),
+            "RabModSubscription" : myobj['RabModSubscription']
+        };
+        self.commonInstance.commonPOST(RabModSubscription,"RNI_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    RabModSubscription: res[0]['RabModSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.RabModSubscription_subscriptionsGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     console.log("Actions");
 
@@ -1222,10 +2038,97 @@ ApiActions.prototype.RabModSubscription_subscriptionsGET = function (req, callba
     });
 };
 
+ApiActions.prototype.RabModSubscription_subscriptionsPUT = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "RabModSubscription" : myobj['RabModSubscription']
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "RNI_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                "RabModSubscription" : myobj['RabModSubscription']
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
+ApiActions.prototype.RabRelSubscription_subscriptionsPOST = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "rab_rel_subscriptionId" : 0
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('RNI')){
+            var counter = (resp1[0]["RNI"]);
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"RNI.rab_rel_subscriptionId": counter.rab_rel_subscriptionId + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "rab_rel_subscriptionId" : 0
+            }
+        }
+        var RabRelSubscription = {
+            "subscriptionId" : "RabRelSubscription"+(counter.rab_rel_subscriptionId + 1).toString(),
+            "RabRelSubscription" : myobj['RabRelSubscription']
+        };
+        self.commonInstance.commonPOST(RabRelSubscription,"RNI_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    RabRelSubscription: res[0]['RabRelSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.RabRelSubscription_subscriptionsGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -1264,10 +2167,97 @@ ApiActions.prototype.RabRelSubscription_subscriptionsGET = function (req, callba
     });
 };
 
+ApiActions.prototype.RabRelSubscription_subscriptionsPUT = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "RabRelSubscription" : myobj['RabRelSubscription']
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "RNI_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                "RabRelSubscription" : myobj['RabRelSubscription']
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
+ApiActions.prototype.CaReConfSubscription_subscriptionsPOST = function (req, callback) {
+
+    var self = this;
+
+    var myobj = req.body;
+
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err){
+            var counter = {
+                "ca_reconf_subscriptionId" : 0
+            }
+        }
+        else if(resp1.length > 0 && resp1[0].hasOwnProperty('RNI')){
+            var counter = (resp1[0]["RNI"]);
+            var criteria={
+                condition:{ },
+                options:{
+                    multi:false,
+                    upsert:false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set:{"RNI.ca_reconf_subscriptionId": counter.ca_reconf_subscriptionId + 1}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else{
+            var counter = {
+                "ca_reconf_subscriptionId" : 0
+            }
+        }
+        var CaReConfSubscription = {
+            "subscriptionId" : "CaReConfSubscription"+(counter.ca_reconf_subscriptionId + 1).toString(),
+            "CaReConfSubscription" : myobj['CaReConfSubscription']
+        };
+        self.commonInstance.commonPOST(CaReConfSubscription,"RNI_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    CaReConfSubscription: res[0]['CaReConfSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
 ApiActions.prototype.CaReConfSubscription_subscriptionsGET = function (req, callback) {
 
     var self = this;
-    var app = this.app;
 
     // console.log("Actions");
 
@@ -1303,5 +2293,39 @@ ApiActions.prototype.CaReConfSubscription_subscriptionsGET = function (req, call
             };
             callback(null,result)
         };
+    });
+};
+
+ApiActions.prototype.CaReConfSubscription_subscriptionsPUT = function (req, callback) {
+
+    var self = this;
+
+    var subscriptionId = req.params.subscriptionId;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "subscriptionId" : subscriptionId
+        },
+        value:{
+            "CaReConfSubscription" : myobj['CaReConfSubscription']
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "RNI_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            var result = {
+                statuscode:200,
+                "CaReConfSubscription" : myobj['CaReConfSubscription']
+            };
+            callback(err,result);
+        }
+        else{
+            callback(err,'updateError');
+        }
     });
 };

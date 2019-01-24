@@ -1357,13 +1357,11 @@ RNIservice.prototype.RabRel_subscriptionsSubscrIdDELETE = function (req,callback
     })
 };
 
-
 RNIservice.prototype.SubscriptionLinkList_subscriptions_cr_GET = function (req,callback) {
 
     console.log("RNI Method40");
     callback(null,"DONE SubscriptionLinkList_subscriptions_cr_GET");
 };
-
 
 RNIservice.prototype.CaReConfSubscription_subscriptionsPOST = function (req,callback) {
 
