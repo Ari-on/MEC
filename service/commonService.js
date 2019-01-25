@@ -67,3 +67,19 @@ commonService.prototype.commonUpdate = function(condition,updation,collectionNam
 
     });
 };
+
+commonService.prototype.commonDelete = function(condition,collectionName,callback) {
+
+    console.log("This is commonDelete method!!!");
+    var self = this;
+    var db = self.app.db;
+    var collection = db.collection(collectionName);
+
+    collection.removeOne(condition, function(err, resp) {
+        if (resp) {
+            callback(err, 'deleted')
+        } else {
+            callback(err, "Error while Deleting")
+        }
+    });
+};

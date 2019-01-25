@@ -179,7 +179,11 @@ UIRoutes.prototype.init = function() {
 
     app.patch("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        self.seviceInstance.bw_allocationsAllocationIdPATCH(req, function (err, result) {
+        // self.seviceInstance.bw_allocationsAllocationIdPATCH(req, function (err, result) {
+        //     res.status(200).send(result);
+        // })
+
+        self.ActionInstance.bw_allocationsAllocationIdPATCH(req, function (err, result) {
             res.status(200).send(result);
         })
     });
@@ -197,7 +201,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/bwm/v1/bw_allocations/:allocationID",function (req,res) {
 
-        self.seviceInstance.bw_allocationsAllocationIdDELETE(req, function (err, result) {
+        // self.seviceInstance.bw_allocationsAllocationIdDELETE(req, function (err, result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.bw_allocationsAllocationIdDELETE(req, function (err, result) {
             res.status(204).send(result);
         })
     });
@@ -236,7 +244,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/mx2/v1/app_contexts/:contextID",function (req,res) {
 
-        self.AppserviceInstance.app_contextsContextIdDELETE(req, function (err, result) {
+        // self.AppserviceInstance.app_contextsContextIdDELETE(req, function (err, result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.app_contextsContextIdDELETE(req, function (err, result) {
             res.status(204).send(result);
         })
     });
@@ -307,8 +319,12 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/exampleAPI/mp1/v1/applications/:appInstId/subscriptions/:subType/:subId",function (req,res) {
 
-        self.Mp1serviceInstance.ApplicationsSubscription_DELETE(req, function (err, result) {
-            res.send(result);
+        // self.Mp1serviceInstance.ApplicationsSubscription_DELETE(req, function (err, result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.ApplicationsSubscription_DELETE(req, function (err, result) {
+            res.status(204).send(result);
         })
     });
 
@@ -478,7 +494,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/exampleAPI/location/v1/subscriptions/zonalTraffic/:subscriptionId",function (req,res) {
 
-        self.LocationServiceInstance.zonalTrafficSubDelById(req, function (err,result) {
+        // self.LocationServiceInstance.zonalTrafficSubDelById(req, function (err,result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelById(req, function (err,result) {
             res.status(204).send(result);
         })
     });
@@ -521,7 +541,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/exampleAPI/location/v1/subscriptions/userTracking/:subscriptionId",function (req,res) {
 
-        self.LocationServiceInstance.userTrackingSubDelById(req, function (err,result) {
+        // self.LocationServiceInstance.userTrackingSubDelById(req, function (err,result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelById(req, function (err,result) {
             res.status(204).send(result);
         })
     });
@@ -564,7 +588,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/exampleAPI/location/v1/subscriptions/zoneStatus/:subscriptionId",function (req,res) {
 
-        self.LocationServiceInstance.zoneStatusDelById(req, function (err,result) {
+        // self.LocationServiceInstance.zoneStatusDelById(req, function (err,result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelById(req, function (err,result) {
             res.status(204).send(result);
         })
     });
@@ -763,7 +791,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/rni/v1/subscriptions/cell_change/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.CellChange_subscriptionsSubscrIdDELETE(req, function (err, result) {
+        // self.RNIserviceInstance.CellChange_subscriptionsSubscrIdDELETE(req, function (err, result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelfrRNI(req, function (err, result) {
             res.status(204).send(result);
         })
 
@@ -872,7 +904,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/rni/v1/subscriptions/s1_bearer/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.S1Bearer_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        // self.RNIserviceInstance.S1Bearer_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelfrRNI(req, function (err, result) {
             res.status(204).send(result);
         })
     });
@@ -979,7 +1015,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/rni/v1/subscriptions/ta/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.MeasTa_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        // self.RNIserviceInstance.MeasTa_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelfrRNI(req, function (err, result) {
             res.status(204).send(result);
         })
     });
@@ -1086,7 +1126,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/rni/v1/subscriptions/meas_rep_ue/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.MeasRepUe_subscriptionsSubscrIdDELETE(req, function (err, result) {
+        // self.RNIserviceInstance.MeasRepUe_subscriptionsSubscrIdDELETE(req, function (err, result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelfrRNI(req, function (err, result) {
             res.status(204).send(result);
         })
 
@@ -1194,7 +1238,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/rni/v1/subscriptions/rab_est/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.RabEst_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        // self.RNIserviceInstance.RabEst_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelfrRNI(req, function (err, result) {
             res.status(204).send(result);
         })
     });
@@ -1302,7 +1350,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/rni/v1/subscriptions/rab_mod/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.RabMod_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        // self.RNIserviceInstance.RabMod_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelfrRNI(req, function (err, result) {
             res.status(204).send(result);
         })
     });
@@ -1374,7 +1426,7 @@ UIRoutes.prototype.init = function() {
                 }
             })
         }
-    });
+});
 
     app.get("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
 
@@ -1410,7 +1462,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/rni/v1/subscriptions/rab_rel/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.RabRel_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        // self.RNIserviceInstance.RabRel_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelfrRNI(req, function (err, result) {
             res.status(204).send(result);
         })
     });
@@ -1518,7 +1574,11 @@ UIRoutes.prototype.init = function() {
 
     app.delete("/rni/v1/subscriptions/ca_reconf/:subscriptionId",function (req,res) {
 
-        self.RNIserviceInstance.CaReConf_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        // self.RNIserviceInstance.CaReConf_subscriptionsSubscrIdDELETE(req, function (err,result) {
+        //     res.status(204).send(result);
+        // })
+
+        self.ActionInstance.commonDelfrRNI(req, function (err, result) {
             res.status(204).send(result);
         })
     });

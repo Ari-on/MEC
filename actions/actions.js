@@ -133,6 +133,47 @@ ApiActions.prototype.bw_allocationsAllocationIdGET = function (req, callback) {
 
 };
 
+ApiActions.prototype.bw_allocationsAllocationIdPATCH = function (req, callback) {
+
+    var self = this;
+
+    var allocationId = req.params.allocationID;
+    var myobj = req.body;
+
+    var criteria={
+        condition:{
+            "allocationId" : allocationId
+        },
+        value:{
+            "bwInfo.fixedBWPriority" : myobj.fixedBWPriority,
+            "bwInfo.allocationDirection" : myobj.allocationDirection,
+            "bwInfo.appInsId" : myobj.appInsId,
+            "bwInfo.sessionFilter" : myobj.sessionFilter,
+            "bwInfo.requestType" : myobj.requestType,
+            "bwInfo.fixedAllocation" : myobj.fixedAllocation
+        },
+        options:{
+            multi:false,
+            upsert:false
+        }
+    };
+
+    self.commonInstance.commonUpdate(criteria.condition, {$set:criteria.value}, "BWM_API_swagger", function (err, resp) {
+        if(resp['n'] != 0){
+            self.commonInstance.commonGET(criteria.condition,"BWM_API_swagger", function (err, res) {
+                var result = {
+                    statuscode:200,
+                    bwInfo: res[0]['bwInfo']
+                };
+                callback(err,result);
+            });
+        }
+        else{
+            callback(err,'updateError');
+        }
+    });
+};
+
 ApiActions.prototype.bw_allocationsAllocationIdPUT = function (req, callback) {
 
     var self = this;
@@ -165,6 +206,24 @@ ApiActions.prototype.bw_allocationsAllocationIdPUT = function (req, callback) {
             callback(err,'updateError');
         }
     });
+};
+
+ApiActions.prototype.bw_allocationsAllocationIdDELETE = function (req, callback) {
+
+    var self = this;
+
+    var myquery = {
+        allocationId : req.params.allocationID
+    };
+
+    self.commonInstance.commonDelete(myquery,"BWM_API_swagger", function (err, resp) {
+        if (resp) {
+            callback(err, 'deleted')
+        } else {
+            callback(err, "Error while Deleting")
+        }
+    })
+
 };
 
 ApiActions.prototype.app_listGET = function (req, callback) {
@@ -246,6 +305,24 @@ ApiActions.prototype.app_contextsContextIdPUT = function (req, callback) {
             callback(err,'updateError');
         }
     });
+};
+
+ApiActions.prototype.app_contextsContextIdDELETE = function (req, callback) {
+
+    var self = this;
+
+    var myquery = {
+        "AppContext.contextId" : req.params.contextID
+    };
+
+    self.commonInstance.commonDelete(myquery,"UE_Application_Interface_API_swagger", function (err, resp) {
+        if (resp) {
+            callback(err, 'deleted')
+        } else {
+            callback(err, "Error while Deleting")
+        }
+    })
+
 };
 
 ApiActions.prototype.appInstanceIdUe_identity_tag_infoGET = function (req, callback) {
@@ -353,22 +430,73 @@ ApiActions.prototype.ApplicationsSubscriptions_POST = function (req, callback) {
 
     var myobj = req.body;
 
-    var AppTerminationNotificationSubscription = {
-        "AppTerminationNotificationSubscription" : myobj
+    self.commonInstance.commonGET({},"counter", function (err, resp1) {
+        if (err) {
+            var counter = {
+                "subscriptionId": 0,
+            }
+        }
+        else if (resp1.length > 0 && resp1[0].hasOwnProperty('MP1')) {
+            var counter = (resp1[0]["MP1"]);
+            var criteria = {
+                condition: { },
+                value: { },
+                options: {
+                    multi: false,
+                    upsert: false
+                }
+            };
+            self.commonInstance.commonUpdate(criteria.condition, {$set: {"MP1.subscriptionId": (counter.subscriptionId + 1)}}, "counter", function (err, resp) {
+                if (resp){
+                    console.log("counter Updated");
+                }
+                else if(err){
+                    console.log("counter Update Error")
+                }
+            })
+        }
+        else {
+            var counter = {
+                "subscriptionId": 0
+            }
+        }
+        var AppTerminationNotificationSubscription = {
+            "subscriptionId": "subscriptionId"+(counter.subscriptionId + 1).toString(),
+            "AppTerminationNotificationSubscription" : myobj
+        };
+
+        self.commonInstance.commonPOST(AppTerminationNotificationSubscription,"Mp1_API_swagger", function (err, res) {
+            if(res){
+                var result = {
+                    statuscode:201,
+                    AppTerminationNotificationSubscription: res[0]['AppTerminationNotificationSubscription']
+                };
+                callback(err,result);
+            }
+            else{
+                callback(err,'inserterror');
+            }
+        });
+    });
+};
+
+ApiActions.prototype.ApplicationsSubscription_DELETE = function (req, callback) {
+
+    var self = this;
+
+    var myquery = {
+        "AppTerminationNotificationSubscription.subscriptionType" : req.params.subType,
+        "subscriptionId":req.params.subId
     };
 
-    self.commonInstance.commonPOST(AppTerminationNotificationSubscription,"Mp1_API_swagger", function (err, res) {
-        if(res){
-            var result = {
-                statuscode:201,
-                AppTerminationNotificationSubscription: res[0]['AppTerminationNotificationSubscription']
-            };
-            callback(err,result);
+    self.commonInstance.commonDelete(myquery,"Mp1_API_swagger", function (err, resp) {
+        if (resp) {
+            callback(err, 'deleted')
+        } else {
+            callback(err, "Error while Deleting")
         }
-        else{
-            callback(err,'inserterror');
-        }
-    });
+    })
+
 };
 
 ApiActions.prototype.Services_POST = function (req, callback) {
@@ -387,15 +515,13 @@ ApiActions.prototype.Services_POST = function (req, callback) {
             var counter = (resp1[0]["MP1"]);
             var criteria = {
                 condition: {},
-                value: {
-                    "serviceId": (counter.serviceId + 1)
-                },
+                value: { },
                 options: {
                     multi: false,
                     upsert: false
                 }
             };
-            self.commonInstance.commonUpdate(criteria.condition, {$set: {MP1: criteria.value}}, "counter", function (err, resp) {
+            self.commonInstance.commonUpdate(criteria.condition, {$set: {"MP1.serviceId": (counter.serviceId + 1)}}, "counter", function (err, resp) {
                 if (resp){
                     console.log("counter Updated");
                 }
@@ -410,7 +536,7 @@ ApiActions.prototype.Services_POST = function (req, callback) {
             }
         }
         var ServiceInfo = {
-            "serviceId": (counter.serviceId + 1).toString(),
+            "serviceId": "serviceId"+(counter.serviceId + 1).toString(),
             "ServiceInfo": myobj
         };
 
@@ -970,6 +1096,7 @@ ApiActions.prototype.zonalTrafficSubPutById = function (req, callback) {
     });
 };
 
+
 ApiActions.prototype.userTrackingSubGet = function (req, callback) {
 
     var self = this;
@@ -1252,6 +1379,24 @@ ApiActions.prototype.zoneStatusPutById = function (req, callback) {
             callback(err,'updateError');
         }
     });
+};
+
+ApiActions.prototype.commonDelById = function (req, callback) {
+
+    var self = this;
+
+    var myquery = {
+        "subscriptionId":req.params.subscriptionId
+    };
+
+    self.commonInstance.commonDelete(myquery,"Location_API_swagger", function (err, resp) {
+        if (resp) {
+            callback(err, 'deleted')
+        } else {
+            callback(err, "Error while Deleting")
+        }
+    })
+
 };
 
 ApiActions.prototype.plmn_infoGET = function (req, callback) {
@@ -2328,4 +2473,22 @@ ApiActions.prototype.CaReConfSubscription_subscriptionsPUT = function (req, call
             callback(err,'updateError');
         }
     });
+};
+
+ApiActions.prototype.commonDelfrRNI = function (req, callback) {
+
+    var self = this;
+
+    var myquery = {
+        "subscriptionId":req.params.subscriptionId
+    };
+
+    self.commonInstance.commonDelete(myquery,"RNI_API_swagger", function (err, resp) {
+        if (resp) {
+            callback(err, 'deleted')
+        } else {
+            callback(err, "Error while Deleting")
+        }
+    })
+
 };
