@@ -1,0 +1,1 @@
+bwInfo.fixedBWPriority,bwInfo.allocationDirection,bwInfo.appInsId,bwInfo.sessionFilter_SourcePort,bwInfo.sessionFilter_DstAddress,bwInfo.sessionFilter_DstPort,bwInfo.sessionFilter_Protocol,bwInfo.sessionFilter_SourceIp,bwInfo.requestType,bwInfo.timeStamp.seconds,bwInfo.timeStamp.nanoSeconds,bwInfo.fixedAllocation
