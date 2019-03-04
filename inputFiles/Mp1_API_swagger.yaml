@@ -1,0 +1,2330 @@
+---
+swagger: "2.0"
+info:
+  description: "The ETSI MEC ISG MEC011 Application Enablement API described using\
+    \ OpenAPI"
+  version: "1.1.1"
+  title: "Mp1 API"
+  license:
+    name: "ETSI Forge copyright notice"
+    url: "https://forge.etsi.org/etsi-forge-copyright-notice.txt"
+host: "127.0.0.1:8081"
+basePath: "/exampleAPI/mp1/v1/"
+schemes:
+- "http"
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /applications/{appInstanceId}/dns_rules:
+    get:
+      description: "This method retrieves information about all the DNS rules associated\
+        \ with a mobile edge application instance."
+      operationId: "ApplicationsDnsRules.GET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appInstanceId"
+        in: "path"
+        description: "Represents a mobile edge application instance. Note that the\
+          \ appInstanceId is allocated by the mobile edge platform manager."
+        required: true
+        type: "string"
+        format: "uri"
+      responses:
+        200:
+          description: "It is used to indicate nonspecific success. The response body\
+            \ contains a representation of the resource."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/inline_response_200"
+          examples:
+            application/json:
+              DnsRule:
+                dnsRuleId: "DnsRule1"
+                domainName: "www.example.com"
+                ipAddressType: "IP_V4"
+                ipAddress: "146.241.7.3"
+                ttl: 300
+                state: "ACTIVE"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /applications/{appInstanceId}/dns_rules/{dnsRuleId}:
+    get:
+      description: "This method retrieves information about a DNS rule associated\
+        \ with a mobile edge application instance."
+      operationId: "ApplicationsDnsRule.GET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appInstanceId"
+        in: "path"
+        description: "Represents a mobile edge application instance. Note that the\
+          \ appInstanceId is allocated by the mobile edge platform manager."
+        required: true
+        type: "string"
+        format: "uri"
+      - name: "dnsRuleId"
+        in: "path"
+        description: "Represents a DNS rule."
+        required: true
+        type: "string"
+        format: "uri"
+      responses:
+        200:
+          description: "It is used to indicate nonspecific success. The response body\
+            \ contains a representation of the resource."
+          schema:
+            $ref: "#/definitions/inline_response_200"
+          examples:
+            application/json:
+              DnsRule:
+                dnsRuleId: "DnsRule1"
+                domainName: "www.example.com"
+                ipAddressType: "IP_V4"
+                ipAddress: "146.241.7.3"
+                ttl: 300
+                state: "ACTIVE"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+    put:
+      description: "This method activates, de-activates or updates a traffic rule."
+      operationId: "ApplicationsDnsRule.PUT"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appInstanceId"
+        in: "path"
+        description: "Represents a mobile edge application instance. Note that the\
+          \ appInstanceId is allocated by the mobile edge platform manager."
+        required: true
+        type: "string"
+        format: "uri"
+      - name: "dnsRuleId"
+        in: "path"
+        description: "Represents a DNS rule."
+        required: true
+        type: "string"
+        format: "uri"
+      - in: "body"
+        name: "DnsRule"
+        description: "The updated state is included in the entity body of the request."
+        required: true
+        schema:
+          $ref: "#/definitions/DnsRule"
+      responses:
+        200:
+          description: "It is used to indicate nonspecific success. The response body\
+            \ contains a representation of the resource."
+          schema:
+            $ref: "#/definitions/inline_response_200"
+          examples:
+            application/json:
+              DnsRule:
+                dnsRuleId: "DnsRule1"
+                domainName: "www.example.com"
+                ipAddressType: "IP_V4"
+                ipAddress: "146.241.7.3"
+                ttl: 300
+                state: "ACTIVE"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        412:
+          description: "Precondition Failed"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /applications/{appInstanceId}/subscriptions:
+    get:
+      description: "The GET method may be used to request information about all subscriptions\
+        \ for this requestor. Upon success, the response contains entity body with\
+        \ all the subscriptions for the requestor."
+      operationId: "ApplicationsSubscriptions.GET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appInstanceId"
+        in: "path"
+        description: "Represents a mobile edge application instance. Note that the\
+          \ appInstanceId is allocated by the mobile edge platform manager."
+        required: true
+        type: "string"
+        format: "uri"
+      responses:
+        200:
+          description: "Upon success, a response body containing the list of links\
+            \ to the requested subscriptions is returned."
+          schema:
+            $ref: "#/definitions/inline_response_200_1"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+    post:
+      description: "The POST method may be used to create a new subscription. One\
+        \ example use case is to create a new subscription to the mobile edge service\
+        \ availability notifications. Upon success, the response contains entity body\
+        \ describing the created subscription."
+      operationId: "ApplicationsSubscriptions.POST"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appInstanceId"
+        in: "path"
+        description: "Represents a mobile edge application instance. Note that the\
+          \ appInstanceId is allocated by the mobile edge platform manager."
+        required: true
+        type: "string"
+        format: "uri"
+      - in: "body"
+        name: "AppTerminationNotificationSubscription"
+        description: "aaaaaaaaaaaaaaaaEntity body in the request contains a subscription to the mobile\
+          \ edge application termination notifications that is to be created."
+        required: true
+        schema:
+          $ref: "#/definitions/AppTerminationNotificationSubscription.Request"
+      responses:
+        201:
+          description: "Entity body in the request contains a subscription to the\
+            \ mobile edge service availability notifications that is to be created."
+          schema:
+            $ref: "#/definitions/inline_response_201"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /applications/{appInstanceId}/subscriptions/{subscriptionType}/{subscriptionId}:
+    get:
+      description: "The GET method requests information about a subscription for this\
+        \ requestor. Upon success, the response contains entity body with the subscription\
+        \ for the requestor."
+      operationId: "ApplicationsSubscription.GET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appInstanceId"
+        in: "path"
+        description: "Represents a mobile edge application instance. Note that the\
+          \ appInstanceId is allocated by the mobile edge platform manager."
+        required: true
+        type: "string"
+        format: "uri"
+      - name: "subscriptionType"
+        in: "path"
+        description: "Represents a subscription type to the notifications from the\
+          \ mobile edge platform."
+        required: true
+        type: "string"
+        format: "uri"
+      - name: "subscriptionId"
+        in: "path"
+        description: "Represents a subscription to the notifications from the mobile\
+          \ edge platform."
+        required: true
+        type: "string"
+        format: "uri"
+      responses:
+        200:
+          description: "Upon success, a response body containing the requested subscription\
+            \ is returned."
+          schema:
+            $ref: "#/definitions/inline_response_200_2"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+    delete:
+      description: "This method deletes a meMp1Subscription. This method is typically\
+        \ used in \"Unsubscribing from service availability event notifications\"\
+        \ procedure."
+      operationId: "ApplicationsSubscription.DELETE"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appInstanceId"
+        in: "path"
+        description: "Represents a mobile edge application instance. Note that the\
+          \ appInstanceId is allocated by the mobile edge platform manager."
+        required: true
+        type: "string"
+        format: "uri"
+      - name: "subscriptionType"
+        in: "path"
+        description: "Represents a subscription type to the notifications from the\
+          \ mobile edge platform."
+        required: true
+        type: "string"
+        format: "uri"
+      - name: "subscriptionId"
+        in: "path"
+        description: "Represents a subscription to the notifications from the mobile\
+          \ edge platform."
+        required: true
+        type: "string"
+        format: "uri"
+      responses:
+        204:
+          description: "No Content"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /applications/{appInstanceId}/traffic_rules:
+    get:
+      description: "This method retrieves information about all the traffic rules\
+        \ associated with a mobile edge application instance."
+      operationId: "ApplicationsTrafficRules.GET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appInstanceId"
+        in: "path"
+        description: "Represents a mobile edge application instance. Note that the\
+          \ appInstanceId is allocated by the mobile edge platform manager."
+        required: true
+        type: "string"
+        format: "uri"
+      responses:
+        200:
+          description: "It is used to indicate nonspecific success. The response body\
+            \ contains a representation of the resource."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/inline_response_200_3"
+          examples:
+            application/json:
+              TrafficRule:
+                trafficRuleId: "TrafficRule123"
+                serName: "ExampleService"
+                filterType: "FLOW"
+                priority: 1
+                trafficFilter:
+                  srcAddress:
+                  - "192.168.2.0/24"
+                  - "192.168.3.0/24"
+                  dstAddress:
+                  - "192.127.4.100/32"
+                  dstPort:
+                  - 80
+                action: "FORWARD_DECAPSULATED"
+                dstInterface:
+                  interfaceType: "IP"
+                  dstIpAddress: "20.1.1.1"
+                state: "ACTIVE"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /applications/{appInstanceId}/traffic_rules/{trafficRuleId}:
+    get:
+      description: "This method retrieves information about all the traffic rules\
+        \ associated with a mobile edge application instance."
+      operationId: "ApplicationsTrafficRule.GET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appInstanceId"
+        in: "path"
+        description: "Represents a mobile edge application instance. Note that the\
+          \ appInstanceId is allocated by the mobile edge platform manager."
+        required: true
+        type: "string"
+        format: "uri"
+      - name: "trafficRuleId"
+        in: "path"
+        description: "Represents a traffic rule."
+        required: true
+        type: "string"
+        format: "uri"
+      responses:
+        200:
+          description: "It is used to indicate nonspecific success. The response body\
+            \ contains a representation of the resource."
+          schema:
+            $ref: "#/definitions/inline_response_200_3"
+          examples:
+            application/json:
+              TrafficRule:
+                trafficRuleId: "TrafficRule123"
+                serName: "ExampleService"
+                filterType: "FLOW"
+                priority: 1
+                trafficFilter:
+                  srcAddress:
+                  - "192.168.2.0/24"
+                  - "192.168.3.0/24"
+                  dstAddress:
+                  - "192.127.4.100/32"
+                  dstPort:
+                  - 80
+                action: "FORWARD_DECAPSULATED"
+                dstInterface:
+                  interfaceType: "IP"
+                  dstIpAddress: "20.1.1.1"
+                state: "ACTIVE"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+    put:
+      description: "This method retrieves information about all the traffic rules\
+        \ associated with a mobile edge application instance."
+      operationId: "ApplicationsTrafficRules.PUT"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "appInstanceId"
+        in: "path"
+        description: "Represents a mobile edge application instance. Note that the\
+          \ appInstanceId is allocated by the mobile edge platform manager."
+        required: true
+        type: "string"
+        format: "uri"
+      - name: "trafficRuleId"
+        in: "path"
+        description: "Represents a traffic rule."
+        required: true
+        type: "string"
+        format: "uri"
+      - in: "body"
+        name: "TrafficRule"
+        description: "One or more updated attributes that are allowed to be changed"
+        required: true
+        schema:
+          $ref: "#/definitions/TrafficRule"
+      responses:
+        200:
+          description: "Upon success, a response body containing data type describing\
+            \ the updated TrafficRule is returned."
+          schema:
+            $ref: "#/definitions/inline_response_200_3"
+          examples:
+            application/json:
+              TrafficRule:
+                trafficRuleId: "TrafficRule123"
+                serName: "ExampleService"
+                filterType: "FLOW"
+                priority: 1
+                trafficFilter:
+                  srcAddress:
+                  - "192.168.2.0/24"
+                  - "192.168.3.0/24"
+                  dstAddress:
+                  - "192.127.4.100/32"
+                  dstPort:
+                  - 80
+                action: "FORWARD_DECAPSULATED"
+                dstInterface:
+                  interfaceType: "IP"
+                  dstIpAddress: "20.1.1.1"
+                state: "ACTIVE"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        412:
+          description: "Precondition Failed"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /services:
+    get:
+      description: "This method retrieves information about a list of meService resources.\
+        \ This method is typically used in \"service availability query\" procedure"
+      operationId: "Services.GET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "ser_instance_id"
+        in: "query"
+        description: "A mobile edge application instance may use multiple ser_instance_ids\
+          \ as an input parameter to query the availability of a list of mobile edge\
+          \ service instances. Either \"ser_instance_id\" or \"ser_name\" or \"ser_category_id\"\
+          \ or none of them shall be present."
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      - name: "ser_name"
+        in: "query"
+        description: "A mobile edge application instance may use multiple ser_names\
+          \ as an input parameter to query the availability of a list of mobile edge\
+          \ service instances. Either \"ser_instance_id\" or \"ser_name\" or \"ser_category_id\"\
+          \ or none of them shall be present."
+        required: false
+        type: "array"
+        items:
+          type: "string"
+        collectionFormat: "multi"
+      - name: "ser_category_id"
+        in: "query"
+        description: "A mobile edge application instance may use ser_category_id as\
+          \ an input parameter to query the availability of a list of mobile edge\
+          \ service instances in a serCategory. Either \"ser_instance_id\" or \"ser_name\"\
+          \ or \"ser_category_id\" or none of them shall be present."
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "It is used to indicate nonspecific success. The response body\
+            \ contains a representation of the resource."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/inline_response_200_4"
+          examples:
+            application/json:
+              ServiceInfo:
+                serInstanceId: "ServiceInstance123"
+                serName: "ExampleService"
+                serCategory:
+                  href: "catItem1"
+                  id: "id12345"
+                  name: "RNI"
+                  version: "version1"
+                version: "ServiceVersion1"
+                state: "ACTIVE"
+                transportId: "Rest1"
+                transportInfo:
+                  id: "TransId12345"
+                  name: "REST"
+                  description: "REST API"
+                  type: "JSON"
+                  protocol: "HTTP"
+                  version: "2.0"
+                  endpoint:
+                    uris:
+                    - "/meMp1/service/EntryPoint"
+                    addresses:
+                    - host: "192.0.2.0"
+                      port: "8080"
+                  security:
+                    oAuth2Info:
+                      grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+                      tokenEndpoint: "/meMp1/security/TokenEndPoint"
+                serializer: "JSON"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+    put:
+      description: "This method is used to create a meService resource. This method\
+        \ is typically used in \"service availability update and new service registration\"\
+        \ procedure"
+      operationId: "Services.POST"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "ServiceInfo"
+        description: "New ServiceInfo with updated \"state\" is included as entity\
+          \ body of the request"
+        required: true
+        schema:
+          $ref: "#/definitions/ServiceInfo"
+      responses:
+        201:
+          description: "Upon success, the HTTP response shall include a Location HTTP\
+            \ header that contains the resource URI of the created resource."
+          schema:
+            $ref: "#/definitions/inline_response_200_4"
+          examples:
+            application/json:
+              ServiceInfo:
+                serInstanceId: "ServiceInstance123"
+                serName: "ExampleService"
+                serCategory:
+                  href: "catItem1"
+                  id: "id12345"
+                  name: "RNI"
+                  version: "version1"
+                version: "ServiceVersion1"
+                state: "ACTIVE"
+                transportId: "Rest1"
+                transportInfo:
+                  id: "TransId12345"
+                  name: "REST"
+                  description: "REST API"
+                  type: "JSON"
+                  protocol: "HTTP"
+                  version: "2.0"
+                  endpoint:
+                    uris:
+                    - "/meMp1/service/EntryPoint"
+                    addresses:
+                    - host: "192.0.2.0"
+                      port: "8080"
+                  security:
+                    oAuth2Info:
+                      grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+                      tokenEndpoint: "/meMp1/security/TokenEndPoint"
+                serializer: "JSON"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /services/{serviceId}:
+    get:
+      description: "This method retrieves information about a meService resource.\
+        \ This method is typically used in \"service availability query\" procedure"
+      operationId: "ServicesServiceId.GET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "Represents a mobile edge service instance."
+        required: true
+        type: "string"
+        format: "uri"
+      responses:
+        200:
+          description: "It is used to indicate nonspecific success. The response body\
+            \ contains a representation of the resource."
+          schema:
+            $ref: "#/definitions/inline_response_200_4"
+          examples:
+            application/json:
+              ServiceInfo:
+                serInstanceId: "ServiceInstance123"
+                serName: "ExampleService"
+                serCategory:
+                  href: "catItem1"
+                  id: "id12345"
+                  name: "RNI"
+                  version: "version1"
+                version: "ServiceVersion1"
+                state: "ACTIVE"
+                transportId: "Rest1"
+                transportInfo:
+                  id: "TransId12345"
+                  name: "REST"
+                  description: "REST API"
+                  type: "JSON"
+                  protocol: "HTTP"
+                  version: "2.0"
+                  endpoint:
+                    uris:
+                    - "/meMp1/service/EntryPoint"
+                    addresses:
+                    - host: "192.0.2.0"
+                      port: "8080"
+                  security:
+                    oAuth2Info:
+                      grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+                      tokenEndpoint: "/meMp1/security/TokenEndPoint"
+                serializer: "JSON"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+    put:
+      description: "This method updates the information about a meService resource"
+      operationId: "ServicesServiceId.PUT"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "serviceId"
+        in: "path"
+        description: "Represents a mobile edge service instance."
+        required: true
+        type: "string"
+        format: "uri"
+      - in: "body"
+        name: "ServiceInfo"
+        description: "@@@@@@@@@@@@@@@@@New ServiceInfo with updated \"state\" is included as entity\
+          \ body of the request"
+        required: true
+        schema:
+          $ref: "#/definitions/ServiceInfo"
+      responses:
+        200:
+          description: "Upon success, a response body containing data type describing\
+            \ the updated ServiceInfo is returned"
+          schema:
+            $ref: "#/definitions/inline_response_200_4"
+          examples:
+            application/json:
+              ServiceInfo:
+                serInstanceId: "ServiceInstance123"
+                serName: "ExampleService"
+                serCategory:
+                  href: "catItem1"
+                  id: "id12345"
+                  name: "RNI"
+                  version: "version1"
+                version: "ServiceVersion1"
+                state: "ACTIVE"
+                transportId: "Rest1"
+                transportInfo:
+                  id: "TransId12345"
+                  name: "REST"
+                  description: "REST API"
+                  type: "JSON"
+                  protocol: "HTTP"
+                  version: "2.0"
+                  endpoint:
+                    uris:
+                    - "/meMp1/service/EntryPoint"
+                    addresses:
+                    - host: "192.0.2.0"
+                      port: "8080"
+                  security:
+                    oAuth2Info:
+                      grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+                      tokenEndpoint: "/meMp1/security/TokenEndPoint"
+                serializer: "JSON"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        412:
+          description: "Precondition Failed"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /timing/current_time:
+    get:
+      description: "This method retrieves the information of the platform's current\
+        \ time which corresponds to the get platform time procedure"
+      operationId: "TimingCurrentTime.GET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "It is used to indicate nonspecific success. The response body\
+            \ contains a representation of the resource."
+          schema:
+            $ref: "#/definitions/inline_response_200_5"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /timing/timing_caps:
+    get:
+      description: "This method retrieves the information of the platform's timing\
+        \ capabilities which corresponds to the timing capabilities query"
+      operationId: "TimingCaps.GET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "It is used to indicate nonspecific success. The response body\
+            \ contains a representation of the resource."
+          schema:
+            $ref: "#/definitions/inline_response_200_6"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+  /transports:
+    get:
+      description: "This method retrieves information about a list of available transports.\
+        \ This method is typically used by a service-producing application to discover\
+        \ transports provided by the mobile edge platform in the \"transport information\
+        \ query\" procedure"
+      operationId: "Transports.GET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        200:
+          description: "It is used to indicate nonspecific success. The response body\
+            \ contains a representation of the resource."
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/inline_response_200_7"
+        400:
+          description: "Bad Request"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        403:
+          description: "Forbidden"
+          schema:
+            $ref: "#/definitions/inline_response_403"
+        404:
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+      x-swagger-router-controller: "Default"
+definitions:
+  AppTerminationNotification.MaxGracefulTimeout:
+    type: "string"
+    format: "uint32"
+    description: "Maximum timeout value in seconds for graceful termination or graceful\
+      \ stop of an application instance."
+    example: 10
+  AppTerminationNotification.NotificationType:
+    type: "string"
+    description: "Shall be set to AppTerminationNotification."
+    example: "AppTerminationNotification"
+  AppTerminationNotification:
+    type: "object"
+    required:
+    - "_links"
+    - "maxGracefulTimeout"
+    - "notificationType"
+    properties:
+      notificationType:
+        $ref: "#/definitions/AppTerminationNotification.NotificationType"
+      maxGracefulTimeout:
+        $ref: "#/definitions/AppTerminationNotification.MaxGracefulTimeout"
+      _links:
+        $ref: "#/definitions/Subscription"
+    description: "This type represents the information that the mobile edge platform\
+      \ notifies the subscribed application instance about  the corresponding application\
+      \ instance termination/stop."
+  AppTerminationNotificationSubscription.AppInstanceId:
+    type: "string"
+    description: "It is used as the filtering criterion for the subscribed events."
+    example: "ID1"
+  AppTerminationNotificationSubscription.CallbackReference:
+    type: "string"
+    format: "uri"
+    description: "URI selected by the mobile edge application instance to receive\
+      \ notifications on the subscribed mobile edge application instance management\
+      \ information. This shall be included in both the request and the response."
+  AppTerminationNotificationSubscription.Request:
+    type: "object"
+    required:
+    - "appInstanceId"
+    - "callbackReference"
+    - "subscriptionType"
+    properties:
+      subscriptionType:
+        $ref: "#/definitions/AppTerminationNotificationSubscription.SubscriptionType"
+      callbackReference:
+        $ref: "#/definitions/AppTerminationNotificationSubscription.CallbackReference"
+      appInstanceId:
+        $ref: "#/definitions/AppTerminationNotificationSubscription.AppInstanceId"
+    description: "This type represents the information that the mobile edge platform\
+      \ notifies the subscribed application instance about  the corresponding application\
+      \ instance termination/stop."
+    example:
+      appInstanceId: "ID1"
+      subscriptionType: "AppTerminationNotificationSubscription"
+      callbackReference: {}
+  AppTerminationNotificationSubscription.Response:
+    type: "object"
+    required:
+    - "_links"
+    - "appInstanceId"
+    - "callbackReference"
+    - "subscriptionType"
+    properties:
+      subscriptionType:
+        $ref: "#/definitions/AppTerminationNotificationSubscription.SubscriptionType"
+      callbackReference:
+        $ref: "#/definitions/AppTerminationNotificationSubscription.CallbackReference"
+      _links:
+        $ref: "#/definitions/Self"
+      appInstanceId:
+        $ref: "#/definitions/AppTerminationNotificationSubscription.AppInstanceId"
+    description: "This type represents the information that the mobile edge platform\
+      \ notifies the subscribed application instance about  the corresponding application\
+      \ instance termination/stop."
+    example:
+      appInstanceId: "ID1"
+      subscriptionType: "AppTerminationNotificationSubscription"
+      _links:
+        self: "/meMp1/example"
+      callbackReference: {}
+  AppTerminationNotificationSubscription.SubscriptionType:
+    type: "string"
+    description: "Shall be set to AppTerminationNotificationSubscription."
+    example: "AppTerminationNotificationSubscription"
+  CategoryRef.Href:
+    type: "string"
+    description: "Reference of the catalogue"
+    example: "catItem1"
+  CategoryRef.Id:
+    type: "string"
+    description: "Unique identifier of the category"
+    example: "id12345"
+  CategoryRef.Name:
+    type: "string"
+    description: "Name of the category"
+    example: "RNI"
+  CategoryRef.Version:
+    type: "string"
+    description: "Category version"
+    example: "version1"
+  CategoryRef:
+    type: "object"
+    required:
+    - "href"
+    - "id"
+    - "name"
+    - "version"
+    properties:
+      href:
+        $ref: "#/definitions/CategoryRef.Href"
+      id:
+        $ref: "#/definitions/CategoryRef.Id"
+      name:
+        $ref: "#/definitions/CategoryRef.Name"
+      version:
+        $ref: "#/definitions/CategoryRef.Version"
+    description: "This type represents the category reference"
+    example:
+      name: "RNI"
+      href: "catItem1"
+      id: "id12345"
+      version: "version1"
+  CurrentTime:
+    type: "object"
+    required:
+    - "nanoSeconds"
+    - "seconds"
+    - "timeSourceStatus"
+    properties:
+      seconds:
+        type: "integer"
+        format: "uint32"
+        example: 1577836800
+        description: "The seconds part of the time. Time is defined as Unix-time since\
+          \ January 1, 1970, 00:00:00 UTC"
+      nanoSeconds:
+        type: "integer"
+        format: "uint32"
+        example: 0
+        description: "The nanoseconds part of the time. Time is defined as Unix-time\
+          \ since January 1, 1970, 00:00:00 UTC"
+      timeSourceStatus:
+        type: "string"
+        example: "TRACEABLE"
+        description: "Platform Time Source status. 1 = TRACEABLE - time source is\
+          \ locked to the UTC time source. 2 = NONTRACEABLE - time source is not locked\
+          \ to the UTC time source"
+        enum:
+        - "TRACEABLE"
+        - "NONTRACEABLE"
+    description: "This type represents the information provided by the mobile edge\
+      \ platform in response to the Get Platform Time Request message."
+    example:
+      seconds: 1577836800
+      nanoSeconds: 0
+      timeSourceStatus: "TRACEABLE"
+  DestinationInterface.InterfaceType:
+    type: "string"
+    description: "Type of the interface"
+    example: "TUNNEL"
+    enum:
+    - "TUNNEL"
+    - "MAC"
+    - "IP"
+  DestinationInterface.IpAddress:
+    type: "string"
+    description: "IP address of the remote destination"
+    example: "192.0.2.0"
+  DestinationInterface.MacAddress:
+    type: "string"
+    description: "Source address identifies the MAC address of the interface"
+    example: "02-00-00-00-00-00"
+  DestinationInterface:
+    type: "object"
+    required:
+    - "interfaceType"
+    properties:
+      interfaceType:
+        $ref: "#/definitions/DestinationInterface.InterfaceType"
+      tunnelInfo:
+        $ref: "#/definitions/TunnelInfo"
+      srcMacAddress:
+        $ref: "#/definitions/DestinationInterface.MacAddress"
+      dstMacAddress:
+        $ref: "#/definitions/DestinationInterface.MacAddress"
+      dstIpAddress:
+        $ref: "#/definitions/DestinationInterface.IpAddress"
+    description: "This type represents the destination interface."
+    example:
+      interfaceType: "TUNNEL"
+      dstIpAddress: "192.0.2.0"
+      srcMacAddress: "02-00-00-00-00-00"
+      tunnelInfo:
+        tunnelSrcAddress: "?"
+        tunnelType: "GTP_U"
+        tunnelDstAddress: "?"
+      dstMacAddress: "02-00-00-00-00-00"
+  DnsRule.DomainName:
+    type: "string"
+    description: "FQDN resolved by the DNS rule"
+    example: "www.example.com"
+  DnsRule.Id:
+    type: "string"
+    description: "Identifies the DNS Rule"
+    example: "dnsRule1"
+  DnsRule.IpAddress:
+    type: "string"
+    description: "IP address associated with the FQDN resolved by the DNS rule"
+    example: "192.0.2.0"
+  DnsRule.IpAddressType:
+    type: "string"
+    description: "IP address type"
+    example: "IP_V6"
+    enum:
+    - "IP_V6"
+    - "IP_V4"
+  DnsRule.State:
+    type: "string"
+    description: "DNS rule state"
+    example: "ACTIVE"
+    enum:
+    - "ACTIVE"
+    - "INACTIVE"
+  DnsRule.Ttl:
+    type: "integer"
+    format: "uint32"
+    description: "Time to live value"
+    example: "?"
+  DnsRule:
+    type: "object"
+    required:
+    - "dnsRuleId"
+    - "domainName"
+    - "ipAddress"
+    - "ipAddressType"
+    - "state"
+    properties:
+      dnsRuleId:
+        $ref: "#/definitions/DnsRule.Id"
+      domainName:
+        $ref: "#/definitions/DnsRule.DomainName"
+      ipAddressType:
+        $ref: "#/definitions/DnsRule.IpAddressType"
+      ipAddress:
+        $ref: "#/definitions/DnsRule.IpAddress"
+      ttl:
+        $ref: "#/definitions/DnsRule.Ttl"
+      state:
+        $ref: "#/definitions/DnsRule.State"
+    description: "This type represents the general information of a DNS rule."
+    example:
+      domainName: "www.example.com"
+      ipAddress: "192.0.2.0"
+      dnsRuleId: "dnsRule1"
+      state: "ACTIVE"
+      ttl: "?"
+      ipAddressType: "IP_V6"
+  EndPointInfo.Address.Host:
+    type: "string"
+    description: "Host portion of the address"
+    example: "192.0.2.0"
+  EndPointInfo.Address.Port:
+    type: "integer"
+    format: "uint32"
+    description: "Port portion of the address"
+    example: "8080"
+  EndPointInfo.Address:
+    type: "object"
+    properties:
+      host:
+        $ref: "#/definitions/EndPointInfo.Address.Host"
+      port:
+        $ref: "#/definitions/EndPointInfo.Address.Port"
+    description: "A IP address and port pair"
+  EndPointInfo.Addresses:
+    type: "array"
+    description: "Entry point information of the service as one or more pairs of IP\
+      \ address and port"
+    items:
+      $ref: "#/definitions/EndPointInfo.Address"
+  EndPointInfo.Alternative:
+    type: "object"
+    description: "Entry point information of the service in a format defined by an\
+      \ implementation, or in an external specification."
+  EndPointInfo.Uri:
+    type: "string"
+    format: "uri"
+    description: "Entry point information of the service"
+    example: "/meMp1/service/EntryPoint"
+  EndPointInfo.Uris:
+    type: "array"
+    description: "Entry point information of the service as string, formatted according\
+      \ to URI syntax"
+    items:
+      $ref: "#/definitions/EndPointInfo.Uri"
+  EndPointInfo:
+    type: "object"
+    properties:
+      uris:
+        $ref: "#/definitions/EndPointInfo.Uris"
+      addresses:
+        $ref: "#/definitions/EndPointInfo.Addresses"
+      alternative:
+        $ref: "#/definitions/EndPointInfo.Alternative"
+    description: "This type represents information about a transport endpoint"
+    example:
+      uris: ""
+      addresses: ""
+      alternative: {}
+  LinkType:
+    type: "string"
+    format: "uri"
+    description: "URI referring to a resource"
+    example: "/meMp1/example"
+  Mp1SubscriptionLinkList.Links:
+    type: "object"
+    required:
+    - "self"
+    properties:
+      self:
+        $ref: "#/definitions/LinkType"
+      subscription:
+        type: "array"
+        description: "Subscription list"
+        items:
+          $ref: "#/definitions/Mp1SubscriptionLinkList.Subscription"
+    description: "Self-referring URI."
+    example:
+      self: "/meMp1/example"
+      subscription:
+      - rel: "rel"
+        href: "http://example.com/aeiou"
+      - rel: "rel"
+        href: "http://example.com/aeiou"
+  Mp1SubscriptionLinkList.Subscription:
+    type: "object"
+    required:
+    - "href"
+    - "rel"
+    properties:
+      href:
+        type: "string"
+        format: "uri"
+        description: "The URI referring to the subscription"
+      rel:
+        type: "string"
+        description: "The values are as defined in the \"subscriptionType\" attribute\
+          \ for each different Mp1 event subscription data type."
+    description: "A link to a subscription."
+    example:
+      rel: "rel"
+      href: "http://example.com/aeiou"
+  Mp1SubscriptionLinkList:
+    type: "object"
+    required:
+    - "_links"
+    properties:
+      _links:
+        $ref: "#/definitions/Mp1SubscriptionLinkList.Links"
+    description: "This type represents a list of links related to currently existing\
+      \ subscriptions for a mobile edge application instance. This information is\
+      \ returned when sending a request to receive current subscriptions."
+    example:
+      _links:
+        self: "/meMp1/example"
+        subscription:
+        - rel: "rel"
+          href: "http://example.com/aeiou"
+        - rel: "rel"
+          href: "http://example.com/aeiou"
+  ProblemDetails:
+    type: "object"
+    properties:
+      type:
+        $ref: "#/definitions/Problem.type"
+      title:
+        $ref: "#/definitions/Problem.title"
+      status:
+        $ref: "#/definitions/Problem.status"
+      detail:
+        $ref: "#/definitions/Problem.detail"
+      instance:
+        $ref: "#/definitions/Problem.instance"
+  Problem.detail:
+    type: "string"
+    description: "A human-readable explanation specific to this occurrence of the\
+      \ problem"
+  Problem.instance:
+    type: "string"
+    format: "uri"
+    description: "A URI reference that identifies the specific occurrence of the problem"
+  Problem.status:
+    type: "integer"
+    format: "uint32"
+    description: "The HTTP status code for this occurrence of the problem"
+  Problem.title:
+    type: "string"
+    description: "A short, human-readable summary of the problem type"
+  Problem.type:
+    type: "string"
+    format: "uri"
+    description: "A URI reference according to IETF RFC 3986 that identifies the problem\
+      \ type"
+  SecurityInfo.OAuth2Info.GrantTypes:
+    type: "string"
+    description: "List of supported OAuth 2.0 grant types"
+    example: "OAUTH2_CLIENT_CREDENTIALS"
+    enum:
+    - "OAUTH2_AUTHORIZATION_CODE"
+    - "OAUTH2_IMPLICIT_GRANT"
+    - "OAUTH2_RESOURCE_OWNER"
+    - "OAUTH2_CLIENT_CREDENTIALS"
+  SecurityInfo.OAuth2Info.TokenEndpoint:
+    type: "string"
+    format: "uri"
+    description: "The token endpoint"
+    example: "/meMp1/security/TokenEndPoint"
+  SecurityInfo.OAuth2Info:
+    required:
+    - "grantTypes"
+    - "tokenEndpoint"
+    properties:
+      grantTypes:
+        $ref: "#/definitions/SecurityInfo.OAuth2Info.GrantTypes"
+      tokenEndpoint:
+        $ref: "#/definitions/SecurityInfo.OAuth2Info.TokenEndpoint"
+    description: "Parameters related to use of OAuth 2.0"
+    example:
+      tokenEndpoint: "/meMp1/security/TokenEndPoint"
+      grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+  SecurityInfo:
+    type: "object"
+    required:
+    - "oAuth2Info"
+    properties:
+      oAuth2Info:
+        $ref: "#/definitions/SecurityInfo.OAuth2Info"
+    description: "This type represents security information related to a transport"
+    example:
+      oAuth2Info:
+        tokenEndpoint: "/meMp1/security/TokenEndPoint"
+        grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+  Self:
+    type: "object"
+    required:
+    - "self"
+    properties:
+      self:
+        $ref: "#/definitions/LinkType"
+    description: "Self-referring URI."
+    example:
+      self: "/meMp1/example"
+  SerAvailabilityNotificationSubscription.CallbackReference:
+    type: "string"
+    format: "uri"
+    description: "URI selected by the mobile edge application instance to receive\
+      \ notifications on the subscribed mobile edge service availability information.\
+      \ This shall be included in both the request and the response."
+  SerAvailabilityNotificationSubscription.Request:
+    type: "object"
+    required:
+    - "callbackReference"
+    - "filteringCriteria"
+    - "subscriptionType"
+    properties:
+      subscriptionType:
+        $ref: "#/definitions/SerAvailabilityNotificationSubscription.SubscriptionType"
+      callbackReference:
+        $ref: "#/definitions/SerAvailabilityNotificationSubscription.CallbackReference"
+      filteringCriteria:
+        $ref: "#/definitions/ServiceInfo"
+    description: "This type represents a subscription to the notifications from the\
+      \ mobile edge platform regarding the availability of a mobile edge service or\
+      \ a list of mobile edge services."
+  SerAvailabilityNotificationSubscription.Response:
+    type: "object"
+    required:
+    - "_links"
+    - "callbackReference"
+    - "filteringCriteria"
+    - "subscriptionType"
+    properties:
+      subscriptionType:
+        $ref: "#/definitions/SerAvailabilityNotificationSubscription.SubscriptionType"
+      callbackReference:
+        $ref: "#/definitions/SerAvailabilityNotificationSubscription.CallbackReference"
+      _links:
+        $ref: "#/definitions/Self"
+      filteringCriteria:
+        $ref: "#/definitions/ServiceInfo"
+    description: "This type represents a subscription to the notifications from the\
+      \ mobile edge platform regarding the availability of a mobile edge service or\
+      \ a list of mobile edge services."
+    example:
+      filteringCriteria:
+        serCategory:
+          name: "RNI"
+          href: "catItem1"
+          id: "id12345"
+          version: "version1"
+        transportInfo:
+          implSpecificInfo: {}
+          protocol: "HTTP"
+          endpoint:
+            uris: ""
+            addresses: ""
+            alternative: {}
+          security:
+            oAuth2Info:
+              tokenEndpoint: "/meMp1/security/TokenEndPoint"
+              grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+          name: "REST"
+          description: "REST API"
+          id: "TransId12345"
+          type: "JSON"
+          version: "2.0"
+        transportId: "Rest1"
+        serializer: "JSON"
+        serName: "ExampleService"
+        state: "ACTIVE"
+        version: "ServiceVersion1"
+        serInstanceId: "ServiceInstance123"
+      subscriptionType: "SerAvailabilityNotificationSubscription"
+      _links:
+        self: "/meMp1/example"
+      callbackReference: {}
+  SerAvailabilityNotificationSubscription.SubscriptionType:
+    type: "string"
+    description: "Shall be set to SerAvailabilityNotificationSubscription."
+    example: "SerAvailabilityNotificationSubscription"
+  SerializerTypes:
+    type: "string"
+    description: "The enumeration SerializerTypes represents types of serializers"
+    example: "JSON"
+    enum:
+    - "JSON"
+    - "XML"
+    - "PROTOBUF3"
+  ServiceInfo.SerInstanceId:
+    type: "string"
+    description: "Identifier of the service instance assigned by the MEPM / mobile\
+      \ edge platform."
+    example: "ServiceInstance123"
+  ServiceInfo.SerName:
+    type: "string"
+    description: "The name of the service. This is how the service producing mobile\
+      \ edge application identifies the service instance it produces."
+    example: "ExampleService"
+  ServiceInfo.State:
+    type: "string"
+    description: "Contains the state"
+    example: "ACTIVE"
+    enum:
+    - "ACTIVE"
+    - "INACTIVE"
+  ServiceInfo.TransportId:
+    type: "string"
+    description: "Identifier of the platform-provided transport to be used by the\
+      \ service. Valid identifiers may be obtained using the \"Transport information\
+      \ query\" procedure. May be present in POST requests to signal the use of a\
+      \ platform-provided transport for the service, and shall be absent otherwise."
+    example: "Rest1"
+  ServiceInfo.Version:
+    type: "string"
+    description: "Service version"
+    example: "ServiceVersion1"
+  ServiceInfo:
+    type: "object"
+    required:
+    - "serName"
+    - "serializer"
+    - "state"
+    - "version"
+    properties:
+      serInstanceId:
+        $ref: "#/definitions/ServiceInfo.SerInstanceId"
+      serName:
+        $ref: "#/definitions/ServiceInfo.SerName"
+      serCategory:
+        $ref: "#/definitions/CategoryRef"
+      version:
+        $ref: "#/definitions/ServiceInfo.Version"
+      state:
+        $ref: "#/definitions/ServiceInfo.State"
+      transportId:
+        $ref: "#/definitions/ServiceInfo.TransportId"
+      transportInfo:
+        $ref: "#/definitions/TransportInfo"
+      serializer:
+        $ref: "#/definitions/SerializerTypes"
+    description: "This type represents the general information of a mobile edge service."
+    example:
+      serCategory:
+        name: "RNI"
+        href: "catItem1"
+        id: "id12345"
+        version: "version1"
+      transportInfo:
+        implSpecificInfo: {}
+        protocol: "HTTP"
+        endpoint:
+          uris: ""
+          addresses: ""
+          alternative: {}
+        security:
+          oAuth2Info:
+            tokenEndpoint: "/meMp1/security/TokenEndPoint"
+            grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+        name: "REST"
+        description: "REST API"
+        id: "TransId12345"
+        type: "JSON"
+        version: "2.0"
+      transportId: "Rest1"
+      serializer: "JSON"
+      serName: "ExampleService"
+      state: "ACTIVE"
+      version: "ServiceVersion1"
+      serInstanceId: "ServiceInstance123"
+  Subscription:
+    type: "object"
+    required:
+    - "subscription"
+    properties:
+      subscription:
+        $ref: "#/definitions/LinkType"
+    description: "A link to the related subscription"
+  TimingCaps.NtpServers.AuthenticationKeyNum:
+    type: "integer"
+    format: "uint32"
+    description: "Authentication key number"
+    example: 1
+  TimingCaps.NtpServers.AuthenticationOption:
+    type: "string"
+    description: "NTP authentication option"
+    example: "NONE"
+    enum:
+    - "NONE"
+    - "SYMMETRIC_KEY"
+    - "AUTO_KEY"
+  TimingCaps.NtpServers.DelayReqMaxRate:
+    type: "integer"
+    format: "uint32"
+    description: "Acceptable maximum rate of the Delay_Req messages in packets per\
+      \ second"
+    example: 10
+  TimingCaps.NtpServers.LocalPriority:
+    type: "integer"
+    format: "uint32"
+    description: "NTP server local priority"
+    example: 1
+  TimingCaps.NtpServers.MaxPollingInterval:
+    type: "integer"
+    format: "uint32"
+    description: "Maximum poll interval for NTP messages, in seconds as a power of\
+      \ two. Range 3...17"
+    example: 17
+  TimingCaps.NtpServers.MinPollingInterval:
+    type: "integer"
+    format: "uint32"
+    description: "Minimum poll interval for NTP messages, in seconds as a power of\
+      \ two. Range 3...17"
+    example: 3
+  TimingCaps.NtpServers.NtpServerAddr:
+    type: "string"
+    description: "NTP server address"
+    example: "192.0.2.0"
+  TimingCaps.NtpServers.NtpServerAddrType:
+    type: "string"
+    description: "Address type of NTP server"
+    example: "IP_ADDRESS"
+    enum:
+    - "IP_ADDRESS"
+    - "DNS_NAME"
+  TimingCaps.NtpServers.PtpMasterIpAddress:
+    type: "string"
+    description: "PTP Master IP Address"
+    example: "192.0.2.0"
+  TimingCaps.NtpServers.PtpMasterLocalPriority:
+    type: "integer"
+    format: "uint32"
+    description: "PTP Master local priority"
+    example: 1
+  TimingCaps.NtpServers:
+    type: "object"
+    required:
+    - "authenticationKeyNum"
+    - "authenticationOption"
+    - "localPriority"
+    - "maxPollingInterval"
+    - "minPollingInterval"
+    - "ntpServerAddr"
+    - "ntpServerAddrType"
+    properties:
+      ntpServerAddrType:
+        $ref: "#/definitions/TimingCaps.NtpServers.NtpServerAddrType"
+      ntpServerAddr:
+        $ref: "#/definitions/TimingCaps.NtpServers.NtpServerAddr"
+      minPollingInterval:
+        $ref: "#/definitions/TimingCaps.NtpServers.MinPollingInterval"
+      maxPollingInterval:
+        $ref: "#/definitions/TimingCaps.NtpServers.MaxPollingInterval"
+      localPriority:
+        $ref: "#/definitions/TimingCaps.NtpServers.LocalPriority"
+      authenticationOption:
+        $ref: "#/definitions/TimingCaps.NtpServers.AuthenticationOption"
+      authenticationKeyNum:
+        $ref: "#/definitions/TimingCaps.NtpServers.AuthenticationKeyNum"
+    description: "NTP server detail."
+    example:
+      ntpServerAddr: "192.0.2.0"
+      maxPollingInterval: 17
+      authenticationKeyNum: 1
+      localPriority: 1
+      authenticationOption: "NONE"
+      ntpServerAddrType: "IP_ADDRESS"
+      minPollingInterval: 3
+  TimingCaps.PtpMasters:
+    type: "object"
+    required:
+    - "delayReqMaxRate"
+    - "ptpMasterIpAddress"
+    - "ptpMasterLocalPriority"
+    properties:
+      ptpMasterIpAddress:
+        $ref: "#/definitions/TimingCaps.NtpServers.PtpMasterIpAddress"
+      ptpMasterLocalPriority:
+        $ref: "#/definitions/TimingCaps.NtpServers.PtpMasterLocalPriority"
+      delayReqMaxRate:
+        $ref: "#/definitions/TimingCaps.NtpServers.DelayReqMaxRate"
+    description: "NTP server detail."
+    example:
+      ptpMasterLocalPriority: 1
+      ptpMasterIpAddress: "192.0.2.0"
+      delayReqMaxRate: 10
+  TimingCaps.TimeStamp:
+    type: "object"
+    required:
+    - "nanoSeconds"
+    - "seconds"
+    properties:
+      seconds:
+        type: "integer"
+        format: "uint32"
+        example: 1577836800
+        description: "The seconds part of the time. Time is defined as Unix-time since\
+          \ January 1, 1970, 00:00:00 UTC"
+      nanoSeconds:
+        type: "integer"
+        format: "uint32"
+        example: 0
+        description: "The nanoseconds part of the time. Time is defined as Unix-time\
+          \ since January 1, 1970, 00:00:00 UTC"
+    description: "time"
+    example:
+      seconds: 1577836800
+      nanoSeconds: 0
+  TimingCaps:
+    type: "object"
+    properties:
+      timeStamp:
+        $ref: "#/definitions/TimingCaps.TimeStamp"
+      ntpServers:
+        type: "array"
+        description: "Available NTP servers"
+        items:
+          $ref: "#/definitions/TimingCaps.NtpServers"
+      ptpMasters:
+        type: "array"
+        description: "Available PTP Masters"
+        items:
+          $ref: "#/definitions/TimingCaps.PtpMasters"
+    description: "This type represents the information provided by the mobile edge\
+      \ platform in response to the Timing capabilities Query message."
+    example:
+      timeStamp:
+        seconds: 1577836800
+        nanoSeconds: 0
+      ntpServers:
+      - ntpServerAddr: "192.0.2.0"
+        maxPollingInterval: 17
+        authenticationKeyNum: 1
+        localPriority: 1
+        authenticationOption: "NONE"
+        ntpServerAddrType: "IP_ADDRESS"
+        minPollingInterval: 3
+      - ntpServerAddr: "192.0.2.0"
+        maxPollingInterval: 17
+        authenticationKeyNum: 1
+        localPriority: 1
+        authenticationOption: "NONE"
+        ntpServerAddrType: "IP_ADDRESS"
+        minPollingInterval: 3
+      ptpMasters:
+      - ptpMasterLocalPriority: 1
+        ptpMasterIpAddress: "192.0.2.0"
+        delayReqMaxRate: 10
+      - ptpMasterLocalPriority: 1
+        ptpMasterIpAddress: "192.0.2.0"
+        delayReqMaxRate: 10
+  TrafficFilter.Address:
+    type: "string"
+    description: "Identify the traffic ip address."
+    example: "192.168.1.1"
+  TrafficFilter.DSCP:
+    type: "integer"
+    format: "uint32"
+    description: "Used to match all IPv4 packets that have the same Differentiated\
+      \ Services Code Point (DSCP)"
+    example: 0
+  TrafficFilter.Port:
+    type: "string"
+    description: "A port"
+    example: "8080"
+  TrafficFilter.Protocol:
+    type: "string"
+    description: "Protocol of the traffic filter"
+    example: "?"
+  TrafficFilter.QCI:
+    type: "integer"
+    format: "uint32"
+    description: "Used to match all packets that have the same Quality Class Indicator\
+      \ (QCI)."
+    example: 1
+  TrafficFilter.TC:
+    type: "integer"
+    format: "uint32"
+    description: "Used to match all IPv6 packets that have the same Traffic Class."
+    example: 1
+  TrafficFilter.Token:
+    type: "string"
+    description: "Used for token based traffic rule"
+    example: "?"
+  TrafficFilter.TunnelAddress:
+    type: "string"
+    description: "Used for GTP tunnel based traffic rule"
+    example: "?"
+  TrafficFilter.TunnelPort:
+    type: "string"
+    description: "Used for GTP tunnel based traffic rule"
+    example: "?"
+  TrafficFilter:
+    type: "object"
+    properties:
+      srcAddress:
+        type: "array"
+        description: "An IP address or a range of IP address. For IPv4, the IP address\
+          \ could be an IP address plus mask, or an individual IP address, or a range\
+          \ of IP addresses. For IPv6, the IP address could be an IP prefix, or a\
+          \ range of IP prefixes."
+        items:
+          $ref: "#/definitions/TrafficFilter.Address"
+      dstAddress:
+        type: "array"
+        description: "An IP address or a range of IP address. For IPv4, the IP address\
+          \ could be an IP address plus mask, or an individual IP address, or a range\
+          \ of IP addresses. For IPv6, the IP address could be an IP prefix, or a\
+          \ range of IP prefixes."
+        items:
+          $ref: "#/definitions/TrafficFilter.Address"
+      srcPort:
+        type: "array"
+        description: "A port or a range of ports"
+        items:
+          $ref: "#/definitions/TrafficFilter.Port"
+      dstPort:
+        type: "array"
+        description: "A port or a range of ports"
+        items:
+          $ref: "#/definitions/TrafficFilter.Port"
+      protocol:
+        type: "array"
+        description: "Specify the protocol of the traffic filter"
+        items:
+          $ref: "#/definitions/TrafficFilter.Protocol"
+      token:
+        type: "array"
+        description: "Used for token based traffic rule"
+        items:
+          $ref: "#/definitions/TrafficFilter.Token"
+      srcTunnelAddress:
+        type: "array"
+        description: "Used for GTP tunnel based traffic rule"
+        items:
+          $ref: "#/definitions/TrafficFilter.TunnelAddress"
+      tgtTunnelAddress:
+        type: "array"
+        description: "Used for GTP tunnel based traffic rule"
+        items:
+          $ref: "#/definitions/TrafficFilter.TunnelAddress"
+      srcTunnelPort:
+        type: "array"
+        description: "Used for GTP tunnel based traffic rule"
+        items:
+          $ref: "#/definitions/TrafficFilter.TunnelPort"
+      dstTunnelPort:
+        type: "array"
+        description: "Used for GTP tunnel based traffic rule"
+        items:
+          $ref: "#/definitions/TrafficFilter.TunnelPort"
+      qCI:
+        $ref: "#/definitions/TrafficFilter.QCI"
+      dSCP:
+        $ref: "#/definitions/TrafficFilter.DSCP"
+      tC:
+        $ref: "#/definitions/TrafficFilter.TC"
+    description: "This type represents the traffic filter."
+    example:
+      srcTunnelPort:
+      - "?"
+      - "?"
+      dstAddress:
+      - "192.168.1.1"
+      - "192.168.1.1"
+      srcAddress:
+      - "192.168.1.1"
+      - "192.168.1.1"
+      srcPort:
+      - "8080"
+      - "8080"
+      token:
+      - "?"
+      - "?"
+      tC: 1
+      protocol:
+      - "?"
+      - "?"
+      dstTunnelPort:
+      - "?"
+      - "?"
+      dSCP: 0
+      dstPort:
+      - "8080"
+      - "8080"
+      qCI: 1
+      srcTunnelAddress:
+      - "?"
+      - "?"
+      tgtTunnelAddress:
+      - "?"
+      - "?"
+  TrafficRule.Action:
+    type: "string"
+    description: "The action of the ME host data plane when a packet matches the trafficFilter"
+    example: "DROP"
+    enum:
+    - "DROP"
+    - "FORWARD_DECAPSULATED"
+    - "FORWARD_AS_IS"
+    - "PASSTHROUGH"
+    - "DUPLICATE_DECAPSULATED"
+    - "DUPLICATE_AS_IS"
+  TrafficRule.FilterType:
+    type: "string"
+    description: "Definition of filter per FLOW or PACKET. If flow the filter match\
+      \ UE->EPC packet and the reverse packet is handled in the same context"
+    example: "FLOW"
+    enum:
+    - "FLOW"
+    - "PACKET"
+  TrafficRule.Id:
+    type: "string"
+    description: "Identify the traffic rule."
+    example: "TrafficRule1"
+  TrafficRule.Priority:
+    type: "integer"
+    format: "uint32"
+    description: "Priority of this traffic rule. If traffic rule conflicts, the one\
+      \ with higher priority take precedence"
+    example: 1
+  TrafficRule.State:
+    type: "string"
+    description: "Contains the traffic rule state"
+    example: "ACTIVE"
+    enum:
+    - "ACTIVE"
+    - "INACTIVE"
+  TrafficRule:
+    type: "object"
+    required:
+    - "action"
+    - "filterType"
+    - "priority"
+    - "state"
+    - "trafficFilter"
+    - "trafficRuleId"
+    properties:
+      trafficRuleId:
+        $ref: "#/definitions/TrafficRule.Id"
+      filterType:
+        $ref: "#/definitions/TrafficRule.FilterType"
+      priority:
+        $ref: "#/definitions/TrafficRule.Priority"
+      trafficFilter:
+        $ref: "#/definitions/TrafficFilter"
+      action:
+        $ref: "#/definitions/TrafficRule.Action"
+      dstInterface:
+        $ref: "#/definitions/DestinationInterface"
+      state:
+        $ref: "#/definitions/TrafficRule.State"
+    description: "This type represents the general information of a traffic rule."
+    example:
+      action: "DROP"
+      trafficRuleId: "TrafficRule1"
+      dstInterface:
+        interfaceType: "TUNNEL"
+        dstIpAddress: "192.0.2.0"
+        srcMacAddress: "02-00-00-00-00-00"
+        tunnelInfo:
+          tunnelSrcAddress: "?"
+          tunnelType: "GTP_U"
+          tunnelDstAddress: "?"
+        dstMacAddress: "02-00-00-00-00-00"
+      state: "ACTIVE"
+      filterType: "FLOW"
+      priority: 1
+      trafficFilter:
+        srcTunnelPort:
+        - "?"
+        - "?"
+        dstAddress:
+        - "192.168.1.1"
+        - "192.168.1.1"
+        srcAddress:
+        - "192.168.1.1"
+        - "192.168.1.1"
+        srcPort:
+        - "8080"
+        - "8080"
+        token:
+        - "?"
+        - "?"
+        tC: 1
+        protocol:
+        - "?"
+        - "?"
+        dstTunnelPort:
+        - "?"
+        - "?"
+        dSCP: 0
+        dstPort:
+        - "8080"
+        - "8080"
+        qCI: 1
+        srcTunnelAddress:
+        - "?"
+        - "?"
+        tgtTunnelAddress:
+        - "?"
+        - "?"
+  TransportInfo.Description:
+    type: "string"
+    description: "Human-readable description of this transport"
+    example: "REST API"
+  TransportInfo.Id:
+    type: "string"
+    description: "The identifier of this transport"
+    example: "TransId12345"
+  TransportInfo.ImplSpecificInfo:
+    type: "object"
+    description: "Additional implementation specific details of the transport"
+  TransportInfo.Name:
+    type: "string"
+    description: "The name of this transport"
+    example: "REST"
+  TransportInfo.Protocol:
+    type: "string"
+    description: "The name of the protocol used. Shall be set to HTTP for a REST API."
+    example: "HTTP"
+  TransportInfo.Version:
+    type: "string"
+    description: "The version of the protocol used"
+    example: "2.0"
+  TransportInfo:
+    type: "object"
+    required:
+    - "endpoint"
+    - "id"
+    - "name"
+    - "protocol"
+    - "security"
+    - "type"
+    - "version"
+    properties:
+      id:
+        $ref: "#/definitions/TransportInfo.Id"
+      name:
+        $ref: "#/definitions/TransportInfo.Name"
+      description:
+        $ref: "#/definitions/TransportInfo.Description"
+      type:
+        $ref: "#/definitions/TransportTypes"
+      protocol:
+        $ref: "#/definitions/TransportInfo.Protocol"
+      version:
+        $ref: "#/definitions/TransportInfo.Version"
+      endpoint:
+        $ref: "#/definitions/EndPointInfo"
+      security:
+        $ref: "#/definitions/SecurityInfo"
+      implSpecificInfo:
+        $ref: "#/definitions/TransportInfo.ImplSpecificInfo"
+    description: "This type represents the general information of a mobile edge service."
+    example:
+      implSpecificInfo: {}
+      protocol: "HTTP"
+      endpoint:
+        uris: ""
+        addresses: ""
+        alternative: {}
+      security:
+        oAuth2Info:
+          tokenEndpoint: "/meMp1/security/TokenEndPoint"
+          grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+      name: "REST"
+      description: "REST API"
+      id: "TransId12345"
+      type: "JSON"
+      version: "2.0"
+  TransportTypes:
+    type: "string"
+    description: "The enumeration TransportTypes represents types of transports"
+    example: "JSON"
+    enum:
+    - "REST_HTTP"
+    - "MB_TOPIC_BASED"
+    - "MB_ROUTING"
+    - "MB_PUBSUB"
+    - "RPC"
+    - "RPC_STREAMING"
+    - "WEBSOCKET"
+  TunnelInfo.TunnelDstAddress:
+    type: "string"
+    description: "Destination address of the tunnel"
+    example: "?"
+  TunnelInfo.TunnelSrcAddress:
+    type: "string"
+    description: "Source address of the tunnel"
+    example: "?"
+  TunnelInfo.TunnelType:
+    type: "string"
+    description: "This type represents the tunnel information."
+    example: "GTP_U"
+    enum:
+    - "GTP_U"
+    - "GRE"
+  TunnelInfo:
+    type: "object"
+    required:
+    - "tunnelType"
+    properties:
+      tunnelType:
+        $ref: "#/definitions/TunnelInfo.TunnelType"
+      tunnelDstAddress:
+        $ref: "#/definitions/TunnelInfo.TunnelDstAddress"
+      tunnelSrcAddress:
+        $ref: "#/definitions/TunnelInfo.TunnelSrcAddress"
+    description: "This type represents the tunnel information."
+    example:
+      tunnelSrcAddress: "?"
+      tunnelType: "GTP_U"
+      tunnelDstAddress: "?"
+  inline_response_200:
+    properties:
+      DnsRule:
+        $ref: "#/definitions/DnsRule"
+  inline_response_400:
+    properties:
+      ProblemDetails:
+        $ref: "#/definitions/ProblemDetails"
+  inline_response_403:
+    required:
+    - "ProblemDetails"
+    properties:
+      ProblemDetails:
+        $ref: "#/definitions/ProblemDetails"
+  inline_response_200_1:
+    properties:
+      Mp1SubscriptionLinkList:
+        $ref: "#/definitions/Mp1SubscriptionLinkList"
+    example:
+      Mp1SubscriptionLinkList:
+        _links:
+          self: "/meMp1/example"
+          subscription:
+          - rel: "rel"
+            href: "http://example.com/aeiou"
+          - rel: "rel"
+            href: "http://example.com/aeiou"
+  inline_response_201:
+    properties:
+      AppTerminationNotificationSubscription:
+        $ref: "#/definitions/AppTerminationNotificationSubscription.Response"
+    example:
+      AppTerminationNotificationSubscription:
+        appInstanceId: "ID1"
+        subscriptionType: "AppTerminationNotificationSubscription"
+        _links:
+          self: "/meMp1/example"
+        callbackReference: {}
+  inline_response_200_2:
+    properties:
+      SerAvailabilityNotificationSubscription:
+        $ref: "#/definitions/SerAvailabilityNotificationSubscription.Response"
+    example:
+      SerAvailabilityNotificationSubscription:
+        filteringCriteria:
+          serCategory:
+            name: "RNI"
+            href: "catItem1"
+            id: "id12345"
+            version: "version1"
+          transportInfo:
+            implSpecificInfo: {}
+            protocol: "HTTP"
+            endpoint:
+              uris: ""
+              addresses: ""
+              alternative: {}
+            security:
+              oAuth2Info:
+                tokenEndpoint: "/meMp1/security/TokenEndPoint"
+                grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+            name: "REST"
+            description: "REST API"
+            id: "TransId12345"
+            type: "JSON"
+            version: "2.0"
+          transportId: "Rest1"
+          serializer: "JSON"
+          serName: "ExampleService"
+          state: "ACTIVE"
+          version: "ServiceVersion1"
+          serInstanceId: "ServiceInstance123"
+        subscriptionType: "SerAvailabilityNotificationSubscription"
+        _links:
+          self: "/meMp1/example"
+        callbackReference: {}
+  inline_response_200_3:
+    properties:
+      TrafficRule:
+        $ref: "#/definitions/TrafficRule"
+  inline_response_200_4:
+    properties:
+      ServiceInfo:
+        $ref: "#/definitions/ServiceInfo"
+  inline_response_200_5:
+    properties:
+      CurrentTime:
+        $ref: "#/definitions/CurrentTime"
+    example:
+      CurrentTime:
+        seconds: 1577836800
+        nanoSeconds: 0
+        timeSourceStatus: "TRACEABLE"
+  inline_response_200_6:
+    properties:
+      TimingCaps:
+        $ref: "#/definitions/TimingCaps"
+    example:
+      TimingCaps:
+        timeStamp:
+          seconds: 1577836800
+          nanoSeconds: 0
+        ntpServers:
+        - ntpServerAddr: "192.0.2.0"
+          maxPollingInterval: 17
+          authenticationKeyNum: 1
+          localPriority: 1
+          authenticationOption: "NONE"
+          ntpServerAddrType: "IP_ADDRESS"
+          minPollingInterval: 3
+        - ntpServerAddr: "192.0.2.0"
+          maxPollingInterval: 17
+          authenticationKeyNum: 1
+          localPriority: 1
+          authenticationOption: "NONE"
+          ntpServerAddrType: "IP_ADDRESS"
+          minPollingInterval: 3
+        ptpMasters:
+        - ptpMasterLocalPriority: 1
+          ptpMasterIpAddress: "192.0.2.0"
+          delayReqMaxRate: 10
+        - ptpMasterLocalPriority: 1
+          ptpMasterIpAddress: "192.0.2.0"
+          delayReqMaxRate: 10
+  inline_response_200_7:
+    properties:
+      TransportInfo:
+        $ref: "#/definitions/TransportInfo"
+    example:
+      TransportInfo:
+        implSpecificInfo: {}
+        protocol: "HTTP"
+        endpoint:
+          uris: ""
+          addresses: ""
+          alternative: {}
+        security:
+          oAuth2Info:
+            tokenEndpoint: "/meMp1/security/TokenEndPoint"
+            grantTypes: "OAUTH2_CLIENT_CREDENTIALS"
+        name: "REST"
+        description: "REST API"
+        id: "TransId12345"
+        type: "JSON"
+        version: "2.0"
+parameters:
+  Body.AppTerminationNotificationSubscription:
+    in: "body"
+    name: "AppTerminationNotificationSubscription"
+    description: "Entity body in the request contains a subscription to the mobile\
+      \ edge application termination notifications that is to be created."
+    required: true
+    schema:
+      $ref: "#/definitions/AppTerminationNotificationSubscription.Request"
+  Body.DnsRule:
+    in: "body"
+    name: "DnsRule"
+    description: "The updated state is included in the entity body of the request."
+    required: true
+    schema:
+      $ref: "#/definitions/DnsRule"
+  Body.SerAvailabilityNotificationSubscription:
+    in: "body"
+    name: "SerAvailabilityNotificationSubscription"
+    description: "Entity body in the request contains a subscription to the mobile\
+      \ edge service availability notifications that is to be created."
+    required: true
+    schema:
+      $ref: "#/definitions/SerAvailabilityNotificationSubscription.Request"
+  Body.ServiceInfo:
+    in: "body"
+    name: "ServiceInfo"
+    description: "New ServiceInfo with updated \"state\" is included as entity body\
+      \ of the request"
+    required: true
+    schema:
+      $ref: "#/definitions/ServiceInfo"
+  Body.TrafficRule:
+    in: "body"
+    name: "TrafficRule"
+    description: "One or more updated attributes that are allowed to be changed"
+    required: true
+    schema:
+      $ref: "#/definitions/TrafficRule"
+  Path.AppInstanceId:
+    name: "appInstanceId"
+    in: "path"
+    description: "Represents a mobile edge application instance. Note that the appInstanceId\
+      \ is allocated by the mobile edge platform manager."
+    required: true
+    type: "string"
+    format: "uri"
+  Path.DnsRuleId:
+    name: "dnsRuleId"
+    in: "path"
+    description: "Represents a DNS rule."
+    required: true
+    type: "string"
+    format: "uri"
+  Path.SubscriptionId:
+    name: "subscriptionId"
+    in: "path"
+    description: "Represents a subscription to the notifications from the mobile edge\
+      \ platform."
+    required: true
+    type: "string"
+    format: "uri"
+  Path.SubscriptionType:
+    name: "subscriptionType"
+    in: "path"
+    description: "Represents a subscription type to the notifications from the mobile\
+      \ edge platform."
+    required: true
+    type: "string"
+    format: "uri"
+  Path.ServiceId:
+    name: "serviceId"
+    in: "path"
+    description: "Represents a mobile edge service instance."
+    required: true
+    type: "string"
+    format: "uri"
+  Path.TrafficRuleId:
+    name: "trafficRuleId"
+    in: "path"
+    description: "Represents a traffic rule."
+    required: true
+    type: "string"
+    format: "uri"
+  Query.Ser_category_id:
+    name: "ser_category_id"
+    in: "query"
+    description: "A mobile edge application instance may use ser_category_id as an\
+      \ input parameter to query the availability of a list of mobile edge service\
+      \ instances in a serCategory. Either \"ser_instance_id\" or \"ser_name\" or\
+      \ \"ser_category_id\" or none of them shall be present."
+    required: false
+    type: "string"
+  Query.Ser_instance_id:
+    name: "ser_instance_id"
+    in: "query"
+    description: "A mobile edge application instance may use multiple ser_instance_ids\
+      \ as an input parameter to query the availability of a list of mobile edge service\
+      \ instances. Either \"ser_instance_id\" or \"ser_name\" or \"ser_category_id\"\
+      \ or none of them shall be present."
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "multi"
+  Query.Ser_name:
+    name: "ser_name"
+    in: "query"
+    description: "A mobile edge application instance may use multiple ser_names as\
+      \ an input parameter to query the availability of a list of mobile edge service\
+      \ instances. Either \"ser_instance_id\" or \"ser_name\" or \"ser_category_id\"\
+      \ or none of them shall be present."
+    required: false
+    type: "array"
+    items:
+      type: "string"
+    collectionFormat: "multi"
+externalDocs:
+  description: "ETSI GS MEC011 Application Enablement API, V1.1.1"
+  url: "http://www.etsi.org/deliver/etsi_gs/MEC/001_099/011/01.01.01_60/gs_mec011v010101p.pdf"
