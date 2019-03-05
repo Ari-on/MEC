@@ -102,7 +102,7 @@ UIRoutes.prototype.init = function() {
     var finalQuery = {}
 
     app.get("/read_db/:rowno",function (req,res) {
-        console.log('read_excel API called ---')
+        console.log('read_db API called ---')
         var url = req.query.query;
         var db = self.app.db;
 
@@ -115,9 +115,12 @@ UIRoutes.prototype.init = function() {
         if(url.includes(':')){
             var str = url.split('/')
             for(var i=0; i < str.length; i++){
+
                 if(str[i].includes(':')){
+                    console.log('url.indexOf(str[i] ----',str.indexOf(str[i]) )
                     var finalWord = str[i].replace(':','')
-                     getParams.push(finalWord)
+//                     getParams.push(finalWord)
+                    getParams.push({ key : str.indexOf(str[i]) - 1, value : finalWord})
                 }
             }
             console.log('getParams ---', getParams)
@@ -125,22 +128,16 @@ UIRoutes.prototype.init = function() {
         else{
 
             var str = url.split('?')
-
+console.log("str is ---", str.length)
             for(var i=0; i<str.length; i++){
                   if(str[i].includes('{{')){
                     console.log(str[i],"str[i] {{ symbol is their")
-//                        var sub1 = '{{', sub2 = '}}'
-//                        var SP = url.indexOf(sub1)+sub1.length;
-//                        var string1 = url.substr(0,SP);
-//                        var string2 = url.substr(SP)
-//                        var TP = string1.length + string2.indexOf(sub2);
-//                        var finalWord = url.substring(SP,TP);
                         var finalWord = str[i].split('=')
                         console.log("finalWord[0] -----", finalWord[0])
                         getParams.push(finalWord[0])
                   }
             }
-            console.log("getParams ====", getParams)
+//            console.log("getParams ====", getParams)
         }
 
 
@@ -208,11 +205,32 @@ UIRoutes.prototype.init = function() {
     app.get("/read_csv/:rowno", function (req, res) {
 
         var url = req.query.query;
-        if (url.includes('/bwm/v1')) {
+
+        if (url.includes('/bwm/v1')){
+               collectionName = "BWM_API_swagger"
+        }
+        else if (url.includes('/ui/v1')){
+            collectionName = "UE_Identity_API_swagger"
+        }
+        else if (url.includes('/mx2/v1')){
+            collectionName = "UE_Application_Interface_API_swagger"
+        }
+        else if (url.includes('/exampleAPI/mp1')){
+            collectionName = "Mp1_API_swagger"
+        }
+        else if (url.includes('/exampleAPI/location')){
+            collectionName = "Location_API_swagger"
+        }
+        else if (url.includes('/rni/v1')){
+            collectionName = "RNI_API_swagger"
+        }
+
+
+//        if (url.includes('/bwm/v1')) {
             var rowNo = parseInt(req.params.rowno, 10);
             var list = [];
 
-            var stream = fs.createReadStream("F:\\MEC_New\\BWM_API_swagger.csv");
+            var stream = fs.createReadStream(__dirname+"/../outputFiles/"+collectionName+".csv");
 
             var csvStream = csv()
                 .on("data", function(data){
@@ -230,7 +248,7 @@ UIRoutes.prototype.init = function() {
                 });
 
             stream.pipe(csvStream);
-        }
+//        }
     });
     /* BWM API */
 
@@ -241,43 +259,54 @@ UIRoutes.prototype.init = function() {
 //    });
 
 
+    app.post("/*", function(req, res){
+        console.log("Entered into Common Post Method")
+         self.commonInstance.commonPOST(req.body,collectionName, function (err, res) {
+         console.log('Post response is',res)
+            if(res){
+                var result = {
+                    statuscode:201,
+                    bwInfo: res[0]
+                };
+                res.send(result)
+            }
+            else{
+                console.log('Post Method error is', err)
+                res.send(err)
+            }
+        });
+    })
+
     app.get("/*", function (req, res){
-//            var self = this
-            // console.log("common GET API call --- ")
-            // console.log("req.params", req)
+
+console.log('req.query ----',req.query)
+console.log('req.query ----',req.params)
             if(getParams.length > 0){
                 var query = {}
                 var parameters = []
-                // console.log('getParams ----',getParams)
-
                 parameters = getParams
+//                console.log('req.params.allocationId',req.params)
 
-                console.log('req.params.allocationId',req.params)
-
-                if (req.params === '')
-                {
-                    finalQuery = req.params
+                if (req.query === '' || req.query === undefined || req.query === 'undefined'){
+                     var str = req.params[0].split('/')
+                     for(var i=0; i < getParams.length; i++){
+                        console.log(getParams[i].key, "getParams[i].key --")
+                        query[getParams[i].value] = str[getParams[i].key]
+                     }
+                    finalQuery = query
                 }
                 else{
                     finalQuery = req.query
                 }
 
-//                console.log(parameters.length,"parameters.length ---")
-                for(var i=0; i < parameters.length; i++){
-                    // console.log(parameters[i],"getParams[i] =======")
-            //        query[i] = {parameters[i]  : req.params.parameters[i] }
-                    query[parameters[i]] = 'req.params.'+parameters[i]
-                }
-//                console.log("myquery ---- ", query)
             }
             else{
-                var query = req.query;
+                finalQuery = req.query;
             }
             console.log(finalQuery)
             self.commonInstance.commonGET(finalQuery,collectionName, function (err, resp) {
 
                 var permittedValues = resp.map(function(value) {
-//                console.log("value is ----", value)
                     if (value.hasOwnProperty('bwInfo')) {
                         return {bwInfo: value.bwInfo};
                     }else{
@@ -286,12 +315,9 @@ UIRoutes.prototype.init = function() {
 //                    return {bwInfo: value};
                 });
 
-                // console.log("permittedValues", permittedValues)
-
                 var data = permittedValues.filter(function( element ) {
                     return element !== undefined;
                 });
-
 
                 var result = {
                     statuscode : 200,
@@ -309,27 +335,24 @@ UIRoutes.prototype.init = function() {
          var url = req.params;
          var reqBody = req.body;
 
-//        var myquery = {
-//            allocationId : req.params.allocationID
-//        };
         var query = {}
         var parameters = []
-        console.log('getParams ----',getParams)
 
-        parameters = getParams
+        console.log("myquery ---- ", req.params)
 
-        console.log(parameters.length,"parameters.length ---")
-        for(var i=0; i < parameters.length; i++){
-        console.log(parameters[i],"getParams[i] =======")
-//        query[i] = {parameters[i]  : req.params.parameters[i] }
-        query[parameters[i]] = 'req.params.'+parameters[i]
-
+        if (req.query === '' || req.query === undefined || req.query === 'undefined'){
+            var str = req.params[0].split('/')
+            for(var i=0; i < getParams.length; i++){
+//                console.log(getParams[i].key, "getParams[i].key --")
+                query[getParams[i].value] = str[getParams[i].key]
+            }
+            finalQuery = query
+        } else{
+            finalQuery = req.query
         }
 
-        console.log("myquery ---- ", query)
-
-        self.commonInstance.commonDelete(query,collectionName, function (err, resp) {
-        console.log('response is ---',resp)
+        self.commonInstance.commonDelete(finalQuery,collectionName, function (err, resp) {
+//        console.log('response is ---',resp)
             if (resp) {
                 res.send('Record deleted Successfully')
             } else {
@@ -342,44 +365,44 @@ UIRoutes.prototype.init = function() {
 
     app.put("/*", function(req, res){
         console.log('common put routes called -- ')
-//        console.log("request body ---", req.body)
 
         var query = {}
         var parameters = []
         console.log('getParams ----',getParams)
 
-        parameters = getParams
-
-        console.log(parameters.length,"parameters.length ---")
-        for(var i=0; i < parameters.length; i++){
-//            console.log(parameters[i],"getParams[i] =======")
-            query[parameters[i]] = 'req.params.'+parameters[i]
-
+//        if (req.params !== ''){
+        if (req.query === '' || req.query === undefined || req.query === 'undefined'){
+            var str = req.params[0].split('/')
+             for(var i=0; i < getParams.length; i++){
+//                console.log(getParams[i].key, "getParams[i].key --")
+                query[getParams[i].value] = str[getParams[i].key]
+              }
+            finalQuery = query
+        }
+        else{
+            finalQuery = req.query
         }
 
         console.log("myquery ---- ", query)
 
-        var criteria={
-            value:{
-                "bwInfo" : req.body
-            },
-            options:{
-                multi:false,
-                upsert:false
-            }
-        };
-         self.commonInstance.commonUpdate(query, {$set:criteria.value}, collectionName, function (err, resp) {
+         self.commonInstance.commonUpdate(finalQuery, {$set:req.body}, collectionName, function (err, resp) {
             if(resp['n'] != 0){
                 var result = {
                     statuscode:200,
-                    bwInfo: myobj
+                    result: req.body
                 };
-                callback(err,result);
+                res.send(result);
             }
             else{
-                callback(err,'updateError');
+                console.log('Error is', err)
+                res.send(err);
             }
          });
+    })
+
+    app.patch("/*", function(req, res){
+        console.log("Emtered into patch Method")
+
     })
 
 /*

@@ -12,7 +12,7 @@ module.exports = commonService;
 
 commonService.prototype.commonGET = function(req,collectionName,callback) {
 
-    console.log("This is commonGET method!!!");
+    console.log("This is commonGET service!!!");
     var self = this;
     var db = self.app.db;
     var collection = db.collection(collectionName);
@@ -34,7 +34,7 @@ commonService.prototype.commonGET = function(req,collectionName,callback) {
 
 commonService.prototype.commonPOST = function(myobj,collectionName,callback) {
 
-    console.log("This is commonPOST method!!!");
+    console.log("This is commonPOST service!!!");
     var self = this;
     var db = self.app.db;
     var collection = db.collection(collectionName);
@@ -52,7 +52,7 @@ commonService.prototype.commonPOST = function(myobj,collectionName,callback) {
 
 commonService.prototype.commonUpdate = function(condition,updation,collectionName,callback) {
 
-    console.log("This is commonUpdate method!!!");
+    console.log("This is commonUpdate service!!!");
     var self = this;
     var db = self.app.db;
     var collection = db.collection(collectionName);
@@ -70,12 +70,12 @@ commonService.prototype.commonUpdate = function(condition,updation,collectionNam
 
 commonService.prototype.commonDelete = function(condition,collectionName,callback) {
 
-    console.log("This is commonDelete method!!!");
+    console.log("This is commonDelete service !!!");
     var self = this;
     var db = self.app.db;
     var collection = db.collection(collectionName);
 
-    collection.removeOne(condition, function(err, resp) {
+    collection.remove(condition, function(err, resp) {
         if (resp) {
             callback(err, 'deleted')
         } else {
