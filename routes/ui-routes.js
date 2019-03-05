@@ -344,7 +344,9 @@ console.log('req.query ----',req.params)
 
         console.log("myquery ---- ", req.params)
 
-        if (req.query === '' || req.query === undefined || req.query === 'undefined'){
+        if (req.query === '' || req.query === undefined || req.query === 'undefined' || Object.keys(req.query).length === 0){
+            console.log('query',req.query)
+
             var str = req.params[0].split('/')
             for(var i=0; i < getParams.length; i++){
 //                console.log(getParams[i].key, "getParams[i].key --")
@@ -354,7 +356,7 @@ console.log('req.query ----',req.params)
         } else{
             finalQuery = req.query
         }
-
+        
         self.commonInstance.commonDelete(finalQuery,collectionName, function (err, resp) {
 //        console.log('response is ---',resp)
             if (resp) {
@@ -375,7 +377,7 @@ console.log('req.query ----',req.params)
         console.log('getParams ----',getParams)
 
 //        if (req.params !== ''){
-        if (req.query === '' || req.query === undefined || req.query === 'undefined'){
+        if (req.query === '' || req.query === undefined || req.query === 'undefined' || Object.keys(req.query).length === 0){
             var str = req.params[0].split('/')
              for(var i=0; i < getParams.length; i++){
 //                console.log(getParams[i].key, "getParams[i].key --")
