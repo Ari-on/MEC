@@ -128,7 +128,7 @@ UIRoutes.prototype.init = function() {
         else{
 
             var str = url.split('?')
-console.log("str is ---", str.length)
+            console.log("str is ---", str.length)
             for(var i=0; i<str.length; i++){
                   if(str[i].includes('{{')){
                     console.log(str[i],"str[i] {{ symbol is their")
@@ -183,13 +183,13 @@ console.log("str is ---", str.length)
 
 
         var myobj = parseInt(req.params.rowno)-1;
-        // console.log("myobj ----",myobj)
+        console.log("myobj ----",myobj)
         // console.log("collectionName", collectionName)
         var collection = db.collection(collectionName);
 
         collection.find().toArray(function(err,resp) {
             if(resp){
-//                console.log(resp[myobj])
+                // console.log(typeof(myobj))
                 res.send(resp[myobj]);
             }
             else{
@@ -242,6 +242,10 @@ console.log("str is ---", str.length)
                     data = list[rowNo];
                     for (i = 0;i<headings.length;i++)
                     {
+                        if (headings[i].indexOf('_') > -1 && headings[i].indexOf('._') <= -1)
+                        {
+                           headings[i] = headings[i].replace('_','.');
+                        }
                         req[headings[i]] = data[i]
                     }
                     res.send([req]);

@@ -393,24 +393,33 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile,response_l
 
 
 		if content['method'] == 'POST':
-			print(content)
 			final_List = []
-			# print(raw_List)
-			print('\n')
-			# print(csv_List)
-			for element in csv_List:
-				if element in raw_List:
-					final_List.append(element)
-				else:
-					roughElement = element.split('.',1)[1]
-					if '_' in roughElement:
-						roughElement = roughElement.replace('_','.')
-					if roughElement in raw_List:
-						final_List.append(element)
+			for element in response_list:
+				if element['method'] == 'post':
 
-			for rawElement in final_List:
+					postAPI = element['api']
+					postAPI = postAPI.split('/')[-1]
+					postURL = url.split('/')[-1]
+
+					postAPI = postAPI.replace('s','')
+					postAPI = postAPI.replace('/','')
+					postURL = postURL.replace('s','')
+
+					if postAPI == postURL:
+						postHeader = element['main_Key']
+					else:
+						reverse = reverse.split('/')[-1]
+						reverseURL = reverse[len(reverse)/2:]
+
+						postURL = postURL.replace(reverseURL,'')
+
+						if postAPI == postURL:
+							postHeader = element['main_Key']
+
+			for rawElement in raw_List:
+				if postHeader not in rawElement:
+					rawElement = postHeader+'.'+rawElement
 				if '.' in rawElement:
-					# print(rawElement)
 					data = rawElement.split('.')[-1]
 					content['events'][eventCheck]['script']['exec'].append(space+"pm.environment.set("+'"'+ data +'"'+',currentData["'+rawElement+'"]);')
 				else:
