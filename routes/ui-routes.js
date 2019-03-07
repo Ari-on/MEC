@@ -265,12 +265,11 @@ UIRoutes.prototype.init = function() {
 
     app.post("/*", function(req, res){
         console.log("Entered into Common Post Method")
-         self.commonInstance.commonPOST(req.body,collectionName, function (err, res) {
-         console.log('Post response is',res)
-            if(res){
+         self.commonInstance.commonPOST(req.body,collectionName, function (err, resp) {
+            if(resp){
                 var result = {
-                    statuscode:201,
-                    bwInfo: res[0]
+                    'statuscode':201,
+                    'res': resp[0]
                 };
                 res.send(result)
             }
@@ -283,15 +282,15 @@ UIRoutes.prototype.init = function() {
 
     app.get("/*", function (req, res){
 
-console.log('req.query ----',req.query)
-console.log('req.query ----',req.params)
+            console.log('req.query ----',req.query)
+            console.log('req.query ----',req.params)
             if(getParams.length > 0){
                 var query = {}
                 var parameters = []
                 parameters = getParams
 //                console.log('req.params.allocationId',req.params)
 
-                if (req.query === '' || req.query === undefined || req.query === 'undefined'){
+                if (req.query === '' || req.query === undefined || req.query === 'undefined' || Object.keys(req.query).length === 0){
                      var str = req.params[0].split('/')
                      for(var i=0; i < getParams.length; i++){
                         console.log(getParams[i].key, "getParams[i].key --")
@@ -307,7 +306,7 @@ console.log('req.query ----',req.params)
             else{
                 finalQuery = req.query;
             }
-            console.log(finalQuery)
+
             self.commonInstance.commonGET(finalQuery,collectionName, function (err, resp) {
 
                 var permittedValues = resp.map(function(value) {
@@ -388,8 +387,6 @@ console.log('req.query ----',req.params)
         else{
             finalQuery = req.query
         }
-
-        console.log("myquery ---- ", query)
 
          self.commonInstance.commonUpdate(finalQuery, {$set:req.body}, collectionName, function (err, resp) {
             if(resp['n'] != 0){
