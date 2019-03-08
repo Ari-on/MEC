@@ -98,6 +98,7 @@ UIRoutes.prototype.init = function() {
     });
 */
     var collectionName = ''
+    var header = ''
     var getParams = [];
     var finalQuery = {}
 
@@ -205,9 +206,10 @@ UIRoutes.prototype.init = function() {
     app.get("/read_csv/:rowno", function (req, res) {
 
         var url = req.query.query;
+        header = req.query.header
 
         if (url.includes('/bwm/v1')){
-               collectionName = "BWM_API_swagger"
+            collectionName = "BWM_API_swagger"
         }
         else if (url.includes('/ui/v1')){
             collectionName = "UE_Identity_API_swagger"
@@ -264,8 +266,17 @@ UIRoutes.prototype.init = function() {
 
 
     app.post("/*", function(req, res){
-        console.log("Entered into Common Post Method")
-         self.commonInstance.commonPOST(req.body,collectionName, function (err, resp) {
+        
+        if (header in req.body){
+            bwInfo = req.body
+        }
+        else{
+            var bwInfo = {}
+            bwInfo[header] = {}
+            bwInfo[header] = req.body
+        }
+
+        self.commonInstance.commonPOST(bwInfo,collectionName, function (err, resp) {
             if(resp){
                 var result = {
                     'statuscode':201,

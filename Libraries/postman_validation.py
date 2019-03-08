@@ -362,13 +362,19 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile,response_l
 					reqRespkey = element['response_key']
 
 		crcrQuery = query.replace('&','?')
+
+		if content['method'] == 'POST':
+			execContent = space*1+"url: 'localhost:8081/"+readUrl+'/'+str(rowNoCopy)+"?query="+crcrQuery+'&header='+reqMainkey+"',",
+		else:
+			execContent = space*1+"url: 'localhost:8081/"+readUrl+'/'+str(rowNoCopy)+"?query="+crcrQuery+"',",
+
 		content['events'].append({   #Default content for 'Pre-Requests'
 			"listen": "prerequest",
 			"script": {"type": "text/javascript",
 			"exec":[
 			space*1+"var list = [];",
 			space*1+"pm.sendRequest({",
-			space*1+"url: 'localhost:8081/"+readUrl+'/'+str(rowNoCopy)+"?query="+crcrQuery+"',",
+			execContent,
 			space*1+"method: 'GET',",
 			space*1+"header: 'Content-Type:application/x-www-form-urlencoded',",
 			space*1+"}, function (err, res) {",
