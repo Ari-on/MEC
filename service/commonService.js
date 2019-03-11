@@ -34,7 +34,7 @@ commonService.prototype.commonGET = function(req,collectionName,callback) {
 
 commonService.prototype.commonPOST = function(myobj,collectionName,callback) {
 
-    console.log("This is commonPOST service!!!");
+    console.log("This is commonPOST service!!!",myobj);
     var self = this;
     var db = self.app.db;
     var collection = db.collection(collectionName);

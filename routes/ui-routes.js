@@ -141,65 +141,76 @@ UIRoutes.prototype.init = function() {
 //            console.log("getParams ====", getParams)
         }
 
+        fs.readFile('.//dbname.txt', 'utf8', function(err, data) {
+          if (err) throw err;
+          data = data.split('\n')
+          for (i=0;i<data.length;i++){
+            data[i] = data[i].replace(/\s+/g,'');
+            line = data[i].split(':')
+            keyWord = line[0]
+            collectionValue = line[1] 
+            // console.log(url,keyWord)
+            if (url.includes(keyWord)){
+                collectionName = collectionValue
+                var myobj = parseInt(req.params.rowno)-1;
+                var collection = db.collection(collectionName);
 
-        if (url.includes('/bwm/v1')){
-//             collectionNameBWM = "BWM_test1"
-
-               collectionName = "BWM_API_swagger"
-               console.log("collectionName", collectionName)
-//            self.seviceInstance.read_db(req, function (err, result) {
-//                res.send([result]);
-//            })
-        }
-        else if (url.includes('/ui/v1')){
-            collectionName = "UE_Identity_API_swagger"
-//            self.IdserviceInstance.read_db(req, function (err, result) {
-//                res.send([result]);
-//            })
-        }
-        else if (url.includes('/mx2/v1')){
-            collectionName = "UE_Application_Interface_API_swagger"
-//            self.AppserviceInstance.read_db(req, function (err, result) {
-//                res.send([result]);
-//            })
-        }
-        else if (url.includes('/exampleAPI/mp1')){
-            collectionName = "Mp1_API_swagger"
-//            self.Mp1serviceInstance.read_db(req, function (err, result) {
-//                res.send([result]);
-//            })
-        }
-        else if (url.includes('/exampleAPI/location')){
-            collectionName = "Location_API_swagger"
-//            self.LocationServiceInstance.read_db(req, function (err, result) {
-//                res.send([result]);
-//            })
-        }
-        else if (url.includes('/rni/v1')){
-            collectionName = "RNI_API_swagger"
-//            self.RNIserviceInstance.read_db(req, function (err, result) {
-//                res.send([result]);
-//            })
-        }
-
-
-        var myobj = parseInt(req.params.rowno)-1;
-        console.log("myobj ----",myobj)
-        // console.log("collectionName", collectionName)
-        var collection = db.collection(collectionName);
-
-        collection.find().toArray(function(err,resp) {
-            if(resp){
-                // console.log(typeof(myobj))
-                res.send(resp[myobj]);
+                collection.find().toArray(function(err,resp) {
+                    if(resp){
+                        // console.log(typeof(myobj))
+                        res.send(resp[myobj]);
+                    }
+                    else{
+                        console.log('Error is', err)
+                        res.send('finderror');
+                    }
+            })
             }
-            else{
-                console.log('Error is', err)
-                res.send('finderror');
-            }
-        })
+          }
+        });
+
+//         if (url.includes('/bwm/v1')){
+// //             collectionNameBWM = "BWM_test1"
+
+//                // collectionName = "BWM_API_swagger"
+//                console.log("collectionName", collectionName)
+// //            self.seviceInstance.read_db(req, function (err, result) {
+// //                res.send([result]);
+// //            })
+//         }
+//         else if (url.includes('/ui/v1')){
+//             collectionName = "UE_Identity_API_swagger"
+// //            self.IdserviceInstance.read_db(req, function (err, result) {
+// //                res.send([result]);
+// //            })
+//         }
+//         else if (url.includes('/mx2/v1')){
+//             collectionName = "UE_Application_Interface_API_swagger"
+// //            self.AppserviceInstance.read_db(req, function (err, result) {
+// //                res.send([result]);
+// //            })
+//         }
+//         else if (url.includes('/exampleAPI/mp1')){
+//             collectionName = "Mp1_API_swagger"
+// //            self.Mp1serviceInstance.read_db(req, function (err, result) {
+// //                res.send([result]);
+// //            })
+//         }
+//         else if (url.includes('/exampleAPI/location')){
+//             collectionName = "Location_API_swagger"
+// //            self.LocationServiceInstance.read_db(req, function (err, result) {
+// //                res.send([result]);
+// //            })
+//         }
+//         else if (url.includes('/rni/v1')){
+//             collectionName = "RNI_API_swagger"
+// //            self.RNIserviceInstance.read_db(req, function (err, result) {
+// //                res.send([result]);
+// //            })
+//         }
 
 
+        
     });
 
 
@@ -208,52 +219,68 @@ UIRoutes.prototype.init = function() {
         var url = req.query.query;
         header = req.query.header
 
-        if (url.includes('/bwm/v1')){
-            collectionName = "BWM_API_swagger"
-        }
-        else if (url.includes('/ui/v1')){
-            collectionName = "UE_Identity_API_swagger"
-        }
-        else if (url.includes('/mx2/v1')){
-            collectionName = "UE_Application_Interface_API_swagger"
-        }
-        else if (url.includes('/exampleAPI/mp1')){
-            collectionName = "Mp1_API_swagger"
-        }
-        else if (url.includes('/exampleAPI/location')){
-            collectionName = "Location_API_swagger"
-        }
-        else if (url.includes('/rni/v1')){
-            collectionName = "RNI_API_swagger"
-        }
+        fs.readFile('.//dbname.txt', 'utf8', function(err, data) {
+          if (err) throw err;
+          data = data.split('\n')
+          for (i=0;i<data.length;i++){
+            data[i] = data[i].replace(/\s+/g,'');
+            line = data[i].split(':')
+            keyWord = line[0]
+            collectionValue = line[1] 
+            // console.log(url,keyWord)
+            if (url.includes(keyWord)){
+                collectionName = collectionValue
+
+                var rowNo = parseInt(req.params.rowno, 10);
+                var list = [];
+
+                var stream = fs.createReadStream(__dirname+"/../outputFiles/"+collectionName+".csv");
+
+                var csvStream = csv()
+                    .on("data", function(data){
+                        list.push(data)
+                    })
+                    .on("end", function(){
+                        req = {};
+                        headings = list[0];
+                        data = list[rowNo];
+                        for (i = 0;i<headings.length;i++)
+                        {
+                            if (headings[i].indexOf('_') > -1 && headings[i].indexOf('._') <= -1)
+                            {
+                               headings[i] = headings[i].replace('_','.');
+                            }
+                            req[headings[i]] = data[i]
+                        }
+                        res.send([req]);
+                    });
+
+                stream.pipe(csvStream);
+            }
+          }
+        });
+        // if (url.includes('/bwm/v1')){
+        //     collectionName = "BWM_API_swagger"
+        // }
+        // else if (url.includes('/ui/v1')){
+        //     collectionName = "UE_Identity_API_swagger"
+        // }
+        // else if (url.includes('/mx2/v1')){
+        //     collectionName = "UE_Application_Interface_API_swagger"
+        // }
+        // else if (url.includes('/exampleAPI/mp1')){
+        //     collectionName = "Mp1_API_swagger"
+        // }
+        // else if (url.includes('/exampleAPI/location')){
+        //     collectionName = "Location_API_swagger"
+        // }
+        // else if (url.includes('/rni/v1')){
+        //     collectionName = "RNI_API_swagger"
+        // }
 
 
 //        if (url.includes('/bwm/v1')) {
-            var rowNo = parseInt(req.params.rowno, 10);
-            var list = [];
-
-            var stream = fs.createReadStream(__dirname+"/../outputFiles/"+collectionName+".csv");
-
-            var csvStream = csv()
-                .on("data", function(data){
-                    list.push(data)
-                })
-                .on("end", function(){
-                    req = {};
-                    headings = list[0];
-                    data = list[rowNo];
-                    for (i = 0;i<headings.length;i++)
-                    {
-                        if (headings[i].indexOf('_') > -1 && headings[i].indexOf('._') <= -1)
-                        {
-                           headings[i] = headings[i].replace('_','.');
-                        }
-                        req[headings[i]] = data[i]
-                    }
-                    res.send([req]);
-                });
-
-            stream.pipe(csvStream);
+            
 //        }
     });
     /* BWM API */
@@ -268,15 +295,15 @@ UIRoutes.prototype.init = function() {
     app.post("/*", function(req, res){
         
         if (header in req.body){
-            bwInfo = req.body
+            reqobj = req.body
         }
         else{
-            var bwInfo = {}
-            bwInfo[header] = {}
-            bwInfo[header] = req.body
+            var reqobj = {}
+            reqobj[header] = {}
+            reqobj[header] = req.body
         }
 
-        self.commonInstance.commonPOST(bwInfo,collectionName, function (err, resp) {
+        self.commonInstance.commonPOST(reqobj,collectionName, function (err, resp) {
             if(resp){
                 var result = {
                     'statuscode':201,
