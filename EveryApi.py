@@ -123,7 +123,7 @@ def Yaml2Json(yaml_file):
 		validation_file = yaml_file.split('/')[-1].strip(".yaml")
 
 	print(validation_file + ".json file is created Successfully")
-	# postman_validation.readExcel(validation_file)
+	postman_validation.readExcel(validation_file)
 	
 def swagger2postman(out_file):
 	os.system ("node ./Libraries/swagger2postman.js  "+out_file)

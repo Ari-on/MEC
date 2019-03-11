@@ -33,6 +33,7 @@ def readSwagger(yaml_file):
 
 		# Calls the function to add the tags to the text file
 		addTags(yamlContent)
+		addDBFile(yamlContent,outputFileName)
 
 def addTags(yamlContent):
 	i = "parameters"
@@ -216,3 +217,23 @@ def addKeys(keys,main_Key,keyList):
 				addKeys(keys[key],main_Key+'.'+key,keyList)
 # swagrToExcl = swaggerToExcel(sys.argv[1])
 # swagrToExcl.readSwagger()
+
+def addDBFile(yamlContent,swaggerFile):
+	fileName = 'dbname.txt'
+	basePath = yamlContent['basePath']
+	fileLine = basePath+':'+swaggerFile+'\n'
+
+	if os.path.exists(fileName):
+		readerList = []
+		reader = open(fileName,'r')
+		for i in reader:
+			readerList.append(i)
+		if fileLine in readerList:
+			pass
+		else:
+			appender = open(fileName,'a')
+			appender.write(fileLine)
+	else:
+		file = open(fileName,'w')		
+		file.write(fileLine)
+
