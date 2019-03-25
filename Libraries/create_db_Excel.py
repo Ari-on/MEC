@@ -82,6 +82,36 @@ def addTags(yamlContent):
 								pass	
 						else:
 							pass
+
+	for element in response_list:
+		main_Key = element['main_Key']
+		# print('came',main_Key)
+		definitionKeys = yamlContent['definitions'].keys()
+		for key in definitionKeys:
+			capKey1 = main_Key.upper()
+			capKey2 = key.upper()
+			if capKey1 == capKey2:
+				requiredKey = key
+				if requiredKey in definitionKeys:
+					if 'properties' in yamlContent['definitions'][requiredKey]:
+						definitions = yamlContent['definitions'][requiredKey]['properties'].keys()
+						for key in definitions:
+							if main_Key in element['response']:
+								if key not in element['response'][main_Key].keys():
+									element['response'][main_Key][key] = ''
+							else:
+								pass
+	queryList = {}
+	for api in yamlContent['paths']:
+		for method in yamlContent['paths'][api]:
+			for element in yamlContent['paths'][api][method]['parameters']:
+				if element['in'] == 'path' or element['in'] == 'query':
+					if api not in queryList:
+						queryList[api] = []
+
+					if element['name'] not in queryList[api]:
+						queryList[api].append(element['name'])
+
 	keyList = []
 	for element in response_list:
 		main_Key = element['main_Key']
@@ -94,54 +124,23 @@ def addTags(yamlContent):
 				else:
 					x = addKeys(element['response'][k],main_Key+'_'+k,keyList)
 			elif type(element['response'][k]) == dict:
+				if len(element['response'][k]) == 0:
+					keyList.append(main_Key+'.'+k)
 				if main_Key == k:
 					key = k
 				else:
 					key = main_Key+'.'+k
 				x = addKeys(element['response'][k],key,keyList)
 
+		for api in queryList:
+			if element['api'] in api:
+				for param in queryList[api]:
+					param = param.replace('.','-')
+					param = param.replace('_','-')
+					if main_Key+'.'+param not in keyList:
+						keyList.append(main_Key+'.'+param)
+
 	writeToExcel(keyList)
-
-	if i in yamlContent:
-		sorted_sub = sorted(yamlContent[i].items())
-		sorted_sub_keys = sorted(yamlContent[i].keys())
-
-		for j in enumerate(sorted_sub_keys):
-			j = j[1]
-			if "Body." in j:
-				j = j[5:]
-				if definitions in yamlContent:
-					sorted_sub = sorted(yamlContent[definitions].items())
-					sorted_sub_keys = sorted(yamlContent[definitions].keys())
-					if j in sorted_sub_keys:
-						bwInfoExample = yamlContent['definitions'][j]['example']
-						# print(bwInfoExample)
-
-						# this will append the keys and values of the dict to 2 different lists
-						for dictId, dictInfo in bwInfoExample.items():
-							if dictInfo == {} and dictId not in dictListKeys:
-								dictListKeys.append(dictId)
-							else:
-								if isinstance(dictInfo, list):
-									for keys in dictInfo[0]:
-										if dictId+'_'+keys not in dictListKeys:
-											dictListKeys.append(dictId+'_'+keys)
-								else:
-									variable_Type = type(dictInfo).__name__
-									if variable_Type == 'str':
-										if dictId not in dictListKeys:
-											dictListKeys.append(dictId)
-									else:
-										for keys in dictInfo:
-											variable_Type1 = type(dictInfo[keys]).__name__
-											if variable_Type1 == 'dict':
-												for item in dictInfo[keys]:
-													if dictId+'.'+keys+'.'+item not in dictListKeys:
-														dictListKeys.append(dictId+'.'+keys+'.'+item)
-											else:
-												if dictId+'_'+keys not in dictListKeys:
-													dictListKeys.append(dictId+'_'+keys)
-		# writeToExcel(dictListKeys)
 
 def writeToExcel(dictListKeys):
 
@@ -149,56 +148,6 @@ def writeToExcel(dictListKeys):
 		spamwriter = csv.writer(csvfile)
 		spamwriter.writerow(dictListKeys)
 
-	# dictListKeys2 = []
-	# for key in dictListKeys:
-	# 	if '.' in key:
-	# 		new_key = key.split('.')[1]
-	# 		dictListKeys2.append(new_key)
-	# 	else:
-	# 		dictListKeys2.append(key)
-	# createDatabase(dictListKeys2)
-
-def createDatabase(dictListKeys):
-	
-	collName = outputFileName
-
-	# Connection to mongodb
-	client = pymongo.MongoClient("mongodb://localhost:27017/mecTest")
-	db = client["mecTest"]
-
-	# This will read the excel file and insert it into the database
-	if collName not in db.collection_names():
-		# print (collName, "is created")
-		with open(outFileName, 'rb') as csvfile:
-			spamreader = csv.reader(csvfile)
-			for row in spamreader:
-		  # number_of_rows = sheet.nrows
-			  number_of_columns = len(row)
-			  # print (number_of_columns)
-			  dictList = []
-			  dictListValue = []
-			  for column in range(number_of_columns):
-				value = " "
-				dictListValue.append(value)
-				dictList = dict(zip(dictListKeys, dictListValue))
-			  insertRecord = db[collName].insert_one(dictList)
-			  # print ("Record inserted... Check the DB")
-	else:
-		# print (collName, "is exists")
-		with open(outFileName, 'rb') as csvfile:
-			spamreader = csv.reader(csvfile)
-			for row in spamreader:
-		  # number_of_rows = sheet.nrows
-			  number_of_columns = len(row)
-			  # print (number_of_columns)
-			  dictList = []
-			  dictListValue = []
-			  for column in range(number_of_columns):
-				value = ""
-				dictListValue.append(value)
-				dictList = dict(zip(dictListKeys, dictListValue))
-			  insertRecord = db[collName].insert_one(dictList)
-			  # print ("Record inserted... Check the DB")
 
 def addKeys(keys,main_Key,keyList):
 	if type(keys) == list:
@@ -209,14 +158,14 @@ def addKeys(keys,main_Key,keyList):
 				keyList.append(main_Key)
 	if type(keys) == dict:
 		for key in keys:
+			if type(keys[key]) == int:
+				keyList.append(main_Key+'.'+key)
 			if type(keys[key]) == str:
 				keyList.append(main_Key+'.'+key)
 			elif type(keys[key]) == list:
 				addKeys(keys[key],main_Key+'.'+key,keyList)
 			elif type(keys[key]) == dict:
 				addKeys(keys[key],main_Key+'.'+key,keyList)
-# swagrToExcl = swaggerToExcel(sys.argv[1])
-# swagrToExcl.readSwagger()
 
 def addDBFile(yamlContent,swaggerFile):
 	fileName = 'dbname.txt'

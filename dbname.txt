@@ -1,6 +1,6 @@
 /bwm/v1:BWM_API_swagger
-/ui/v1:UE_Identity_API_swagger
 /mx2/v1:UE_Application_Interface_API_swagger
-/exampleAPI/mp1:Mp1_API_swagger
-/exampleAPI/location:Location_API_swagger
+/ui/v1:UE_Identity_API_swagger
+/exampleAPI/location/v1:Location_API_swagger
+/exampleAPI/mp1/v1/:Mp1_API_swagger
 /rni/v1:RNI_API_swagger

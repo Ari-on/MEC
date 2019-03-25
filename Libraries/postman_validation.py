@@ -65,6 +65,25 @@ def readExcel(csv_File): #This method will read the Excel file and take the TAG 
 						else:
 							pass
 
+		for element in response_list:
+			main_Key = element['main_Key']
+			# print('came',main_Key)
+			definitionKeys = yamlContent['definitions'].keys()
+			for key in definitionKeys:
+				capKey1 = main_Key.upper()
+				capKey2 = key.upper()
+				if capKey1 == capKey2:
+					requiredKey = key
+					if requiredKey in definitionKeys:
+						if 'properties' in yamlContent['definitions'][requiredKey]:
+							definitions = yamlContent['definitions'][requiredKey]['properties'].keys()
+							for key in definitions:
+								if main_Key in element['response']:
+									if key not in element['response'][main_Key].keys():
+										element['response'][main_Key][key] = ''
+								else:
+									pass
+
 
 	#Passing the list to next Method to change the Postman file
 	writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile,response_list)
@@ -259,16 +278,16 @@ def writePostmanCollection(Tag,dataType,subDataType,yamlFile,jsonfile,response_l
 		url_List = []
 		raw_List = []
 		final_List = []
-		csv_List = []
+		# csv_List = []
 
-		file = open('./outputFiles/'+resultFile +".csv",'r')#BWM_API_swagger/Location_API_swagger
+		# file = open('./outputFiles/'+resultFile +".csv",'r')#BWM_API_swagger/Location_API_swagger
 
-		data = csv.reader(file)
-		csv_List = []
-		for row in data:
-			csv_List.append(row)
+		# data = csv.reader(file)
+		# csv_List = []
+		# for row in data:
+		# 	csv_List.append(row)
 
-		csv_List = csv_List[0]
+		# csv_List = csv_List[0]
 		pathVariables = content['pathVariables']
 		if len(pathVariables) == 0:
 			pass

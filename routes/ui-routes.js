@@ -1,7 +1,8 @@
 var jwt = require('jsonwebtoken');
 // var xlsx = require('node-xlsx');
- var fs = require('fs');
- var csv = require("fast-csv");
+var fs = require('fs');
+var csv = require("fast-csv");
+var forEach = require('async-foreach').forEach;
 
 var commonservice  = require ('../service/commonservice.js');
 
@@ -97,10 +98,11 @@ UIRoutes.prototype.init = function() {
         res.status(200).send(result)
     });
 */
-    var collectionName = ''
-    var header = ''
+    var collectionName = '';
+    var header = '';
     var getParams = [];
-    var finalQuery = {}
+    var finalQuery = {};
+    var keyWord = '';
 
     app.get("/read_db/:rowno",function (req,res) {
         console.log('read_db API called ---')
@@ -144,30 +146,34 @@ UIRoutes.prototype.init = function() {
         fs.readFile('.//dbname.txt', 'utf8', function(err, data) {
           if (err) throw err;
           data = data.split('\n')
-          for (i=0;i<data.length;i++){
-            data[i] = data[i].replace(/\s+/g,'');
-            line = data[i].split(':')
+
+          forEach(data,function(item,index){
+            item = item.replace(/\s+/g,'');
+            line = item.split(':')
             keyWord = line[0]
             collectionValue = line[1] 
-            // console.log(url,keyWord)
-            if (url.includes(keyWord)){
+            if (url.includes(keyWord))
+            {
                 collectionName = collectionValue
-                var myobj = parseInt(req.params.rowno)-1;
-                var collection = db.collection(collectionName);
-
-                collection.find().toArray(function(err,resp) {
-                    if(resp){
-                        // console.log(typeof(myobj))
-                        res.send(resp[myobj]);
-                    }
-                    else{
-                        console.log('Error is', err)
-                        res.send('finderror');
-                    }
-            })
+                return false;
             }
-          }
+          });
+            var myobj = parseInt(req.params.rowno)-1;
+            var collection = db.collection(collectionName);
+
+            collection.find().toArray(function(err,resp) {
+                if(resp){
+                    res.send(resp[myobj]);
+                }
+                else{
+                    console.log('Error is', err)
+                    res.send('finderror');
+                }
+            })
         });
+
+            // }
+          
 
 //         if (url.includes('/bwm/v1')){
 // //             collectionNameBWM = "BWM_test1"
@@ -217,48 +223,54 @@ UIRoutes.prototype.init = function() {
     app.get("/read_csv/:rowno", function (req, res) {
 
         var url = req.query.query;
-        header = req.query.header
+        header = req.query.header;
+        
 
-        fs.readFile('.//dbname.txt', 'utf8', function(err, data) {
+        fs.readFile('.//dbname.txt', 'utf8', function(err, data) {        
+          
           if (err) throw err;
           data = data.split('\n')
-          for (i=0;i<data.length;i++){
-            data[i] = data[i].replace(/\s+/g,'');
-            line = data[i].split(':')
+
+          forEach(data,function(item,index){
+            item = item.replace(/\s+/g,'');
+            line = item.split(':')
             keyWord = line[0]
             collectionValue = line[1] 
-            // console.log(url,keyWord)
-            if (url.includes(keyWord)){
+            if (url.includes(keyWord))
+            {
                 collectionName = collectionValue
-
-                var rowNo = parseInt(req.params.rowno, 10);
-                var list = [];
-
-                var stream = fs.createReadStream(__dirname+"/../outputFiles/"+collectionName+".csv");
-
-                var csvStream = csv()
-                    .on("data", function(data){
-                        list.push(data)
-                    })
-                    .on("end", function(){
-                        req = {};
-                        headings = list[0];
-                        data = list[rowNo];
-                        for (i = 0;i<headings.length;i++)
-                        {
-                            if (headings[i].indexOf('_') > -1 && headings[i].indexOf('._') <= -1)
-                            {
-                               headings[i] = headings[i].replace('_','.');
-                            }
-                            req[headings[i]] = data[i]
-                        }
-                        res.send([req]);
-                    });
-
-                stream.pipe(csvStream);
+                return false;
             }
-          }
+          });
+            var rowNo = parseInt(req.params.rowno, 10);
+            var list = [];
+
+            var stream = fs.createReadStream(__dirname+"/../outputFiles/"+collectionName+".csv");
+
+            var csvStream = csv()
+                .on("data", function(data){
+                    list.push(data)
+                })
+                .on("end", function(){
+                    req = {};
+                    headings = list[0];
+                    data = list[rowNo];
+                    for (i = 0;i<headings.length;i++)
+                    {
+                        if (headings[i].indexOf('_') > -1 && headings[i].indexOf('._') <= -1)
+                        {
+                           headings[i] = headings[i].replace('_','.');
+                        }
+                        req[headings[i]] = data[i]
+                    }
+                    res.send([req]);
+                });
+            stream.pipe(csvStream);
         });
+
+
+        // }
+        // });
         // if (url.includes('/bwm/v1')){
         //     collectionName = "BWM_API_swagger"
         // }

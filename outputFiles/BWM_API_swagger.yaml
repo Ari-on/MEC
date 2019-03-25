@@ -1,0 +1,572 @@
+basePath: /bwm/v1
+consumes:
+- application/json
+definitions:
+  AllocationDirection:
+    description: The direction of the requested BW allocation
+    enum:
+    - 00 = Downlink (towards the UE)
+    - 01 = Uplink (towards the application/session)
+    - 10 = Symmetrical
+    type: string
+  AppInsId:
+    description: Application instance identifier
+    type: string
+  BwInfo:
+    description: information of bandwidth resource
+    example:
+      allocationDirection: '{{allocationDirection}}'
+      appInsId: '{{appInsId}}'
+      fixedAllocation: '{{fixedAllocation}}'
+      fixedBWPriority: '{{fixedBWPriority}}'
+      requestType: '{{requestType}}'
+      sessionFilter:
+      - DstAddress: '{{DstAddress}}'
+        DstPort:
+        - '{{DstPort}}'
+        Protocol: '{{Protocol}}'
+        SourceIp: '{{SourceIp}}'
+        SourcePort:
+        - '{{SourcePort}}'
+      timeStamp:
+        nanoSeconds: '{{nanoSeconds}}'
+        seconds: '{{seconds}}'
+    properties:
+      allocationDirection:
+        $ref: '#/definitions/AllocationDirection'
+      appInsId:
+        $ref: '#/definitions/AppInsId'
+      fixedAllocation:
+        $ref: '#/definitions/FixedAllocation'
+      fixedBWPriority:
+        $ref: '#/definitions/FixedBWPriority'
+      requestType:
+        $ref: '#/definitions/RequestType'
+      sessionFilter:
+        $ref: '#/definitions/SessionFilter'
+      timeStamp:
+        $ref: '#/definitions/TimeStamp'
+    required:
+    - allocationDirection
+    - appInsId
+    - fixedAllocation
+    - requestType
+    type: object
+  BwInfoDeltas:
+    description: Conform to JSON merge patch format and processing rules specified
+      IETF RFC 7396 [8], this type represents the attributes whose value are allowed
+      to be updated with HTTP PATCH method in content format JSON
+    example:
+      allocationDirection: '{{allocationDirection}}'
+      appInsId: '{{appInsId}}'
+      fixedAllocation: '{{fixedAllocation}}'
+      fixedBWPriority: '{{fixedBWPriority}}'
+      requestType: '{{requestType}}'
+      sessionFilter:
+      - DstAddress: '{{DstAddress}}'
+        DstPort:
+        - '{{DstPort}}'
+        Protocol: '{{Protocol}}'
+        SourceIp: '{{SourceIp}}'
+        SourcePort:
+        - '{{SourcePort}}'
+    properties:
+      allocationDirection:
+        $ref: '#/definitions/AllocationDirection'
+      appInsId:
+        $ref: '#/definitions/AppInsId'
+      fixedAllocation:
+        $ref: '#/definitions/FixedAllocation'
+      fixedBWPriority:
+        $ref: '#/definitions/FixedBWPriority'
+      requestType:
+        $ref: '#/definitions/RequestType'
+      sessionFilter:
+        $ref: '#/definitions/SessionFilter'
+    type: object
+  DstAddress:
+    description: Destination address identity of session (including range)
+    type: string
+  DstPort:
+    description: 'Destination port identity of session '
+    items:
+      type: string
+    type: array
+  FixedAllocation:
+    description: Size of requested fixed BW allocation in [bps]
+    type: string
+  FixedBWPriority:
+    description: Indicates the allocation priority when dealing with several applications
+      or sessions in parallel. Values are not defined in the present document
+    enum:
+    - not defined in the present document
+    type: string
+  NanoSeconds:
+    description: The nanoseconds part of the Time. Time is defined as Unix-time since
+      January 1, 1970, 00:00:00 UTC
+    format: uint32
+    type: integer
+  Problem.detail:
+    description: A human-readable explanation specific to this occurrence of the problem
+    type: string
+  Problem.instance:
+    description: A URI reference that identifies the specific occurrence of the problem
+    format: uri
+    type: string
+  Problem.status:
+    description: The HTTP status code for this occurrence of the problem
+    format: uint32
+    type: integer
+  Problem.title:
+    description: A short, human-readable summary of the problem type
+    type: string
+  Problem.type:
+    description: A URI reference according to IETF RFC 3986 that identifies the problem
+      type
+    format: uri
+    type: string
+  ProblemDetails:
+    properties:
+      detail:
+        $ref: '#/definitions/Problem.detail'
+      instance:
+        $ref: '#/definitions/Problem.instance'
+      status:
+        $ref: '#/definitions/Problem.status'
+      title:
+        $ref: '#/definitions/Problem.title'
+      type:
+        $ref: '#/definitions/Problem.type'
+    type: object
+  Protocol:
+    description: Protocol number
+    type: string
+  RequestType:
+    description: Numeric value (0 - 255) corresponding to specific type of consumer
+    enum:
+    - APPLICATION_SPECIFIC_BW_ALLOCATION
+    - SESSION_SPECIFIC_BW_ALLOCATION
+    type: string
+  Seconds:
+    description: The seconds part of the Time. Time is defined as Unix-time since
+      January 1, 1970, 00:00:00 UTC
+    format: uint32
+    type: integer
+  SessionFilter:
+    description: Session filtering criteria, applicable when requestType is set as
+      SESSION_SPECIFIC_BW_ALLOCATION. Any filtering criteria shall define a single
+      session only. In case multiple sessions match sessionFilter the request shall
+      be rejected
+    items:
+      $ref: '#/definitions/SessionFilter_inner'
+    type: array
+  SessionFilter_inner:
+    properties:
+      dstAddress:
+        $ref: '#/definitions/DstAddress'
+      dstPort:
+        $ref: '#/definitions/DstPort'
+      protocol:
+        $ref: '#/definitions/Protocol'
+      sourceIp:
+        $ref: '#/definitions/SourceIp'
+      sourcePort:
+        $ref: '#/definitions/SourcePort'
+  SourceIp:
+    description: Source address identity of session (including range)
+    type: string
+  SourcePort:
+    description: 'Source port identity of session '
+    items:
+      type: string
+    type: array
+  TimeStamp:
+    example:
+      nanoSeconds: {}
+      seconds: {}
+    properties:
+      nanoSeconds:
+        $ref: '#/definitions/NanoSeconds'
+      seconds:
+        $ref: '#/definitions/Seconds'
+    required:
+    - nanoSeconds
+    - seconds
+    type: object
+  inline_response_200:
+    example:
+      bwInfo:
+        allocationDirection: {}
+        appInsId: {}
+        fixedAllocation: {}
+        fixedBWPriority: {}
+        requestType: {}
+        sessionFilter: ''
+        timeStamp:
+          nanoSeconds: {}
+          seconds: {}
+    properties:
+      bwInfo:
+        $ref: '#/definitions/BwInfo'
+    required:
+    - bwInfo
+  inline_response_400:
+    properties:
+      ProblemDetails:
+        $ref: '#/definitions/ProblemDetails'
+  inline_response_403:
+    properties:
+      ProblemDetails:
+        $ref: '#/definitions/ProblemDetails'
+    required:
+    - ProblemDetails
+externalDocs:
+  description: ETSI MEC015 V1.1.1 Bandwidth Management API
+  url: http://www.etsi.org/deliver/etsi_gs/MEC/001_099/015/01.01.01_60/gs_MEC015v010101p.pdf
+host: 127.0.0.1:8081
+info:
+  description: The ETSI MEC ISG MEC015 Bandwidth Management API described using OpenAPI
+  license:
+    name: ETSI Forge copyright notice
+    url: https://forge.etsi.org/etsi-forge-copyright-notice.txt
+  title: BWM API
+  version: 1.1.1
+parameters:
+  Body.BwInfo:
+    description: BwInfo with updated information is included as entity body of the
+      request
+    in: body
+    name: bwInfo
+    required: true
+    schema:
+      $ref: '#/definitions/BwInfo'
+  Body.BwInfoDeltas:
+    description: 'Description of the changes to instruct the server how to modify
+      the resource representation. '
+    in: body
+    name: bwInfoDeltas
+    required: true
+    schema:
+      $ref: '#/definitions/BwInfoDeltas'
+  Path.AllocationId:
+    description: Represents a bandwidth allocation instance
+    in: path
+    name: allocationId
+    required: true
+    type: string
+  Query.AppInstanceId:
+    collectionFormat: multi
+    description: 'A mobile edge application instance may use multiple app_instance_ids
+      as an input parameter to query the bandwidth allocation of a list of mobile
+      edge application instances. '
+    in: query
+    items:
+      type: string
+    name: app_instance_id
+    required: false
+    type: array
+  Query.AppName:
+    collectionFormat: multi
+    description: 'A mobile edge application instance may use multiple ser_names as
+      an input parameter to query the bandwidth allocation of a list of mobile edge
+      application instances. '
+    in: query
+    items:
+      type: string
+    name: app_name
+    required: false
+    type: array
+  Query.SessionId:
+    collectionFormat: multi
+    description: 'A mobile edge application instance may use session_id as an input
+      parameter to query the bandwidth allocation of a list of sessions. '
+    in: query
+    items:
+      type: string
+    name: session_id
+    required: false
+    type: array
+paths:
+  /bw_allocations:
+    get:
+      description: This method retrieves information about a list of bandwidthAllocation
+        resources
+      operationId: bw_allocationsGET
+      parameters:
+      - collectionFormat: multi
+        description: 'A mobile edge application instance may use multiple app_instance_ids
+          as an input parameter to query the bandwidth allocation of a list of mobile
+          edge application instances. '
+        in: query
+        items:
+          type: string
+        name: app_instance_id
+        required: false
+        type: array
+      - collectionFormat: multi
+        description: 'A mobile edge application instance may use multiple ser_names
+          as an input parameter to query the bandwidth allocation of a list of mobile
+          edge application instances. '
+        in: query
+        items:
+          type: string
+        name: app_name
+        required: false
+        type: array
+      - collectionFormat: multi
+        description: 'A mobile edge application instance may use session_id as an
+          input parameter to query the bandwidth allocation of a list of sessions. '
+        in: query
+        items:
+          type: string
+        name: session_id
+        required: false
+        type: array
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Upon success, a response body containing an array of the bandwidthAllocations
+            is returned.
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        400:
+          description: It is used to indicate that incorrect parameters were passed
+            to the request. In the returned ProblemDetails structure, the "detail"
+            attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+        403:
+          description: The operation is not allowed given the current status of the
+            resource. More information should be provided in the "detail" attribute
+            of the "ProblemDetails" structure.
+          schema:
+            $ref: '#/definitions/inline_response_403'
+        404:
+          description: It is used when a client provided a URI that cannot be mapped
+            to a valid resource URI. In the returned ProblemDetails structure, the
+            "detail" attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+      x-swagger-router-controller: Default
+    post:
+      description: This method is used to create a bandwidthAllocation resource.
+      operationId: bw_allocationsPOST
+      parameters:
+      - description: BwInfo with updated information is included as entity body of
+          the request
+        in: body
+        name: bwInfo
+        required: true
+        schema:
+          $ref: '#/definitions/BwInfo'
+      produces:
+      - application/json
+      responses:
+        201:
+          description: Upon success, the HTTP response shall include a "Location"
+            HTTP header that contains the resource URI of the created resource.
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        400:
+          description: It is used to indicate that incorrect parameters were passed
+            to the request. In the returned ProblemDetails structure, the "detail"
+            attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+        403:
+          description: The operation is not allowed given the current status of the
+            resource. More information should be provided in the "detail" attribute
+            of the "ProblemDetails" structure.
+          schema:
+            $ref: '#/definitions/inline_response_403'
+        404:
+          description: It is used when a client provided a URI that cannot be mapped
+            to a valid resource URI. In the returned ProblemDetails structure, the
+            "detail" attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+      x-swagger-router-controller: Default
+  /bw_allocations/{allocationId}:
+    delete:
+      description: Remove a specific bandwidthAllocation resource. DELETE method is
+        typically used in "Unregister from Bandwidth Management Service" procedure
+      operationId: bw_allocationsAllocationIdDELETE
+      parameters:
+      - description: Represents a bandwidth allocation instance
+        in: path
+        name: allocationId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        204:
+          description: No Content
+        403:
+          description: The operation is not allowed given the current status of the
+            resource. More information shall be provided in the "detail" attribute
+            of the "ProblemDetails" structure.
+          schema:
+            $ref: '#/definitions/inline_response_403'
+        404:
+          description: It is used when a client provided a URI that cannot be mapped
+            to a valid resource URI. In the returned ProblemDetails structure, the
+            "detail" attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+      x-swagger-router-controller: Default
+    get:
+      description: 'This method retrieves information about a specific bandwidthAllocation
+        resource. '
+      operationId: bw_allocationsAllocationIdGET
+      parameters:
+      - description: Represents a bandwidth allocation instance
+        in: path
+        name: allocationId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        200:
+          description: It is used to indicate nonspecific success. The response body
+            contains a representation of the resource.
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        400:
+          description: It is used to indicate that incorrect parameters were passed
+            to the request. In the returned ProblemDetails structure, the "detail"
+            attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+        403:
+          description: "The operation is not allowed given the current status of the\
+            \ resource. More information shall be provided in the \"detail\" attribute\
+            \ of the \"ProblemDetails\" structure. required:\n  - ProblemDetails\n\
+            properties:\n  ProblemDetails:\n    $ref: '#/definitions/ProblemDetails'"
+        404:
+          description: It is used when a client provided a URI that cannot be mapped
+            to a valid resource URI. In the returned ProblemDetails structure, the
+            "detail" attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+      x-swagger-router-controller: Default
+    patch:
+      description: 'This method updates the information about a specific bandwidthAllocation
+        resource. '
+      operationId: bw_allocationsAllocationIdPATCH
+      parameters:
+      - description: Represents a bandwidth allocation instance
+        in: path
+        name: allocationId
+        required: true
+        type: string
+      - description: 'Description of the changes to instruct the server how to modify
+          the resource representation. '
+        in: body
+        name: bwInfoDeltas
+        required: true
+        schema:
+          $ref: '#/definitions/BwInfoDeltas'
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Upon success, a response body containing data type describing
+            the updated BwInfo is returned.
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        400:
+          description: It is used to indicate that incorrect parameters were passed
+            to the request. In the returned ProblemDetails structure, the "detail"
+            attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+        403:
+          description: The operation is not allowed given the current status of the
+            resource. More information shall be provided in the "detail" attribute
+            of the "ProblemDetails" structure.
+          schema:
+            $ref: '#/definitions/inline_response_403'
+        404:
+          description: It is used when a client provided a URI that cannot be mapped
+            to a valid resource URI. In the returned ProblemDetails structure, the
+            "detail" attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+        412:
+          description: It is used when a condition has failed during conditional requests,
+            e.g. when using ETags to avoid write conflicts. In the returned ProblemDetails
+            structure, the "detail" attribute should convey more information about
+            the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+      x-swagger-router-controller: Default
+    put:
+      description: 'This method updates the information about a specific bandwidthAllocation
+        resource. '
+      operationId: bw_allocationsAllocationIdPUT
+      parameters:
+      - description: Represents a bandwidth allocation instance
+        in: path
+        name: allocationId
+        required: true
+        type: string
+      - description: BwInfo with updated information is included as entity body of
+          the request
+        in: body
+        name: bwInfo
+        required: true
+        schema:
+          $ref: '#/definitions/BwInfo'
+      produces:
+      - application/json
+      responses:
+        200:
+          description: Upon success, a response body containing data type describing
+            the updated BwInfo is returned.
+          schema:
+            $ref: '#/definitions/inline_response_200'
+        400:
+          description: It is used to indicate that incorrect parameters were passed
+            to the request. In the returned ProblemDetails structure, the "detail"
+            attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+        403:
+          description: The operation is not allowed given the current status of the
+            resource. More information shall be provided in the "detail" attribute
+            of the "ProblemDetails" structure.
+          schema:
+            $ref: '#/definitions/inline_response_403'
+        404:
+          description: It is used when a client provided a URI that cannot be mapped
+            to a valid resource URI. In the returned ProblemDetails structure, the
+            "detail" attribute should convey more information about the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+        412:
+          description: It is used when a condition has failed during conditional requests,
+            e.g. when using ETags to avoid write conflicts. In the returned ProblemDetails
+            structure, the "detail" attribute should convey more information about
+            the error.
+          schema:
+            $ref: '#/definitions/inline_response_400'
+      x-swagger-router-controller: Default
+produces:
+- application/json
+schemes:
+- http
+- https
+security:
+- OauthSecurity:
+  - all
+securityDefinitions:
+  OauthSecurity:
+    flow: application
+    scopes:
+      all: Single oauth2 scope for API
+    tokenUrl: https://oauth.exampleAPI/token
+    type: oauth2
+swagger: '2.0'

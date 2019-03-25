@@ -10,6 +10,7 @@ import yaml_edit
 import spliting_testCase_basedOn_statusCode
 import spliting_testCase_basedOn_EnumValues
 import format_reqBody
+import AddParams
 
 
 def Yaml2Json(yaml_file):
@@ -47,17 +48,6 @@ def Yaml2Json(yaml_file):
 
 	yaml_edit.addRequest(in_file)
 
-	"""
-			Function Name        : readSwagger
-			Function Description : create DB and .csv file
-			Inputs   : 
-				FileName         : File name(.yaml file)
-			Outputs  : 
-				creates a (.csv file and one DB)
-				
-	"""
-	create_db_Excel.readSwagger(in_file)
-	
 
 	"""
 			Function Name        : .js file
@@ -115,12 +105,25 @@ def Yaml2Json(yaml_file):
 				creates a (postman collection .json v1 file)
 				
 	"""
-
+	fileName = out_file.split('.json')[0]
+	AddParams.readYaml(fileName)
 
 	if '\\' in yaml_file:
 		validation_file = yaml_file.split('\\')[-1].strip(".yaml")
 	else:
 		validation_file = yaml_file.split('/')[-1].strip(".yaml")
+
+
+	"""
+			Function Name        : readSwagger
+			Function Description : create DB and .csv file
+			Inputs   : 
+				FileName         : File name(.yaml file)
+			Outputs  : 
+				creates a (.csv file and one DB)
+				
+	"""
+	create_db_Excel.readSwagger(in_file)
 
 	print(validation_file + ".json file is created Successfully")
 	postman_validation.readExcel(validation_file)
